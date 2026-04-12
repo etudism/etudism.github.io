@@ -31,21 +31,26 @@ const APP_PARTS = [
 ];
 
 function buildCombinedCode() {
-  return APP_PARTS
-    .map(([name, code]) => `// ---- ${name} ----\n${code}`)
-    .join('\n\n');
+  return APP_PARTS.map(([name, code]) => `
+ctx.__currentPartName = ${JSON.stringify(name)};
+window.__CAETA_LAST_PART__ = ctx.__currentPartName;
+// ---- ${name} ----
+${code}
+`).join('\n\n');
 }
 
 export function startApp() {
   try {
     const ctx = createRuntimeContext();
-    executePart(ctx, 'app.bundle.js', buildCombinedCode());
+    executePart(ctx, 'app.bundle.js', buildCombinedCode() + '\n//# sourceURL=app.bundle.js');
   } catch (err) {
     console.error(err);
     const errorBox = document.getElementById('errorBox');
     if (errorBox) {
       errorBox.style.display = 'block';
-      errorBox.textContent = String(err && err.stack ? err.stack : err);
+      errorBox.textContent =
+        `Part: ${window.__CAETA_LAST_PART__ || 'unknown'}\n` +
+        String(err && err.stack ? err.stack : err);
     }
     throw err;
   }
