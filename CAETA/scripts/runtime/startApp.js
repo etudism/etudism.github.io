@@ -14,22 +14,32 @@ import { partName as part10Name, partCode as part10Code } from './parts/10-mater
 import { partName as part11Name, partCode as part11Code } from './parts/11-selection-focus-and-events.js';
 import { partName as part12Name, partCode as part12Code } from './parts/12-raycast-resize-and-main-loop.js';
 
+const APP_PARTS = [
+  [part00Name, part00Code],
+  [part01Name, part01Code],
+  [part02Name, part02Code],
+  [part03Name, part03Code],
+  [part04Name, part04Code],
+  [part05Name, part05Code],
+  [part06Name, part06Code],
+  [part07Name, part07Code],
+  [part08Name, part08Code],
+  [part09Name, part09Code],
+  [part10Name, part10Code],
+  [part11Name, part11Code],
+  [part12Name, part12Code],
+];
+
+function buildCombinedCode() {
+  return APP_PARTS
+    .map(([name, code]) => `// ---- ${name} ----\n${code}`)
+    .join('\n\n');
+}
+
 export function startApp() {
   try {
-  const ctx = createRuntimeContext();
-  executePart(ctx, part00Name, part00Code);
-  executePart(ctx, part01Name, part01Code);
-  executePart(ctx, part02Name, part02Code);
-  executePart(ctx, part03Name, part03Code);
-  executePart(ctx, part04Name, part04Code);
-  executePart(ctx, part05Name, part05Code);
-  executePart(ctx, part06Name, part06Code);
-  executePart(ctx, part07Name, part07Code);
-  executePart(ctx, part08Name, part08Code);
-  executePart(ctx, part09Name, part09Code);
-  executePart(ctx, part10Name, part10Code);
-  executePart(ctx, part11Name, part11Code);
-  executePart(ctx, part12Name, part12Code);
+    const ctx = createRuntimeContext();
+    executePart(ctx, 'app.bundle.js', buildCombinedCode());
   } catch (err) {
     console.error(err);
     const errorBox = document.getElementById('errorBox');
