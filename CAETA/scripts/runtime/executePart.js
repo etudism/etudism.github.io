@@ -1,10 +1,11 @@
-const runnerCache = new Map();
-
 export function executePart(ctx, partName, partCode) {
-  let runner = runnerCache.get(partName);
-  if (!runner) {
-    runner = new Function('ctx', `with (ctx) {\n${partCode}\n}`);
-    runnerCache.set(partName, runner);
-  }
+  const runner = new Function(
+    'ctx',
+    `
+      with (ctx) {
+        ${partCode}
+      }
+    `
+  );
   return runner(ctx);
 }
