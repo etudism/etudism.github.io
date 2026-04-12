@@ -1,4 +1,4 @@
-# CAETA split export
+# CAETA ファイル構成
 
 Files:
 - index.html
