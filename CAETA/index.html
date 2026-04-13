@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAETA | 文学フリマ東京42 3Dデジタルツイン</title>
+  <link rel="stylesheet" href="./styles/10-main.css">
+</head>
+<body>
+  <div id="app">
+    <div id="brand">
+      <div id="brandTitle">CAETA</div>
+      <div id="brandSubtitle">文学フリマ東京42 3Dデジタルツイン</div>
+    </div>
+
+    <div id="infoPanel" class="glass">
+
+      <div id="boothSearch">
+        <div id="boothSearchBar">
+          <input id="boothSearchInput" type="search" placeholder="ブース番号・サークル名・カテゴリで検索" autocomplete="off" spellcheck="false" aria-label="ブース検索">
+          <button id="boothSearchClear" type="button" aria-label="検索をクリア">×</button>
+        </div>
+        <div id="boothSearchMeta" aria-live="polite">
+          <span id="boothSearchCount">0件</span>
+          <span>一覧クリックで表示</span>
+        </div>
+        <div id="boothSearchResults" aria-label="検索結果">
+          <div id="boothSearchResultsList"></div>
+        </div>
+      </div>
+
+      <div id="infoPanelHeader">
+        <h2>ブース情報</h2>
+        <div id="hoverHint">Hover / Click</div>
+      </div>
+      <div id="placeholder">ブースをホバーすると一時表示、クリックすると選択固定されます。</div>
+      <div id="detail" style="display:none;">
+        <div id="boothId"></div>
+        <div id="boothName"></div>
+        <div id="selectionBadge" data-tier="hover">未選択</div>
+        <div id="boothMeta"></div>
+        <div id="boothDesc"></div>
+        <div id="linkRow"></div>
+        <div id="infoActions">
+          <button id="markPrimaryBtn" class="state-btn primary" type="button"><span class="state-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7-4.35-7-10.1c0-2.53 1.9-4.4 4.35-4.4 1.48 0 2.57.69 3.65 2.02 1.08-1.33 2.17-2.02 3.65-2.02 2.45 0 4.35 1.87 4.35 4.4 0 5.75-7 10.1-7 10.1z"></path></svg></span><span>最優先</span></button>
+          <button id="markSecondaryBtn" class="state-btn secondary" type="button"><span class="state-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5h10a1.5 1.5 0 0 1 1.5 1.5v13.5l-6.5-4.2-6.5 4.2V6A1.5 1.5 0 0 1 7 4.5z"></path></svg></span><span>気になる</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="actionDock" class="glass">
+      <button id="topViewBtn" class="icon-btn" type="button" title="真上から見る" aria-label="真上から見る">▥</button>
+      <button id="resetViewBtn" class="icon-btn" type="button" title="視点を戻す" aria-label="視点を戻す">⟲</button>
+      <button id="hallModelBtn" class="icon-btn" type="button" title="会場モデル OFF" aria-label="会場モデル切替">⌂</button>
+      <button id="categoryLayerBtn" class="icon-btn" type="button" title="カテゴリレイヤー OFF" aria-label="カテゴリレイヤー切替">◪</button>
+    </div>
+
+    <div id="rightUtilityDock" class="glass">
+      <button id="themeToggleBtn" class="icon-btn" type="button" title="ダークモードに切り替え" aria-label="ライトモード/ダークモード切替" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 18h6"></path>
+          <path d="M10 22h4"></path>
+          <path d="M12 2v2"></path>
+          <path d="M4.93 4.93l1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M4.93 19.07l1.41-1.41"></path>
+          <path d="M19.07 19.07l-1.41-1.41"></path>
+          <path d="M20 12h2"></path>
+          <path d="M19.07 4.93l-1.41 1.41"></path>
+          <path d="M8 14a4 4 0 1 1 8 0c0 1.53-.62 2.2-1.33 2.95-.48.5-.94.99-1.17 1.55h-3c-.23-.56-.69-1.05-1.17-1.55C8.62 16.2 8 15.53 8 14z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div id="categoryLegend" class="glass" hidden aria-hidden="true">
+      <div id="categoryLegendHeader">
+        <div id="categoryLegendTitle">カテゴリ凡例</div>
+        <div id="categoryLegendHint">hoverで該当ブースを強調</div>
+      </div>
+      <div id="categoryLegendList"></div>
+    </div>
+
+    <div id="bottomDrawer" class="glass" aria-expanded="false">
+      <div id="drawerPeek" role="button" tabindex="0" aria-controls="drawerPanel" aria-expanded="false">
+        <div id="drawerHandleWrap">
+          <div id="drawerHandle"></div>
+          <div id="drawerSummaryBlock">
+            <div id="drawerTitle">全4028ブース</div>
+            <div id="drawerSummaryText">最優先 0件 / 気になる 0件</div>
+          </div>
+        </div>
+        <div id="drawerChevron">⌃</div>
+      </div>
+      <div id="drawerPanel">
+        <div id="drawerPanelInner">
+          <div id="drawerUtilityBar">
+            <button id="drawerShareBtn" class="drawer-utility-btn" type="button">共有リンクをコピー</button>
+            <button id="drawerClearBtn" class="drawer-utility-btn danger" type="button">選択を全解除</button>
+          </div>
+          <div id="drawerColumns">
+            <section class="drawer-section primary">
+              <div class="drawer-section-header">
+                <div class="drawer-section-title"><span class="drawer-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7-4.35-7-10.1c0-2.53 1.9-4.4 4.35-4.4 1.48 0 2.57.69 3.65 2.02 1.08-1.33 2.17-2.02 3.65-2.02 2.45 0 4.35 1.87 4.35 4.4 0 5.75-7 10.1-7 10.1z"></path></svg></span><span>最優先</span></div>
+                <div class="drawer-count" id="drawerPrimaryCount">0件</div>
+              </div>
+              <div id="drawerPrimaryList" class="drawer-list-wrap" data-tier="primary"></div>
+            </section>
+            <section class="drawer-section secondary">
+              <div class="drawer-section-header">
+                <div class="drawer-section-title"><span class="drawer-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5h10a1.5 1.5 0 0 1 1.5 1.5v13.5l-6.5-4.2-6.5 4.2V6A1.5 1.5 0 0 1 7 4.5z"></path></svg></span><span>気になる</span></div>
+                <div class="drawer-count" id="drawerSecondaryCount">0件</div>
+              </div>
+              <div id="drawerSecondaryList" class="drawer-list-wrap" data-tier="secondary"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="labelCanvas"></canvas>
+
+    <div id="boothActionMenu" aria-hidden="true" data-preview="">
+      <div class="action-menu-center">
+        <div id="menuBoothId"></div>
+      </div>
+      <div class="action-node up" data-tier="primary" aria-label="最優先を選択">
+        <span class="node-label"><span class="node-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7-4.35-7-10.1c0-2.53 1.9-4.4 4.35-4.4 1.48 0 2.57.69 3.65 2.02 1.08-1.33 2.17-2.02 3.65-2.02 2.45 0 4.35 1.87 4.35 4.4 0 5.75-7 10.1-7 10.1z"></path></svg></span><span>最優先</span></span>
+      </div>
+      <div class="action-node down" data-tier="secondary" aria-label="気になるを選択">
+        <span class="node-label"><span class="node-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5h10a1.5 1.5 0 0 1 1.5 1.5v13.5l-6.5-4.2-6.5 4.2V6A1.5 1.5 0 0 1 7 4.5z"></path></svg></span><span>気になる</span></span>
+      </div>
+    </div>
+    <div id="toast"></div>
+    <div id="errorBox"></div>
+  </div>
+
+  <script type="module" src="./scripts/00-app.js"></script>
+</body>
+</html>

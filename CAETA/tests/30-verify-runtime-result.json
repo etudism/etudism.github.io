@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "failures": [],
+  "logs": [
+    {
+      "type": "console",
+      "level": "warning",
+      "text": "state restore failed SecurityError: Failed to read the 'localStorage' property from 'Window': Access is denied for this document.\n    at https://caeta.test/scripts/00-app.js:1198:45"
+    },
+    {
+      "type": "console",
+      "level": "warning",
+      "text": "state save failed SecurityError: Failed to read the 'localStorage' property from 'Window': Access is denied for this document."
+    },
+    {
+      "type": "errorBox",
+      "text": ""
+    }
+  ]
+}
