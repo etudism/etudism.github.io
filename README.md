@@ -17,128 +17,233 @@
 
 # 0. まず最初に把握しておくこと
 
-このリポジトリは、**GitHub Pages 用の公開リポジトリ**として使えます。現在、リポジトリは **`main` ブランチ**で運用されており、公開状態は **Public** です。
+このリポジトリは、GitHub Pages 用の公開リポジトリとして運用できます。
+複数人で触る前提なら、**公開中の `main` を直接壊さない運用**が最重要です。
 
-現在の `CAETA` は、以前のような単一の `app.js` と `styles.css` を中心にした構成ではなく、**ES Modules で機能ごとに分割された構成**に更新されています。
+## いまの CAETA の前提
+現在の CAETA は、単一巨大ファイル中心でも、`runtime/parts` / `source-parts` 型でもありません。
 
-現在の CAETA では、少なくとも次の考え方で構成されています。
+いまは、ざっくり言うと次の構成です。
 
-- `index.html` は画面骨組み
-- `styles/main.css` は CSS 全体
-- `scripts/data.js` は会場データ
-- `scripts/runtime/parts/*.js` はブラウザが直接 import する実行用 ES module パーツ
-- `scripts/source-parts/*.js` は編集しやすい元コード断片
-- `scripts/runtime/startApp.js` が各 part module を順番に実行して起動する
+- `CAETA/index.html`
+  - 画面の土台
+  - `./styles/10-main.css` と `./scripts/00-app.js` を直接読み込む
+- `CAETA/styles/10-main.css`
+  - UI 全体の見た目
+- `CAETA/scripts/10-data.js`
+  - 会場データ
+- `CAETA/scripts/00-app.js`
+  - アプリ全体の composition root / 起動と統合の中心
+- `CAETA/scripts/core/`
+  - エラー処理、DOM 参照
+- `CAETA/scripts/utils/`
+  - ID 正規化、検索・選択の共通補助
+- `CAETA/scripts/features/`
+  - 検索、選択、カテゴリ、ドロワー、保存、アクションメニューなどの機能群
+- `CAETA/scripts/visuals/`
+  - ラベル、会場建築、レイアウト描画
+- `CAETA/tests/`
+  - 検証用ファイル
 
-また、`scripts/app.js` は `scripts/runtime/startApp.js` を呼び出す **起動入口** になっています。
-
-つまり現在の CAETA は、**見た目・データ・起動・実行時分割・編集用断片**が分かれた、かなり保守しやすい構成です。  
-README や作業手順を書くときは、**古い `CAETA/styles.css` や `CAETA/app.js` 前提で説明しない**ことが重要です。
+つまり現在の CAETA は、**HTML / CSS / データ / 統合起動 / 機能別 module / 描画系 module / テスト**に分かれています。
 
 ---
 
 # 1. 現在の CAETA の構成を初心者向けに理解する
 
-まずは、現在の CAETA の構成をざっくり把握しましょう。
+現状の CAETA を、まずは次のように把握するとわかりやすいです。
 
 ```txt
 CAETA/
   index.html
   README.md
   styles/
-    main.css
+    10-main.css
   scripts/
-    app.js
-    data.js
-    runtime/
-      createContext.js
-      executePart.js
-      startApp.js
-      parts/
-        00-prelude-and-helpers.js
-        01-theme-and-scene-state.js
-        02-textures-icons-and-labels.js
-        03-hall-architecture.js
-        04-layout-and-overlay.js
-        05-routing-and-search.js
-        06-category-and-selection-basics.js
-        07-drawer-and-dragdrop.js
-        08-url-state-and-persistence.js
-        09-action-menu.js
-        10-materials-and-info-panel.js
-        11-selection-focus-and-events.js
-        12-raycast-resize-and-main-loop.js
-    source-parts/
-      （人が編集しやすい元コード断片）
+    00-app.js
+    10-data.js
+    lib/
+      10-deps.js
+    core/
+      10-errors.js
+      20-dom.js
+    utils/
+      10-id.js
+      20-groups.js
+    features/
+      10-search-utils.js
+      20-search-ui.js
+      30-meta-utils.js
+      40-selection-core.js
+      50-category-utils.js
+      60-category-layer.js
+      70-drawer.js
+      80-url-state.js
+      90-persistence.js
+      100-action-menu.js
+    visuals/
+      10-textures-and-labels.js
+      20-hall-architecture.js
+      30-layout-and-overlay.js
+  tests/
+    10-deps-stub.js
+    20-verify-runtime.py
+    30-verify-runtime-result.json
+    40-verify-runtime.png
 ```
 
 ## 1-1. 各ファイル・各フォルダの役割
 
 ### `CAETA/index.html`
-画面の土台になる HTML です。  
-ただし、アプリ本体のロジックを大量に書く場所ではありません。  
-**「何を読み込むか」を定義する入口のひとつ**と考えるとわかりやすいです。
+画面の骨組みです。  
+検索欄、情報パネル、ドロワー、トグルボタン、`canvas` など、UI の土台があります。
 
-### `CAETA/styles/main.css`
-CAETA 全体の見た目を担当する CSS です。  
-旧構成の `styles.css` ではなく、今は `styles/main.css` にまとまっています。
+ここに大量のロジックを書く場所ではありません。  
+**「何を表示するか」よりも、「何を読み込むか・どんな DOM を用意するか」**を担う場所です。
 
-### `CAETA/scripts/data.js`
-会場データや表示・計算に必要なデータを持つ場所です。  
-レイアウトやブース情報の元になるデータは、まずここを疑うと整理しやすいです。
+### `CAETA/styles/10-main.css`
+CAETA の UI 全体の見た目を担当します。
 
-### `CAETA/scripts/app.js`
-起動入口です。  
-今は非常に薄く、`startApp()` を呼び出す役割だけに近いです。  
-つまり、**「最初に始める係」**です。
+- ライト / ダークテーマ
+- 情報パネル
+- 下部ドロワー
+- カテゴリ凡例
+- 検索結果
+- アクションメニュー
+- トースト
+- エラーボックス
 
-### `CAETA/scripts/runtime/`
-実行時の仕組みです。  
-アプリを動かすための共通コンテキスト生成や、各 part の実行順制御などを担当します。
+などのスタイルがここに入っています。
 
-- `createContext.js` … 共有コンテキストを作る
-- `executePart.js` … 各 part を実行する
-- `startApp.js` … part module を順番に読み込み、アプリ全体を起動する
+### `CAETA/scripts/10-data.js`
+会場・ブース・バンド・ページ情報など、アプリが参照する元データを持つ場所です。
 
-### `CAETA/scripts/runtime/parts/`
-ブラウザが実際に読む、**機能ごとに分割された実行用 ES module** です。  
-機能名がファイル名にかなり反映されているので、初心者でも比較的追いやすいです。
+ブース位置、ホール単位の情報、ルート計算の元になる情報など、**表示や処理の前提となる静的データ**はまずここを確認します。
 
-例:
-- `03-hall-architecture.js` … ホール建築要素
-- `05-routing-and-search.js` … ルート計算と検索
-- `07-drawer-and-dragdrop.js` … ドロワーとドラッグ＆ドロップ
-- `10-materials-and-info-panel.js` … マテリアル反映と情報パネル
-- `12-raycast-resize-and-main-loop.js` … raycast、resize、起動、ループ
+### `CAETA/scripts/00-app.js`
+現在の CAETA の中心です。
 
-### `CAETA/scripts/source-parts/`
-**人が編集しやすい元コード断片**です。  
-共同開発では、まずこちらを読む・触る前提にしておくと安全です。
+ここでは主に、
+
+- `three` や `OrbitControls` の初期化
+- Scene / Camera / Renderer / Controls の生成
+- `core` / `utils` / `features` / `visuals` 各 module の import
+- 共有状態の保持
+- イベント登録
+- 描画ループ
+- 機能間の最終的なつなぎこみ
+
+を行っています。
+
+つまり `00-app.js` は、**アプリ全体の統合責任を持つファイル**です。
+
+### `CAETA/scripts/lib/10-deps.js`
+依存ライブラリの入口です。  
+Three.js や OrbitControls など、外部依存の読み込みをまとめる場所です。
+
+### `CAETA/scripts/core/`
+アプリ全体で使う基礎層です。
+
+- `10-errors.js` … グローバルなエラー表示や例外捕捉
+- `20-dom.js` … `index.html` 内の DOM 要素をまとめて参照する
+
+### `CAETA/scripts/utils/`
+複数機能から使う小さな共通処理です。
+
+- `10-id.js` … ID 正規化、検索用文字列の整形、HTML エスケープ
+- `20-groups.js` … ブース群のグループ単位処理、選択 ID 集約
+
+### `CAETA/scripts/features/`
+ユーザー機能ごとの module 群です。
+
+- `10-search-utils.js` … 検索スコアや検索対象文字列の補助
+- `20-search-ui.js` … 検索結果 UI の描画と更新
+- `30-meta-utils.js` … 情報パネル用のメタ文字列生成
+- `40-selection-core.js` … 選択状態、tier、選択サマリーの管理
+- `50-category-utils.js` … カテゴリ名正規化、色決定、凡例材料生成
+- `60-category-layer.js` … カテゴリレイヤー表示と凡例 UI
+- `70-drawer.js` … 下部ドロワー、並び替え、開閉
+- `80-url-state.js` … URL 共有状態の純粋関数
+- `90-persistence.js` … localStorage / URL / camera 状態の保存復元
+- `100-action-menu.js` … ブース選択時のアクションメニュー
+
+### `CAETA/scripts/visuals/`
+3D 表示・ラベル描画側の module 群です。
+
+- `10-textures-and-labels.js` … テクスチャ、床文字、ラベル、ポータル三角形
+- `20-hall-architecture.js` … ホール建築要素の生成と表示切替
+- `30-layout-and-overlay.js` … レイアウト座標変換、床面、外枠、overlay 描画補助
+
+### `CAETA/tests/`
+検証用ファイルです。
+
+- `10-deps-stub.js` … 依存 stub
+- `20-verify-runtime.py` … runtime 検証
+- `30-verify-runtime-result.json` … 検証結果
+- `40-verify-runtime.png` … 検証スクリーンショット
 
 ---
 
-# 2. このリポジトリでのおすすめ開発フロー
+# 2. この構成での「安全な触り方」
 
-結論から言うと、**「いきなり `main` を直接編集しない」**ことが最重要です。
+大事なのは、**やりたい変更に応じて触る場所を絞ること**です。
 
-おすすめは次の流れです。
+## 2-1. 見た目を直したい
+主に触る場所:
 
-1. `main` から **自分専用の branch（ブランチ）** を作る
-2. そのブランチで編集する
-3. ローカルで動作確認する
-4. 変更内容を GitHub に送る（push / プッシュ）
-5. **Pull Request（プルリクエスト）** を作る
-6. 他の人が確認する
-7. 問題なければ `main` に取り込む（merge / マージ）
+- `CAETA/styles/10-main.css`
+- `CAETA/scripts/visuals/10-textures-and-labels.js`
+- `CAETA/scripts/visuals/20-hall-architecture.js`
 
-この流れにすると、
+## 2-2. DOM 構造や UI パーツを増減したい
+主に触る場所:
 
-- 誰が何を変えたか追いやすい
-- 壊れたときに原因を特定しやすい
-- レビューできる
-- 公開中の `main` を不用意に壊しにくい
+- `CAETA/index.html`
+- `CAETA/scripts/core/20-dom.js`
+- 必要に応じて関連 feature module
 
-というメリットがあります。
+### 注意
+`index.html` 側で ID を増やしたら、`20-dom.js` 側の取得もそろえる必要があります。
+
+## 2-3. 検索機能を直したい
+主に触る場所:
+
+- `CAETA/scripts/features/10-search-utils.js`
+- `CAETA/scripts/features/20-search-ui.js`
+
+## 2-4. 選択状態や「最優先 / 気になる」を直したい
+主に触る場所:
+
+- `CAETA/scripts/features/40-selection-core.js`
+- `CAETA/scripts/features/70-drawer.js`
+- `CAETA/scripts/features/100-action-menu.js`
+
+## 2-5. カテゴリ色分けや凡例を直したい
+主に触る場所:
+
+- `CAETA/scripts/features/50-category-utils.js`
+- `CAETA/scripts/features/60-category-layer.js`
+
+## 2-6. 共有リンク、URL 状態、保存復元を直したい
+主に触る場所:
+
+- `CAETA/scripts/features/80-url-state.js`
+- `CAETA/scripts/features/90-persistence.js`
+
+## 2-7. 会場形状や 3D レイアウトを直したい
+主に触る場所:
+
+- `CAETA/scripts/10-data.js`
+- `CAETA/scripts/visuals/20-hall-architecture.js`
+- `CAETA/scripts/visuals/30-layout-and-overlay.js`
+- 必要に応じて `CAETA/scripts/00-app.js`
+
+## 2-8. 本当に注意して触る場所
+以下は土台に近いので、初心者は最初から大きく触らないほうが安全です。
+
+- `CAETA/scripts/00-app.js`
+- `CAETA/scripts/lib/10-deps.js`
+- `CAETA/scripts/core/20-dom.js`
 
 ---
 
