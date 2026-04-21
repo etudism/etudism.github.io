@@ -1187,7 +1187,7 @@
       flex-direction: column;
       align-items: center;
       gap: 18px;
-      padding: 0;
+      padding: 18px 0 0;
       border-radius: 0;
       background: transparent !important;
       border: none !important;
@@ -1197,15 +1197,21 @@
     }
     #loadingLogo,
     #loadingCard svg {
-      width: 88px;
+      width: min(160px, calc(100vw - 120px));
       height: auto;
       color: #000000 !important;
       display: block;
+      overflow: visible;
+      flex: 0 0 auto;
     }
     #loadingLogo *,
     #loadingCard svg * {
       fill: currentColor !important;
       stroke: none !important;
+    }
+    #loadingCard > svg {
+      margin-bottom: 4px;
+      transform: translateY(0);
     }
 
 
@@ -1895,23 +1901,8 @@
         selectedSecondaryMaterial.color.setHex(isDark ? 0x8b5cf6 : 0x8b5cf6);
         selectedSecondaryMaterial.emissive.setHex(isDark ? 0x3b22a6 : 0x2e1595);
         selectedSecondaryMaterial.emissiveIntensity = isDark ? 0.42 : 0.14;
+        updateSelectionPillarMaterials();
         emptyInfoMaterial.color.setHex(isDark ? 0x101018 : 0xffffff);
-        hallArchitectureMaterials.concrete.color.setHex(isDark ? 0x1a1922 : 0xf7f7fa);
-        hallArchitectureMaterials.wall.color.setHex(isDark ? 0x1b1b25 : 0xffffff);
-        hallArchitectureMaterials.wallPanel.color.setHex(isDark ? 0x2b2b38 : 0xf3f1f7);
-        hallArchitectureMaterials.wallDark.color.setHex(isDark ? 0x363646 : 0xe4e1ea);
-        hallArchitectureMaterials.column.color.setHex(isDark ? 0x272733 : 0xf4f4f7);
-        hallArchitectureMaterials.trim.color.setHex(isDark ? 0x5d5d73 : 0xd6d3dd);
-        hallArchitectureMaterials.shutter.color.setHex(isDark ? 0x4a4a5f : 0xe8e6ee);
-        hallArchitectureMaterials.wood.color.setHex(isDark ? 0x332130 : 0xf3dfe7);
-        hallArchitectureMaterials.woodInset.color.setHex(isDark ? 0x161620 : 0xe8d9e0);
-        hallArchitectureMaterials.ceilingLight.color.setHex(isDark ? 0xfff1f7 : 0xffffff);
-        hallArchitectureMaterials.steel.color.setHex(isDark ? 0x4a4a5e : 0xe5e2eb);
-        hallArchitectureMaterials.steelDark.color.setHex(isDark ? 0x1a1b25 : 0xc9c6d2);
-        hallArchitectureMaterials.blackBox.color.setHex(isDark ? 0x12121a : 0xf0edf4);
-        hallArchitectureMaterials.glass.color.setHex(isDark ? 0xe6a1d1 : 0xf8d7e6);
-        hallArchitectureMaterials.glass.opacity = isDark ? 0.12 : 0.18;
-        hallArchitectureMaterials.signBack.color.setHex(isDark ? 0x2a2a37 : 0xffffff);
         hallGroups.forEach((group) => group.traverse((child) => {
           if (!child?.isMesh || !child.material) return;
           if (child.userData?.kind === 'hall-base-floor' && child.material.color) {
@@ -1922,6 +1913,7 @@
         categoryMaterialCache.clear();
         categoryLegendHoverMaterialCache.clear();
         categoryColorCache.clear();
+        categoryAssignmentCache.clear();
         refreshMapLabelColors();
         overlayDirty = true;
         if (typeof refreshMaterials === 'function') refreshMaterials();
@@ -2004,6 +1996,15 @@
       const categoryMaterialCache = new Map();
       const categoryLegendHoverMaterialCache = new Map();
       const categoryColorCache = new Map();
+      const categoryAssignmentCache = new Map();
+      const CATEGORY_COLOR_THEMES = {
+        '小説': { lanes: [334, 318, 352, 286, 18], light: [0.66, 0.73, 0.60], sat: [0.84, 0.76, 0.70] },
+        '評論・研究': { lanes: [222, 238, 254, 206, 272], light: [0.66, 0.73, 0.60], sat: [0.82, 0.74, 0.68] },
+        'ノンフィクション': { lanes: [170, 188, 206, 152, 28], light: [0.66, 0.73, 0.61], sat: [0.76, 0.68, 0.72] },
+        '詩歌': { lanes: [24, 42, 342, 300, 60], light: [0.67, 0.74, 0.61], sat: [0.80, 0.72, 0.70] },
+        '未分類': { lanes: [220, 280, 184, 18, 330], light: [0.68, 0.75, 0.62], sat: [0.62, 0.56, 0.60] }
+      };
+      const CATEGORY_STEP_OFFSETS = [0, 8, -8, 16, -16, 24, -24, 32, -32, 40, -40];
       const hoverMaterial = new THREE.MeshStandardMaterial({ color: 0xfff3f7, emissive: 0xff5ca8, emissiveIntensity: 0.18, roughness: 0.52, metalness: 0.1 });
       const primaryMaterial = new THREE.MeshStandardMaterial({ color: 0xff8aa8, emissive: 0xff2d55, emissiveIntensity: 0.14, roughness: 0.46, metalness: 0.12 });
       const secondaryMaterial = new THREE.MeshStandardMaterial({ color: 0xb79bff, emissive: 0x8b5cf6, emissiveIntensity: 0.12, roughness: 0.48, metalness: 0.12 });
@@ -2013,20 +2014,158 @@
       const selectedPrimaryMaterial = new THREE.MeshStandardMaterial({ color: 0xff2d55, emissive: 0x7a001d, emissiveIntensity: 0.14, roughness: 0.42, metalness: 0.14 });
       const selectedSecondaryMaterial = new THREE.MeshStandardMaterial({ color: 0x8b5cf6, emissive: 0x2e1595, emissiveIntensity: 0.14, roughness: 0.42, metalness: 0.14 });
       const emptyInfoMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0.02 });
-      const APPLE_MUSIC_CATEGORY_PALETTE = ['#ff628c', '#ff75b7', '#d66bff', '#9377ff', '#6c8fff', '#65d4ff', '#49dac7', '#8bd26a', '#ffc460', '#ff8b61'];
       const boothGeometry = new THREE.BoxGeometry(1, 1, 1);
       const tempVec = new THREE.Vector3();
+      const selectionPillarGroups = new Map();
+      const SELECTION_PILLAR_HEIGHT = 44;
+      const SELECTION_PILLAR_EDGE_OFFSET = 0.22;
+      const SELECTION_PILLAR_PLANE_OFFSET = 0.16;
+
+      function createSelectionPillarTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 32;
+        canvas.height = 256;
+        const ctx = canvas.getContext('2d');
+        const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+        gradient.addColorStop(0.00, 'rgba(255,255,255,0.90)');
+        gradient.addColorStop(0.03, 'rgba(255,255,255,0.88)');
+        gradient.addColorStop(0.08, 'rgba(255,255,255,0.84)');
+        gradient.addColorStop(0.16, 'rgba(255,255,255,0.84)');
+        gradient.addColorStop(0.30, 'rgba(255,255,255,0.56)');
+        gradient.addColorStop(0.52, 'rgba(255,255,255,0.24)');
+        gradient.addColorStop(0.78, 'rgba(255,255,255,0.06)');
+        gradient.addColorStop(1.00, 'rgba(255,255,255,0.00)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.needsUpdate = true;
+        return texture;
+      }
+
+      const selectionPillarTexture = createSelectionPillarTexture();
+      const primaryPillarMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff2d55,
+        map: selectionPillarTexture,
+        transparent: true,
+        opacity: 0.26,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+        toneMapped: false,
+        blending: THREE.AdditiveBlending
+      });
+      const secondaryPillarMaterial = new THREE.MeshBasicMaterial({
+        color: 0x8b5cf6,
+        map: selectionPillarTexture,
+        transparent: true,
+        opacity: 0.24,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+        toneMapped: false,
+        blending: THREE.AdditiveBlending
+      });
+
+      function pillarMaterialForTier(tier) {
+        return tier === 'secondary' ? secondaryPillarMaterial : primaryPillarMaterial;
+      }
+
+      function updateSelectionPillarMaterials() {
+        const isDark = themeMode === 'dark';
+        primaryPillarMaterial.color.setHex(isDark ? 0xff2d55 : 0xe11d48);
+        primaryPillarMaterial.opacity = isDark ? 0.28 : 0.38;
+        primaryPillarMaterial.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+        secondaryPillarMaterial.color.setHex(isDark ? 0x8b5cf6 : 0x6d28d9);
+        secondaryPillarMaterial.opacity = isDark ? 0.25 : 0.34;
+        secondaryPillarMaterial.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+      }
+
+      function disposeSelectionPillarGroup(group) {
+        if (!group) return;
+        group.traverse((child) => {
+          if (!child?.isMesh) return;
+          child.geometry?.dispose?.();
+        });
+      }
+
+      function createSelectionPillarGroup(mesh, tier) {
+        const group = new THREE.Group();
+        group.position.copy(mesh.position);
+        group.renderOrder = 6;
+        group.userData.kind = 'selection-pillar';
+        group.userData.sourceMeshUuid = mesh.uuid;
+        group.userData.tier = tier;
+        const w = mesh.scale.x + SELECTION_PILLAR_EDGE_OFFSET;
+        const d = mesh.scale.z + SELECTION_PILLAR_EDGE_OFFSET;
+        const h = Math.max(SELECTION_PILLAR_HEIGHT, BOOTH_H * 7.2);
+        const material = pillarMaterialForTier(tier);
+        const y = BOOTH_H * 0.5 + h * 0.5;
+        const front = new THREE.Mesh(new THREE.PlaneGeometry(w, h), material);
+        front.position.set(0, y, d * 0.5 + SELECTION_PILLAR_PLANE_OFFSET);
+        front.renderOrder = 6;
+        const back = new THREE.Mesh(new THREE.PlaneGeometry(w, h), material);
+        back.position.set(0, y, -d * 0.5 - SELECTION_PILLAR_PLANE_OFFSET);
+        back.rotation.y = Math.PI;
+        back.renderOrder = 6;
+        const right = new THREE.Mesh(new THREE.PlaneGeometry(d, h), material);
+        right.position.set(w * 0.5 + SELECTION_PILLAR_PLANE_OFFSET, y, 0);
+        right.rotation.y = -Math.PI / 2;
+        right.renderOrder = 6;
+        const left = new THREE.Mesh(new THREE.PlaneGeometry(d, h), material);
+        left.position.set(-w * 0.5 - SELECTION_PILLAR_PLANE_OFFSET, y, 0);
+        left.rotation.y = Math.PI / 2;
+        left.renderOrder = 6;
+        [front, back, right, left].forEach((plane) => {
+          plane.userData.kind = 'selection-pillar-face';
+          plane.userData.tier = tier;
+          group.add(plane);
+        });
+        return group;
+      }
+
+      function ensureSelectionPillar(mesh, tier) {
+        const key = mesh.uuid;
+        const existing = selectionPillarGroups.get(key);
+        if (existing && existing.userData.tier === tier) return existing;
+        if (existing) {
+          existing.parent?.remove(existing);
+          disposeSelectionPillarGroup(existing);
+          selectionPillarGroups.delete(key);
+        }
+        const hallGroup = ensureHall(mesh.userData.page);
+        const group = createSelectionPillarGroup(mesh, tier);
+        hallGroup.add(group);
+        selectionPillarGroups.set(key, group);
+        return group;
+      }
+
+      function removeSelectionPillar(mesh) {
+        const key = mesh.uuid;
+        const group = selectionPillarGroups.get(key);
+        if (!group) return;
+        group.parent?.remove(group);
+        disposeSelectionPillarGroup(group);
+        selectionPillarGroups.delete(key);
+      }
+
+      function updateSelectionPillarForMesh(mesh, tier) {
+        if (!tier) {
+          removeSelectionPillar(mesh);
+          return;
+        }
+        ensureSelectionPillar(mesh, tier);
+      }
+
       const pageTextureCache = new Map();
       const pageLabelTextureCache = new Map();
       const pageLabelPlanes = [];
       const hallNameSprites = [];
 
       function currentMapLabelTextColor() {
-        return '#ffffff';
+        return themeMode === 'dark' ? '#ffffff' : '#111111';
       }
 
       function currentMapLabelTintHex() {
-        return (themeMode === 'dark' || categoryLayerVisible) ? 0xf5f5f7 : 0x111111;
+        return themeMode === 'dark' ? 0xf5f5f7 : 0x111111;
       }
 
       function currentMapLabelStrokeColor() {
@@ -2621,21 +2760,21 @@
       }
 
       const hallArchitectureMaterials = {
-        concrete: new THREE.MeshStandardMaterial({ color: 0xf7f7fa, map: createConcreteTexture(), roughness: 0.98, metalness: 0.01 }),
-        wall: new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95, metalness: 0.01 }),
-        wallPanel: new THREE.MeshStandardMaterial({ color: 0xf3f1f7, roughness: 0.92, metalness: 0.03 }),
-        wallDark: new THREE.MeshStandardMaterial({ color: 0xe4e1ea, roughness: 0.9, metalness: 0.04 }),
-        column: new THREE.MeshStandardMaterial({ color: 0xf4f4f7, roughness: 0.92, metalness: 0.03 }),
-        trim: new THREE.MeshStandardMaterial({ color: 0xd6d3dd, roughness: 0.8, metalness: 0.12 }),
-        shutter: new THREE.MeshStandardMaterial({ color: 0xe8e6ee, roughness: 0.8, metalness: 0.12 }),
-        wood: new THREE.MeshStandardMaterial({ color: 0xf3dfe7, roughness: 0.92, metalness: 0.02 }),
-        woodInset: new THREE.MeshStandardMaterial({ color: 0xe8d9e0, roughness: 0.94, metalness: 0.04 }),
-        ceilingLight: new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, side: THREE.DoubleSide }),
-        steel: new THREE.MeshStandardMaterial({ color: 0xe5e2eb, roughness: 0.78, metalness: 0.2 }),
-        steelDark: new THREE.MeshStandardMaterial({ color: 0xc9c6d2, roughness: 0.9, metalness: 0.1 }),
-        blackBox: new THREE.MeshStandardMaterial({ color: 0xf0edf4, roughness: 0.94, metalness: 0.05 }),
-        glass: new THREE.MeshStandardMaterial({ color: 0xf8d7e6, roughness: 0.14, metalness: 0.14, transparent: true, opacity: 0.18 }),
-        signBack: new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.92, metalness: 0.03 })
+        concrete: new THREE.MeshStandardMaterial({ color: 0xe7e3dd, map: createConcreteTexture(), roughness: 1.0, metalness: 0.0 }),
+        wall: new THREE.MeshStandardMaterial({ color: 0xe5e7eb, roughness: 0.96, metalness: 0.02 }),
+        wallPanel: new THREE.MeshStandardMaterial({ color: 0xc8ced7, roughness: 0.95, metalness: 0.04 }),
+        wallDark: new THREE.MeshStandardMaterial({ color: 0x8f97a1, roughness: 0.92, metalness: 0.06 }),
+        column: new THREE.MeshStandardMaterial({ color: 0xd6dae0, roughness: 0.95, metalness: 0.03 }),
+        trim: new THREE.MeshStandardMaterial({ color: 0x6b7280, roughness: 0.9, metalness: 0.1 }),
+        shutter: new THREE.MeshStandardMaterial({ color: 0x9aa3ad, roughness: 0.86, metalness: 0.12 }),
+        wood: new THREE.MeshStandardMaterial({ color: 0x6f4e35, roughness: 0.95, metalness: 0.02 }),
+        woodInset: new THREE.MeshStandardMaterial({ color: 0x30343a, roughness: 0.96, metalness: 0.05 }),
+        ceilingLight: new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.92, side: THREE.DoubleSide }),
+        steel: new THREE.MeshStandardMaterial({ color: 0xb8bec6, roughness: 0.84, metalness: 0.22 }),
+        steelDark: new THREE.MeshStandardMaterial({ color: 0x2f353d, roughness: 0.94, metalness: 0.14 }),
+        blackBox: new THREE.MeshStandardMaterial({ color: 0x1f252c, roughness: 0.96, metalness: 0.08 }),
+        glass: new THREE.MeshStandardMaterial({ color: 0xbfd4e5, roughness: 0.12, metalness: 0.18, transparent: true, opacity: 0.35 }),
+        signBack: new THREE.MeshStandardMaterial({ color: 0xbcc3cc, roughness: 0.96, metalness: 0.02 })
       };
 
       function addArchBox(parent, options = {}) {
@@ -2711,7 +2850,7 @@
           ctx.clearRect(0, 0, w, h);
           ctx.fillStyle = '#ffffff';
           ctx.fillRect(0, 0, w, h);
-          ctx.strokeStyle = 'rgba(17,24,39,0.18)';
+          ctx.strokeStyle = 'rgba(148,163,184,0.38)';
           ctx.lineWidth = 6;
           ctx.strokeRect(3, 3, w - 6, h - 6);
           ctx.fillStyle = '#16a34a';
@@ -2722,13 +2861,13 @@
           ctx.textBaseline = 'middle';
           ctx.fillText('South', 80, 56);
           ctx.fillText('南', 80, 89);
-          ctx.fillStyle = '#f8f7fb';
+          ctx.fillStyle = '#111111';
           ctx.font = '800 120px "SF Pro Display", "SF Pro Text", "SF Pro JP", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif';
           ctx.fillText(String(number), 240, 78);
         }, 360, 150);
         return new THREE.Mesh(
           new THREE.PlaneGeometry(18, 7.5),
-          new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide, depthWrite: false })
+          new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide, depthWrite: false, toneMapped: false, alphaTest: 0.02 })
         );
       }
 
@@ -3105,12 +3244,12 @@
         }
 
         // User-verified visual correction:
-        // X / ね are still landing too far right after corridor matching,
-        // so shift them left by roughly 1.5 glyphs on the page plane.
-        if (band.page === 1 && label === 'X') {
+        // Side-column X / ね still land too far right after corridor matching,
+        // but the bottom horizontal rows must stay centered.
+        if (band.page === 1 && label === 'X' && String(band.band || '') !== 'X-bottom') {
           dx -= 14;
         }
-        if (band.page === 2 && label === 'ね') {
+        if (band.page === 2 && label === 'ね' && String(band.band || '') !== 'ね-bottom') {
           dx -= 14;
         }
 
@@ -3385,6 +3524,7 @@
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         mesh.userData = { ...booth, page: booth.page, base: 'normal' };
+        mesh.userData.sceneRect = { w: geo.w, d: geo.h };
         mesh.renderOrder = 2;
         group.add(mesh);
         boothMeshes.push(mesh);
@@ -3790,15 +3930,29 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       setLoadingProgress(96, 'Starting');
       }
 
-      function normalizeCategoryLabel(category) {
+      function categoryParts(category) {
         const raw = String(category || '').trim();
-        if (!raw) return '未分類';
-        const parts = raw.split('|').map((part) => part.trim()).filter(Boolean);
-        return parts[1] || parts[0] || '未分類';
+        if (!raw) {
+          return { major: '未分類', sub: '未分類', key: '未分類', label: '未分類' };
+        }
+        const parts = raw.split(/[|｜]/).map((part) => part.trim()).filter(Boolean);
+        const major = parts[0] || '未分類';
+        const sub = parts[1] || parts[0] || '未分類';
+        const key = parts.length > 1 ? `${major}|${sub}` : major;
+        const label = parts.length > 1 ? `${major}｜${sub}` : major;
+        return { major, sub, key, label };
+      }
+
+      function normalizeCategoryLabel(category) {
+        return categoryParts(category).label;
       }
 
       function categoryLabelForMesh(mesh) {
         return normalizeCategoryLabel(mesh?.userData?.info?.category);
+      }
+
+      function categoryKeyForMesh(mesh) {
+        return categoryParts(mesh?.userData?.info?.category).key;
       }
 
       function hashString(value) {
@@ -3810,40 +3964,135 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         return Math.abs(hash);
       }
 
+      function clamp01(value) {
+        return Math.min(1, Math.max(0, value));
+      }
+
+      function normalizeHue(value) {
+        return ((value % 360) + 360) % 360;
+      }
+
+      function stepOffsetForCategory(index) {
+        if (index < CATEGORY_STEP_OFFSETS.length) return CATEGORY_STEP_OFFSETS[index];
+        const step = Math.floor(index / 2) + 1;
+        return step * 8 * (index % 2 === 0 ? -1 : 1);
+      }
+
+      function hslColor(hue, saturation, lightness) {
+        const color = new THREE.Color();
+        color.setHSL(normalizeHue(hue) / 360, clamp01(saturation), clamp01(lightness));
+        return color;
+      }
+
+      function cssColor(color) {
+        return `#${color.getHexString()}`;
+      }
+
+      function cssColorWithAlpha(color, alpha) {
+        return `rgba(${Math.round(color.r * 255)}, ${Math.round(color.g * 255)}, ${Math.round(color.b * 255)}, ${alpha})`;
+      }
+
+      function generateCategoryPaletteForMajor(major, count) {
+        const theme = CATEGORY_COLOR_THEMES[major] || CATEGORY_COLOR_THEMES['未分類'];
+        const colors = [];
+        for (let index = 0; index < count; index += 1) {
+          const lane = index % theme.lanes.length;
+          const step = Math.floor(index / theme.lanes.length);
+          const band = index % theme.light.length;
+          const hue = theme.lanes[lane] + stepOffsetForCategory(step);
+          const saturation = theme.sat[band % theme.sat.length];
+          const lightness = theme.light[band % theme.light.length];
+          const color = hslColor(hue, saturation, lightness);
+          if (themeMode === 'dark') color.offsetHSL(0, 0.02, -0.02);
+          else color.offsetHSL(0, 0.06, -0.03);
+          colors.push(color);
+        }
+        return colors;
+      }
+
+      function ensureCategoryAssignments() {
+        if (categoryAssignmentCache.size) return;
+        const counts = new Map();
+        boothMeshes.forEach((mesh) => {
+          if (!mesh || mesh.userData.base === 'empty') return;
+          const parts = categoryParts(mesh.userData.info?.category);
+          counts.set(parts.key, (counts.get(parts.key) || 0) + 1);
+        });
+
+        const grouped = new Map();
+        counts.forEach((count, key) => {
+          const parts = categoryParts(key);
+          if (!grouped.has(parts.major)) grouped.set(parts.major, []);
+          grouped.get(parts.major).push({ key, label: parts.label, count });
+        });
+
+        grouped.forEach((entries, major) => {
+          entries.sort((a, b) => (b.count - a.count) || a.label.localeCompare(b.label, 'ja'));
+          const palette = generateCategoryPaletteForMajor(major, entries.length);
+          entries.forEach((entry, index) => {
+            categoryAssignmentCache.set(entry.key, palette[index].clone());
+          });
+        });
+      }
+
       function colorForCategoryLabel(label) {
-        const key = normalizeCategoryLabel(label);
+        const parts = categoryParts(label);
+        const key = parts.key;
         if (categoryColorCache.has(key)) return categoryColorCache.get(key).clone();
-        const hash = hashString(key);
-        const color = new THREE.Color(APPLE_MUSIC_CATEGORY_PALETTE[hash % APPLE_MUSIC_CATEGORY_PALETTE.length]);
+        ensureCategoryAssignments();
+        const fallbackHue = 200 + (hashString(key) % 120);
+        const color = (categoryAssignmentCache.get(key) || hslColor(fallbackHue, 0.64, 0.66)).clone();
         categoryColorCache.set(key, color.clone());
         return color;
       }
 
+      function categoryLegendStyleForLabel(label) {
+        const base = colorForCategoryLabel(label).clone();
+        const accent = base.clone().offsetHSL(0, 0.02, themeMode === 'dark' ? 0.08 : -0.04);
+        const accentSoft = base.clone().offsetHSL(0, -0.08, themeMode === 'dark' ? 0.02 : 0.12);
+        const backgroundA = base.clone().offsetHSL(0, -0.16, themeMode === 'dark' ? -0.38 : 0.22);
+        const backgroundB = base.clone().offsetHSL(0, -0.22, themeMode === 'dark' ? -0.46 : 0.30);
+        return {
+          accent: cssColor(accent),
+          accentSoft: cssColor(accentSoft),
+          backgroundA: cssColorWithAlpha(backgroundA, themeMode === 'dark' ? 0.34 : 0.18),
+          backgroundB: cssColorWithAlpha(backgroundB, themeMode === 'dark' ? 0.16 : 0.08),
+          border: cssColorWithAlpha(base, themeMode === 'dark' ? 0.34 : 0.24),
+          count: cssColorWithAlpha(accent, themeMode === 'dark' ? 0.96 : 0.88)
+        };
+      }
+
       function categoryMaterialForMesh(mesh) {
         if (!mesh || mesh.userData.base === 'empty') return emptyInfoMaterial;
-        const label = categoryLabelForMesh(mesh);
-        if (!categoryMaterialCache.has(label)) {
-          const color = colorForCategoryLabel(label);
-          const emissive = color.clone().multiplyScalar(0.18);
-          categoryMaterialCache.set(label, new THREE.MeshStandardMaterial({
+        const key = categoryKeyForMesh(mesh);
+        if (!categoryMaterialCache.has(key)) {
+          const color = colorForCategoryLabel(key);
+          const emissive = color.clone()
+            .lerp(new THREE.Color(themeMode === 'dark' ? 0xffffff : 0x1c1026), themeMode === 'dark' ? 0.16 : 0.08)
+            .multiplyScalar(themeMode === 'dark' ? 0.52 : 0.28);
+          categoryMaterialCache.set(key, new THREE.MeshStandardMaterial({
             color,
             emissive,
-            emissiveIntensity: 0.16
+            emissiveIntensity: themeMode === 'dark' ? 0.44 : 0.22,
+            roughness: themeMode === 'dark' ? 0.42 : 0.56,
+            metalness: 0.1
           }));
         }
-        return categoryMaterialCache.get(label);
+        return categoryMaterialCache.get(key);
       }
 
       function categoryLegendHoverMaterialForLabel(label) {
-        const key = normalizeCategoryLabel(label);
+        const key = categoryParts(label).key;
         if (!categoryLegendHoverMaterialCache.has(key)) {
           const color = colorForCategoryLabel(key).clone();
-          const boosted = color.clone().offsetHSL(0, 0.02, 0.08);
-          const emissive = color.clone().lerp(new THREE.Color(0xffffff), 0.22).multiplyScalar(0.72);
+          const boosted = color.clone().offsetHSL(0, 0.04, themeMode === 'dark' ? 0.10 : 0.06);
+          const emissive = color.clone().lerp(new THREE.Color(0xffffff), 0.24).multiplyScalar(themeMode === 'dark' ? 0.92 : 0.68);
           categoryLegendHoverMaterialCache.set(key, new THREE.MeshStandardMaterial({
             color: boosted,
             emissive,
-            emissiveIntensity: 0.92
+            emissiveIntensity: themeMode === 'dark' ? 1.0 : 0.9,
+            roughness: 0.38,
+            metalness: 0.12
           }));
         }
         return categoryLegendHoverMaterialCache.get(key);
@@ -3853,16 +4102,31 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         const counts = new Map();
         boothMeshes.forEach((mesh) => {
           if (!mesh || mesh.userData.base === 'empty') return;
+          const key = categoryKeyForMesh(mesh);
           const label = categoryLabelForMesh(mesh);
-          counts.set(label, (counts.get(label) || 0) + 1);
+          const entry = counts.get(key) || { key, label, count: 0 };
+          entry.count += 1;
+          counts.set(key, entry);
         });
-        return Array.from(counts.entries())
-          .map(([label, count]) => ({ label, count, color: '#' + colorForCategoryLabel(label).getHexString() }))
+        return Array.from(counts.values())
+          .map((entry) => {
+            const style = categoryLegendStyleForLabel(entry.key);
+            return {
+              ...entry,
+              color: cssColor(colorForCategoryLabel(entry.key)),
+              accent: style.accent,
+              accentSoft: style.accentSoft,
+              backgroundA: style.backgroundA,
+              backgroundB: style.backgroundB,
+              border: style.border,
+              countColor: style.count
+            };
+          })
           .sort((a, b) => (b.count - a.count) || a.label.localeCompare(b.label, 'ja'));
       }
 
       function setLegendHoveredCategory(label) {
-        const next = label ? normalizeCategoryLabel(label) : null;
+        const next = label ? categoryParts(label).key : null;
         if (legendHoveredCategory === next) return;
         legendHoveredCategory = next;
         refreshMaterials();
@@ -3881,15 +4145,15 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
           const button = document.createElement('button');
           button.type = 'button';
           button.className = 'category-legend-item';
-          button.dataset.category = entry.label;
+          button.dataset.category = entry.key;
           button.innerHTML = `
             <span class="category-legend-swatch" style="background:${entry.color}"></span>
-            <span class="category-legend-label">${entry.label}</span>
+            <span class="category-legend-label">${escapeHtml(entry.label)}</span>
             <span class="category-legend-count">${entry.count}件</span>
           `;
-          const activate = () => setLegendHoveredCategory(entry.label);
+          const activate = () => setLegendHoveredCategory(entry.key);
           const deactivate = () => {
-            if (legendHoveredCategory === entry.label) setLegendHoveredCategory(null);
+            if (legendHoveredCategory === entry.key) setLegendHoveredCategory(null);
           };
           button.addEventListener('pointerenter', activate);
           button.addEventListener('pointerleave', deactivate);
@@ -4440,7 +4704,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
 
       function materialFor(mesh, state) {
         if (mesh.userData.base === 'empty') return emptyInfoMaterial;
-        if (state === 'legend-hover') return categoryLegendHoverMaterialForLabel(categoryLabelForMesh(mesh));
+        if (state === 'legend-hover') return categoryLegendHoverMaterialForLabel(categoryKeyForMesh(mesh));
         if (state === 'selected-primary') return selectedPrimaryMaterial;
         if (state === 'selected-secondary') return selectedSecondaryMaterial;
         if (state === 'selected') return selectedGlowMaterial;
@@ -4467,37 +4731,60 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
           const key = mesh.userData.info?.group_key || mesh.userData.id;
           const previewState = previewStateForMesh(mesh);
           let state = 'base';
-          if (previewState === 'primary') state = key === pinnedKey ? 'selected-primary' : 'primary';
-          else if (previewState === 'secondary') state = key === pinnedKey ? 'selected-secondary' : 'secondary';
-          else if (previewState === 'clear') state = key === pinnedKey ? 'selected' : 'base';
-          else if (key === pinnedKey && primaryKeys.has(key)) state = 'selected-primary';
-          else if (key === pinnedKey && secondaryKeys.has(key)) state = 'selected-secondary';
-          else if (key === pinnedKey) state = 'selected';
-          else if (primaryKeys.has(key)) state = 'primary';
-          else if (secondaryKeys.has(key)) state = 'secondary';
-          else if (hoverKey && key === hoverKey) state = 'hover';
-          else if (categoryLayerVisible && legendHoveredCategory && categoryLabelForMesh(mesh) === legendHoveredCategory) state = 'legend-hover';
+          let pillarTier = null;
+          if (previewState === 'primary') {
+            state = key === pinnedKey ? 'selected-primary' : 'primary';
+            pillarTier = 'primary';
+          } else if (previewState === 'secondary') {
+            state = key === pinnedKey ? 'selected-secondary' : 'secondary';
+            pillarTier = 'secondary';
+          } else if (previewState === 'clear') {
+            state = key === pinnedKey ? 'selected' : 'base';
+          } else if (key === pinnedKey && primaryKeys.has(key)) {
+            state = 'selected-primary';
+            pillarTier = 'primary';
+          } else if (key === pinnedKey && secondaryKeys.has(key)) {
+            state = 'selected-secondary';
+            pillarTier = 'secondary';
+          } else if (key === pinnedKey) {
+            state = 'selected';
+          } else if (primaryKeys.has(key)) {
+            state = 'primary';
+            pillarTier = 'primary';
+          } else if (secondaryKeys.has(key)) {
+            state = 'secondary';
+            pillarTier = 'secondary';
+          } else if (hoverKey && key === hoverKey) state = 'hover';
+          else if (categoryLayerVisible && legendHoveredCategory && categoryKeyForMesh(mesh) === legendHoveredCategory) state = 'legend-hover';
           else if (hoveredSearchKey && key === hoveredSearchKey) state = 'search-hover';
           else if (searchKeys.has(key)) state = 'search-match';
           mesh.material = materialFor(mesh, state);
+          updateSelectionPillarForMesh(mesh, pillarTier);
         });
         updateSelectionSummary();
         if (actionMenuState?.mesh) syncActionIconsToSelection(actionMenuState.mesh);
       }
 
+      function inferMembersText(info) {
+        if (!info) return '情報なし';
+        if (typeof info.members === 'string' && info.members.trim()) return info.members.trim();
+        const description = (info.description || '').trim();
+        const category = (info.category || '').trim();
+        const looksLikeShortMemberList = (
+          description &&
+          description !== category &&
+          description.length <= 30 &&
+          !/[。！？!?]/.test(description) &&
+          !/^https?:\/\//.test(description)
+        );
+        return looksLikeShortMemberList ? description : '情報なし';
+      }
+
       function fmtMeta(mesh) {
         const info = mesh.userData.info;
         const lines = [];
-        lines.push(`エリア: ${mesh.userData.label}`);
-        lines.push(`ブース番号: ${mesh.userData.id}`);
-        if (info?.booth_no_range && info.booth_no_range !== mesh.userData.id) lines.push(`範囲: ${info.booth_no_range}`);
-        if (info?.reading) lines.push(`読み: ${info.reading}`);
+        lines.push(`メンバー: ${inferMembersText(info)}`);
         if (info?.category) lines.push(`カテゴリ: ${info.category}`);
-        const previewTier = previewStateForMesh(mesh);
-        const tier = previewTier || getSelectionTierByMesh(mesh);
-        if (tier === 'primary') lines.push(`選択状態: 最優先${previewTier ? '（プレビュー中）' : ''}`);
-        else if (tier === 'secondary') lines.push(`選択状態: 気になる${previewTier ? '（プレビュー中）' : ''}`);
-        else if (tier === 'clear' && previewTier) lines.push('選択状態: 解除（プレビュー中）');
         lines.push(`ホール: ${mesh.userData.page === 1 ? '南1・2ホール' : '南3・4ホール'}`);
         return lines.join('\n');
       }
@@ -5080,6 +5367,10 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
           doRaycast();
           needsRaycast = false;
         }
+        const pulsePhase = performance.now() * 0.0048;
+        const isDark = themeMode === 'dark';
+        primaryPillarMaterial.opacity = (isDark ? 0.28 : 0.38) + (Math.sin(pulsePhase) * (isDark ? 0.05 : 0.03));
+        secondaryPillarMaterial.opacity = (isDark ? 0.25 : 0.34) + (Math.sin(pulsePhase + 1.2) * (isDark ? 0.045 : 0.028));
         tickCamTween();
         controls.update();
         if (actionMenuState?.mesh) updateActionIconLayout(actionMenuState.mesh);
