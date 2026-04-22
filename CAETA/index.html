@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CAETA | 文学フリマ東京42 3Dブース地図</title>
+  <title>CAETA | 文学フリマ東京42 3Dデジタルツイン</title>
   <style>
     :root {
       --bg: #f7f5fb;
@@ -1940,6 +1940,434 @@
       }
     }
 
+
+
+    /* mobile separated frame layout */
+    #mobileFrameLayout,
+    .mobile-frame,
+    .mobile-frame-heading,
+    .mobile-frame-body,
+    #mobileMapHeader,
+    #mobileMapControls,
+    #mobileMapViewport,
+    #mobileMapLegendSlot {
+      display: contents;
+    }
+    .mobile-frame-title,
+    .mobile-map-label {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      html,
+      body {
+        height: auto !important;
+        min-height: 100%;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        overscroll-behavior-x: none !important;
+        overscroll-behavior-y: auto !important;
+        background: var(--app-bg);
+      }
+
+      body.is-mobile-framed #app {
+        position: relative;
+        width: 100%;
+        height: auto !important;
+        min-height: 100dvh;
+        overflow: visible !important;
+        display: block;
+        padding: calc(var(--safe-top) + 10px) calc(var(--safe-right) + 10px) calc(var(--safe-bottom) + 18px) calc(var(--safe-left) + 10px);
+      }
+
+      body.is-mobile-framed #mobileFrameLayout {
+        display: grid;
+        gap: 12px;
+        width: min(100%, 760px);
+        margin: 0 auto;
+      }
+
+      body.is-mobile-framed .mobile-frame {
+        display: block;
+        position: relative;
+        min-width: 0;
+        overflow: hidden;
+        border-radius: 22px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        box-shadow: 0 14px 38px rgba(36,24,56,0.10);
+        backdrop-filter: blur(22px) saturate(1.12);
+        -webkit-backdrop-filter: blur(22px) saturate(1.12);
+      }
+      html[data-theme='dark'] body.is-mobile-framed .mobile-frame {
+        box-shadow: 0 18px 44px rgba(0,0,0,0.30);
+      }
+
+      body.is-mobile-framed .mobile-frame-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        background: var(--surface-muted);
+      }
+      body.is-mobile-framed .mobile-frame-title {
+        display: block;
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.2;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--text);
+      }
+      body.is-mobile-framed .mobile-frame-subtitle {
+        margin-top: 3px;
+        font-size: 11px;
+        line-height: 1.35;
+        color: var(--hint);
+      }
+      body.is-mobile-framed .mobile-frame-body {
+        display: block;
+        min-width: 0;
+      }
+
+      body.is-mobile-framed #mobileMapFrame {
+        padding: 0;
+        overflow: hidden;
+      }
+      body.is-mobile-framed #mobileMapHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px 14px 10px;
+        border-bottom: 1px solid var(--line);
+        background: var(--surface-muted);
+      }
+      body.is-mobile-framed #mobileMapFrame > .mobile-frame-heading {
+        display: none;
+      }
+      body.is-mobile-framed #brand {
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        max-width: none !important;
+        z-index: auto !important;
+        pointer-events: auto;
+        min-width: 0;
+      }
+      body.is-mobile-framed #brandRow {
+        --brand-logo-width: clamp(104px, 31vw, 142px);
+        width: auto;
+        max-width: 100%;
+      }
+      body.is-mobile-framed #brandSubtitle {
+        display: none !important;
+      }
+      body.is-mobile-framed .mobile-map-label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        min-height: 28px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--chip-bg);
+        color: var(--hint);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+
+      body.is-mobile-framed #mobileMapControls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--line);
+        background: var(--surface-soft);
+      }
+      body.is-mobile-framed #actionDock,
+      body.is-mobile-framed #rightUtilityDock {
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+        transform: none !important;
+        z-index: auto !important;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        padding: 0;
+        width: auto;
+        max-width: 100%;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+      body.is-mobile-framed #actionDock {
+        justify-content: flex-start;
+        flex: 1 1 auto;
+      }
+      body.is-mobile-framed #rightUtilityDock {
+        justify-content: flex-end;
+        flex: 0 0 auto;
+      }
+      body.is-mobile-framed .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+      }
+
+      body.is-mobile-framed #mobileMapViewport {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: clamp(320px, 56dvh, 520px);
+        min-height: 320px;
+        overflow: hidden;
+        background: var(--app-bg);
+        touch-action: none;
+      }
+      body.is-mobile-framed #mobileMapViewport > canvas:not(#labelCanvas) {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none;
+        touch-action: none;
+      }
+      body.is-mobile-framed #labelCanvas {
+        display: none !important;
+      }
+
+      body.is-mobile-framed #mobileMapLegendSlot {
+        display: block;
+      }
+      body.is-mobile-framed #categoryLegend {
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+        width: auto !important;
+        max-height: none !important;
+        margin: 8px 10px 10px;
+        padding: 10px;
+        overflow: visible;
+        z-index: auto !important;
+      }
+      body.is-mobile-framed #categoryLegend[hidden],
+      body.is-mobile-framed #categoryLegend:not(.is-visible) {
+        display: none !important;
+      }
+      body.is-mobile-framed #categoryLegend.is-visible {
+        display: block !important;
+        pointer-events: auto;
+      }
+      body.is-mobile-framed #categoryLegendList {
+        max-height: none !important;
+        overflow: visible;
+      }
+      body.is-mobile-framed #categoryLegendHint {
+        display: none;
+      }
+
+      body.is-mobile-framed #infoPanel {
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+        transform: none !important;
+        width: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        z-index: auto !important;
+        padding: 12px 14px 14px;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+      body.is-mobile-framed #infoPanel.is-compact-mobile,
+      body.is-mobile-framed #infoPanel.has-results,
+      body.is-mobile-framed #infoPanel.has-detail {
+        max-height: none !important;
+        overflow: visible !important;
+      }
+      body.is-mobile-framed #infoPanel.is-compact-mobile #infoPanelHeader {
+        display: flex !important;
+      }
+      body.is-mobile-framed #infoPanel.is-compact-mobile #placeholder {
+        display: block !important;
+      }
+      body.is-mobile-framed #boothSearch {
+        position: static !important;
+        margin-bottom: 12px;
+        padding-bottom: 0;
+        background: transparent !important;
+      }
+      body.is-mobile-framed #boothSearchResultsList {
+        max-height: 280px !important;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      body.is-mobile-framed #infoPanelHeader {
+        display: flex !important;
+      }
+      body.is-mobile-framed #detail {
+        padding-top: 8px;
+      }
+      body.is-mobile-framed #boothId {
+        font-size: 25px;
+      }
+      body.is-mobile-framed #boothName {
+        font-size: 16px;
+        line-height: 1.42;
+      }
+      body.is-mobile-framed #boothDesc {
+        max-height: none !important;
+        display: block !important;
+        -webkit-line-clamp: unset !important;
+        -webkit-box-orient: initial !important;
+        overflow: visible !important;
+      }
+      body.is-mobile-framed #linkRow {
+        flex-wrap: wrap;
+        overflow: visible;
+      }
+      body.is-mobile-framed #infoActions {
+        position: static !important;
+        background: transparent !important;
+        padding-top: 10px;
+      }
+
+      body.is-mobile-framed #bottomDrawer {
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+        transform: none !important;
+        width: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        z-index: auto !important;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+      body.is-mobile-framed #drawerPeek {
+        min-height: 44px;
+        padding: 0 14px 10px;
+        cursor: default;
+      }
+      body.is-mobile-framed #drawerHandle,
+      body.is-mobile-framed #drawerChevron {
+        display: none;
+      }
+      body.is-mobile-framed #drawerHandleWrap {
+        gap: 0;
+      }
+      body.is-mobile-framed #drawerPanel {
+        display: grid;
+        grid-template-rows: 1fr !important;
+        margin-top: 0 !important;
+      }
+      body.is-mobile-framed #drawerPanelInner {
+        max-height: none !important;
+        overflow: visible !important;
+        padding: 0 14px 14px;
+      }
+      body.is-mobile-framed #drawerUtilityBar {
+        position: static !important;
+        background: transparent !important;
+        padding: 0 0 12px;
+      }
+      body.is-mobile-framed #drawerColumns {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      body.is-mobile-framed .drawer-list {
+        max-height: none !important;
+        overflow: visible !important;
+      }
+      body.is-mobile-framed .drawer-item {
+        touch-action: manipulation !important;
+      }
+
+      body.is-mobile-framed #toast {
+        position: fixed !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: calc(var(--safe-bottom) + 18px) !important;
+        transform: translateX(-50%) !important;
+        z-index: 150;
+      }
+      body.is-mobile-framed #errorBox {
+        position: fixed !important;
+        left: calc(var(--safe-left) + 12px) !important;
+        right: calc(var(--safe-right) + 12px) !important;
+        bottom: calc(var(--safe-bottom) + 18px) !important;
+        max-width: none;
+        z-index: 151;
+      }
+      body.is-mobile-framed #boothActionMenu {
+        position: fixed !important;
+        z-index: 152;
+      }
+      body.is-mobile-framed #loadingOverlay,
+      body.is-mobile-framed #aboutOverlay {
+        position: fixed !important;
+        inset: 0 !important;
+      }
+    }
+
+    @media (max-width: 900px) and (max-height: 680px) {
+      body.is-mobile-framed #mobileMapViewport {
+        height: clamp(300px, 52dvh, 430px);
+        min-height: 300px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      body.is-mobile-framed #app {
+        padding-left: calc(var(--safe-left) + 8px);
+        padding-right: calc(var(--safe-right) + 8px);
+      }
+      body.is-mobile-framed #mobileFrameLayout {
+        gap: 10px;
+      }
+      body.is-mobile-framed #mobileMapControls {
+        align-items: flex-start;
+      }
+      body.is-mobile-framed .icon-btn {
+        width: 36px;
+        height: 36px;
+      }
+      body.is-mobile-framed #drawerUtilityBar,
+      body.is-mobile-framed #infoActions {
+        grid-template-columns: 1fr;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -2349,6 +2777,105 @@
     let overlayAreaLabels = [];
     let overlayDirty = true;
 
+    let mobileFrameLayout = null;
+    let mobileMapViewport = null;
+
+    function isMobileFrameViewport() {
+      return window.innerWidth <= 900;
+    }
+
+    function syncMobileFrameClass() {
+      document.body.classList.toggle('is-mobile-framed', isMobileFrameViewport());
+    }
+
+    function createMobileFrameElement(tagName, id, className, textContent = '') {
+      const el = document.createElement(tagName);
+      if (id) el.id = id;
+      if (className) el.className = className;
+      if (textContent) el.textContent = textContent;
+      return el;
+    }
+
+    function setupMobileFrameScaffold() {
+      if (!app) return null;
+      const existing = document.getElementById('mobileFrameLayout');
+      if (existing) {
+        mobileFrameLayout = existing;
+        mobileMapViewport = document.getElementById('mobileMapViewport');
+        syncMobileFrameClass();
+        return mobileMapViewport;
+      }
+
+      mobileFrameLayout = createMobileFrameElement('main', 'mobileFrameLayout', 'mobile-frame-layout');
+      mobileFrameLayout.setAttribute('aria-label', '文フリブースマップ');
+
+      const mapFrame = createMobileFrameElement('section', 'mobileMapFrame', 'mobile-frame mobile-map-frame');
+      mapFrame.setAttribute('aria-labelledby', 'mobileMapFrameTitle');
+      const mapHeading = createMobileFrameElement('div', null, 'mobile-frame-heading');
+      const mapHeadingTitleWrap = createMobileFrameElement('div');
+      const mapHeadingTitle = createMobileFrameElement('h2', 'mobileMapFrameTitle', 'mobile-frame-title', '地図フレーム');
+      const mapHeadingSub = createMobileFrameElement('div', null, 'mobile-frame-subtitle', 'ブース配置図を拡大・移動できます');
+      mapHeadingTitleWrap.append(mapHeadingTitle, mapHeadingSub);
+      mapHeading.appendChild(mapHeadingTitleWrap);
+
+      const mapHeader = createMobileFrameElement('div', 'mobileMapHeader', 'mobile-map-header');
+      const mapLabel = createMobileFrameElement('div', null, 'mobile-map-label', '地図フレーム');
+      if (brand) mapHeader.appendChild(brand);
+      mapHeader.appendChild(mapLabel);
+
+      const mapControls = createMobileFrameElement('div', 'mobileMapControls', 'mobile-map-controls');
+      if (actionDock) mapControls.appendChild(actionDock);
+      if (rightUtilityDock) mapControls.appendChild(rightUtilityDock);
+      mobileMapViewport = createMobileFrameElement('div', 'mobileMapViewport', 'mobile-map-viewport');
+      const mapLegendSlot = createMobileFrameElement('div', 'mobileMapLegendSlot', 'mobile-map-legend-slot');
+      if (categoryLegend) mapLegendSlot.appendChild(categoryLegend);
+      mapFrame.append(mapHeading, mapHeader, mapControls, mobileMapViewport, mapLegendSlot);
+
+      const infoFrame = createMobileFrameElement('section', 'mobileInfoFrame', 'mobile-frame mobile-info-frame');
+      infoFrame.setAttribute('aria-labelledby', 'mobileInfoFrameTitle');
+      const infoHeading = createMobileFrameElement('div', null, 'mobile-frame-heading');
+      const infoHeadingWrap = createMobileFrameElement('div');
+      const infoTitle = createMobileFrameElement('h2', 'mobileInfoFrameTitle', 'mobile-frame-title', 'ブース情報フレーム');
+      const infoSub = createMobileFrameElement('div', null, 'mobile-frame-subtitle', '検索結果と選択中ブースの詳細を表示します');
+      infoHeadingWrap.append(infoTitle, infoSub);
+      infoHeading.appendChild(infoHeadingWrap);
+      const infoBody = createMobileFrameElement('div', 'mobileInfoFrameBody', 'mobile-frame-body');
+      if (infoPanel) infoBody.appendChild(infoPanel);
+      infoFrame.append(infoHeading, infoBody);
+
+      const listFrame = createMobileFrameElement('section', 'mobileListFrame', 'mobile-frame mobile-list-frame');
+      listFrame.setAttribute('aria-labelledby', 'mobileListFrameTitle');
+      const listHeading = createMobileFrameElement('div', null, 'mobile-frame-heading');
+      const listHeadingWrap = createMobileFrameElement('div');
+      const listTitle = createMobileFrameElement('h2', 'mobileListFrameTitle', 'mobile-frame-title', '最優先・気になるリストのフレーム');
+      const listSub = createMobileFrameElement('div', null, 'mobile-frame-subtitle', '巡回ルート順で確認できます');
+      listHeadingWrap.append(listTitle, listSub);
+      listHeading.appendChild(listHeadingWrap);
+      const listBody = createMobileFrameElement('div', 'mobileListFrameBody', 'mobile-frame-body');
+      if (bottomDrawer) listBody.appendChild(bottomDrawer);
+      listFrame.append(listHeading, listBody);
+
+      const anchor = loadingOverlay && loadingOverlay.parentNode === app ? loadingOverlay.nextSibling : app.firstChild;
+      app.insertBefore(mobileFrameLayout, anchor);
+      mobileFrameLayout.append(mapFrame, infoFrame, listFrame);
+      syncMobileFrameClass();
+      return mobileMapViewport;
+    }
+
+    function currentRendererViewportSize() {
+      const useFramedViewport = isMobileFrameViewport() && mobileMapViewport;
+      const rect = useFramedViewport ? mobileMapViewport.getBoundingClientRect() : null;
+      const width = rect && rect.width > 32 ? rect.width : window.innerWidth;
+      const height = rect && rect.height > 32 ? rect.height : window.innerHeight;
+      return {
+        width: Math.max(1, Math.round(width)),
+        height: Math.max(1, Math.round(height))
+      };
+    }
+
+    setupMobileFrameScaffold();
+
+
     function resizeLabelCanvas() {
       if (!labelCanvas || !labelCtx) return;
       overlayDpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -2388,18 +2915,19 @@
 
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      const initialRenderSize = currentRendererViewportSize();
+      renderer.setSize(initialRenderSize.width, initialRenderSize.height);
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
-      app.appendChild(renderer.domElement);
+      (mobileMapViewport || app).appendChild(renderer.domElement);
       renderer.domElement.style.touchAction = 'none';
       renderer.domElement.style.userSelect = 'none';
       renderer.domElement.style.webkitUserSelect = 'none';
       renderer.domElement.style.webkitTapHighlightColor = 'transparent';
       if (labelCtx) resizeLabelCanvas();
 
-      const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 5, 4000);
+      const camera = new THREE.PerspectiveCamera(45, initialRenderSize.width / initialRenderSize.height, 5, 4000);
       camera.position.set(0, 820, 980);
 
       const controls = new OrbitControls(camera, renderer.domElement);
@@ -2417,6 +2945,37 @@
       controls.mouseButtons.RIGHT = THREE.MOUSE.ROTATE;
       controls.touches.ONE = THREE.TOUCH.PAN;
       controls.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;
+
+
+      let rendererResizeRaf = 0;
+      function resizeRendererToDisplay() {
+        syncMobileFrameClass();
+        const size = currentRendererViewportSize();
+        camera.aspect = size.width / size.height;
+        camera.updateProjectionMatrix();
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+        renderer.setSize(size.width, size.height);
+        if (labelCtx) resizeLabelCanvas();
+        overlayDirty = true;
+      }
+
+      function scheduleRendererResize() {
+        if (rendererResizeRaf) cancelAnimationFrame(rendererResizeRaf);
+        rendererResizeRaf = requestAnimationFrame(() => {
+          rendererResizeRaf = 0;
+          resizeRendererToDisplay();
+        });
+      }
+
+      if (window.ResizeObserver) {
+        const rendererResizeObserver = new ResizeObserver(() => scheduleRendererResize());
+        [app, mobileMapViewport].filter(Boolean).forEach((el) => {
+          try { rendererResizeObserver.observe(el); } catch (err) {}
+        });
+      }
+      window.visualViewport?.addEventListener('resize', scheduleRendererResize);
+      window.visualViewport?.addEventListener('scroll', scheduleRendererResize);
+      resizeRendererToDisplay();
 
       const orbitMouseDefaults = {
         LEFT: THREE.MOUSE.PAN,
@@ -5954,6 +6513,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
 
       function updateResponsiveUiState() {
         const mobile = isMobileViewport();
+        document.body.classList.toggle('is-mobile-framed', mobile);
         document.body.classList.toggle('is-mobile-viewport', mobile);
         document.body.classList.toggle('is-mobile-drawer-open', mobile && isDrawerOpen);
         if (hoverHint) hoverHint.textContent = '';
@@ -7727,11 +8287,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       }
 
       window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-        if (labelCtx) resizeLabelCanvas();
+        resizeRendererToDisplay();
         updateResponsiveUiState();
         scheduleMobileLayoutMetrics();
         overlayDirty = true;
