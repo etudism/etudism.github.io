@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CAETA | 文学フリマ東京42 3Dデジタルツイン</title>
+  <title>CAETA | 文学フリマ東京42 3Dブース配置図</title>
   <style>
     :root {
       --bg: #f7f5fb;
@@ -2807,19 +2807,17 @@
       }
 
       mobileFrameLayout = createMobileFrameElement('main', 'mobileFrameLayout', 'mobile-frame-layout');
-      mobileFrameLayout.setAttribute('aria-label', '文フリブースマップ');
+      mobileFrameLayout.setAttribute('aria-label', '文学フリマ東京42 3Dブース地図');
 
       const mapFrame = createMobileFrameElement('section', 'mobileMapFrame', 'mobile-frame mobile-map-frame');
       mapFrame.setAttribute('aria-labelledby', 'mobileMapFrameTitle');
       const mapHeading = createMobileFrameElement('div', null, 'mobile-frame-heading');
       const mapHeadingTitleWrap = createMobileFrameElement('div');
-      const mapHeadingTitle = createMobileFrameElement('h2', 'mobileMapFrameTitle', 'mobile-frame-title', '地図フレーム');
-      const mapHeadingSub = createMobileFrameElement('div', null, 'mobile-frame-subtitle', 'ブース配置図を拡大・移動できます');
       mapHeadingTitleWrap.append(mapHeadingTitle, mapHeadingSub);
       mapHeading.appendChild(mapHeadingTitleWrap);
 
       const mapHeader = createMobileFrameElement('div', 'mobileMapHeader', 'mobile-map-header');
-      const mapLabel = createMobileFrameElement('div', null, 'mobile-map-label', '地図フレーム');
+      const mapLabel = createMobileFrameElement('div', null, 'mobile-map-label', 'ブース配置図');
       if (brand) mapHeader.appendChild(brand);
       mapHeader.appendChild(mapLabel);
 
@@ -2835,7 +2833,7 @@
       infoFrame.setAttribute('aria-labelledby', 'mobileInfoFrameTitle');
       const infoHeading = createMobileFrameElement('div', null, 'mobile-frame-heading');
       const infoHeadingWrap = createMobileFrameElement('div');
-      const infoTitle = createMobileFrameElement('h2', 'mobileInfoFrameTitle', 'mobile-frame-title', 'ブース情報フレーム');
+      const infoTitle = createMobileFrameElement('h2', 'mobileInfoFrameTitle', 'mobile-frame-title', 'ブース情報');
       const infoSub = createMobileFrameElement('div', null, 'mobile-frame-subtitle', '検索結果と選択中ブースの詳細を表示します');
       infoHeadingWrap.append(infoTitle, infoSub);
       infoHeading.appendChild(infoHeadingWrap);
@@ -2847,7 +2845,7 @@
       listFrame.setAttribute('aria-labelledby', 'mobileListFrameTitle');
       const listHeading = createMobileFrameElement('div', null, 'mobile-frame-heading');
       const listHeadingWrap = createMobileFrameElement('div');
-      const listTitle = createMobileFrameElement('h2', 'mobileListFrameTitle', 'mobile-frame-title', '最優先・気になるリストのフレーム');
+      const listTitle = createMobileFrameElement('h2', 'mobileListFrameTitle', 'mobile-frame-title', '最優先・気になるリスト');
       const listSub = createMobileFrameElement('div', null, 'mobile-frame-subtitle', '巡回ルート順で確認できます');
       listHeadingWrap.append(listTitle, listSub);
       listHeading.appendChild(listHeadingWrap);
