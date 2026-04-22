@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CAETA | 文学フリマ東京42 3Dデジタルツイン</title>
+  <title>CAETA | 文学フリマ東京42 3Dブース図</title>
   <style>
     :root {
       --bg: #f7f5fb;
@@ -328,7 +328,8 @@
       background: rgba(255,45,85,0.08);
     }
     .drawer-item {
-      touch-action: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     .drawer-item.is-dragging-origin {
       opacity: 0.32;
@@ -1519,6 +1520,28 @@
     input, button, a {
       touch-action: manipulation;
     }
+    #app > canvas {
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #drawerPanelInner,
+    .drawer-list,
+    #infoPanel,
+    #boothSearchResultsList,
+    #categoryLegendList,
+    #aboutDialog {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+    #drawerPanelInner,
+    .drawer-list {
+      touch-action: pan-y;
+    }
+    #drawerPeek {
+      touch-action: manipulation;
+    }
 
     @media (max-width: 900px) {
       #brand {
@@ -2183,6 +2206,10 @@
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       app.appendChild(renderer.domElement);
+      renderer.domElement.style.touchAction = 'none';
+      renderer.domElement.style.userSelect = 'none';
+      renderer.domElement.style.webkitUserSelect = 'none';
+      renderer.domElement.style.webkitTapHighlightColor = 'transparent';
       if (labelCtx) resizeLabelCanvas();
 
       const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 5, 4000);
@@ -2217,7 +2244,13 @@
       const groundPanCurrentPoint = new THREE.Vector3();
       const groundPanDelta = new THREE.Vector3();
       const activeTouchPointerIds = new Set();
+      const activeTouchPointers = new Map();
+      const touchPinchStartCameraPosition = new THREE.Vector3();
+      const touchPinchStartTarget = new THREE.Vector3();
+      const touchPinchOffset = new THREE.Vector3();
       let groundPanState = null;
+      let touchPinchState = null;
+      let suppressCanvasTapUntil = 0;
 
       function clampGroundPanToGrid() {
         const minX = Math.min(camera.position.x, controls.target.x);
@@ -2264,12 +2297,46 @@
         return groundPanRaycaster.ray.intersectPlane(groundPanPlane, out);
       }
 
+      function clearTouchHoverState() {
+        let changed = false;
+        if (hoveredMesh) {
+          hoveredMesh = null;
+          changed = true;
+        }
+        if (actionMenuState?.previewTier) {
+          actionMenuState.previewTier = null;
+          hoveredActionIconTier = null;
+          if (boothActionMenu) boothActionMenu.dataset.preview = '';
+          menuNodes.forEach((node) => node.classList.remove('is-active'));
+          changed = true;
+        }
+        if (changed) {
+          refreshMaterials();
+          refreshInfoPanel();
+          overlayDirty = true;
+        }
+      }
+
+      function isTouchNavigationActive() {
+        return !!touchPinchState || (groundPanState?.pointerType === 'touch') || activeTouchPointerIds.size > 0;
+      }
+
+      function updateTouchPointer(event) {
+        activeTouchPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      }
+
       function beginGroundPlanePan(event) {
         if (!intersectGroundPlaneAtClient(event.clientX, event.clientY, groundPanLastPoint)) return false;
         groundPanState = {
           pointerId: event.pointerId,
-          pointerType: event.pointerType || 'mouse'
+          pointerType: event.pointerType || 'mouse',
+          startClientX: event.clientX,
+          startClientY: event.clientY,
+          moved: false
         };
+        if (event.pointerType === 'touch' || event.pointerType === 'pen' || event.pointerType === 'mouse') {
+          try { renderer.domElement.setPointerCapture?.(event.pointerId); } catch (err) {}
+        }
         controls.enabled = false;
         return true;
       }
@@ -2277,6 +2344,18 @@
       function updateGroundPlanePan(event) {
         if (!groundPanState || event.pointerId !== groundPanState.pointerId) return false;
         if (!intersectGroundPlaneAtClient(event.clientX, event.clientY, groundPanCurrentPoint)) return false;
+        const dragDistance = Math.hypot(event.clientX - groundPanState.startClientX, event.clientY - groundPanState.startClientY);
+        if (groundPanState.pointerType === 'touch' && dragDistance < 3) return true;
+        if (dragDistance > TAP_THRESHOLD) {
+          groundPanState.moved = true;
+          suppressCanvasTapUntil = performance.now() + 360;
+          if (pointerDownState?.pointerId === event.pointerId) pointerDownState = null;
+          if (groundPanState.pointerType === 'touch') {
+            if (actionMenuState || actionIconSprites.length) closeActionMenu();
+            controls.enabled = false;
+            clearTouchHoverState();
+          }
+        }
         groundPanDelta.copy(groundPanLastPoint).sub(groundPanCurrentPoint);
         camera.position.add(groundPanDelta);
         controls.target.add(groundPanDelta);
@@ -2291,7 +2370,65 @@
         if (!groundPanState) return;
         if (pointerId !== null && groundPanState.pointerId !== pointerId) return;
         groundPanState = null;
-        controls.enabled = true;
+        controls.enabled = !touchPinchState;
+      }
+
+      function touchPointsArray() {
+        return Array.from(activeTouchPointers.values());
+      }
+
+      function beginTouchPinch() {
+        const points = touchPointsArray();
+        if (points.length < 2) return false;
+        const [a, b] = points;
+        const distance = Math.hypot(a.x - b.x, a.y - b.y);
+        if (!Number.isFinite(distance) || distance < 2) return false;
+        touchPinchStartCameraPosition.copy(camera.position);
+        touchPinchStartTarget.copy(controls.target);
+        touchPinchState = {
+          startDistance: distance,
+          moved: false
+        };
+        controls.enabled = false;
+        suppressCanvasTapUntil = performance.now() + 420;
+        pointerDownState = null;
+        closeActionMenu();
+        controls.enabled = false;
+        clearTouchHoverState();
+        return true;
+      }
+
+      function updateTouchPinch() {
+        if (!touchPinchState || activeTouchPointers.size < 2) return false;
+        const points = touchPointsArray();
+        const [a, b] = points;
+        const distance = Math.hypot(a.x - b.x, a.y - b.y);
+        if (!Number.isFinite(distance) || distance < 2) return false;
+        const ratio = Math.max(0.18, Math.min(5.5, touchPinchState.startDistance / distance));
+        touchPinchOffset.copy(touchPinchStartCameraPosition).sub(touchPinchStartTarget).multiplyScalar(ratio);
+        const offsetLength = touchPinchOffset.length();
+        if (offsetLength > controls.maxDistance) touchPinchOffset.setLength(controls.maxDistance);
+        if (offsetLength < controls.minDistance) touchPinchOffset.setLength(controls.minDistance);
+        camera.position.copy(touchPinchStartTarget).add(touchPinchOffset);
+        controls.target.copy(touchPinchStartTarget);
+        clampGroundPanToGrid();
+        controls.update();
+        touchPinchState.moved = true;
+        suppressCanvasTapUntil = performance.now() + 420;
+        pointerDownState = null;
+        clearTouchHoverState();
+        overlayDirty = true;
+        return true;
+      }
+
+      function endTouchPinchIfNeeded() {
+        if (!touchPinchState || activeTouchPointers.size >= 2) return;
+        touchPinchState = null;
+        controls.enabled = !groundPanState;
+        if (activeTouchPointers.size === 1) {
+          const [[pointerId, point]] = activeTouchPointers.entries();
+          beginGroundPlanePan({ pointerId, pointerType: 'touch', clientX: point.x, clientY: point.y });
+        }
       }
 
       const ambient = new THREE.AmbientLight(0xfff1f7, 0.74);
@@ -5525,7 +5662,9 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       let actionIconGroup = null;
       let hoveredActionIconTier = null;
       let isDrawerOpen = false;
+      let drawerPointerStartX = null;
       let drawerPointerStartY = null;
+      let drawerSwipeSuppressClickUntil = 0;
       const SWIPE_THRESHOLD = 44;
       const TAP_THRESHOLD = 14;
       const MENU_DEADZONE = 28;
@@ -6199,6 +6338,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       }
 
       function onDrawerItemPointerDown(event, button, item, tier, index) {
+        if (event.pointerType === 'touch') return;
         if (event.button !== undefined && event.button !== 0) return;
         if (drawerDragState) return;
         const startX = event.clientX;
@@ -6342,6 +6482,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
             <div class="drawer-item-name">${escapeHtml(item.boothName)}</div>
             <div class="drawer-item-meta">${escapeHtml(item.category)}</div>
           `;
+          button.addEventListener('pointerdown', (event) => onDrawerItemPointerDown(event, button, item, tier, index));
           button.addEventListener('click', () => {
             if (performance.now() < drawerDragSuppressUntil) return;
             setPinnedMesh(item.mesh);
@@ -6974,17 +7115,37 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         applyTierSelection(pinnedMesh, 'secondary', { toastMessage: `${normalizeBoothId(pinnedMesh.userData.id)} を気になるに設定しました` });
       });
 
-      drawerPeek?.addEventListener('click', toggleDrawer);
+      drawerPeek?.addEventListener('click', (e) => {
+        if (performance.now() < drawerSwipeSuppressClickUntil) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        toggleDrawer();
+      });
       drawerPeek?.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDrawer(); } });
-      drawerPeek?.addEventListener('pointerdown', (e) => { drawerPointerStartY = e.clientY; });
+      drawerPeek?.addEventListener('pointerdown', (e) => {
+        drawerPointerStartX = e.clientX;
+        drawerPointerStartY = e.clientY;
+      });
       drawerPeek?.addEventListener('pointerup', (e) => {
-        if (drawerPointerStartY == null) return;
+        if (drawerPointerStartY == null || drawerPointerStartX == null) return;
+        const dx = e.clientX - drawerPointerStartX;
         const dy = e.clientY - drawerPointerStartY;
-        if (dy <= -24) setDrawerOpen(true);
-        else if (dy >= 24) setDrawerOpen(false);
+        if (Math.abs(dy) >= 24 && Math.abs(dy) > Math.abs(dx)) {
+          if (dy < 0) setDrawerOpen(true);
+          else setDrawerOpen(false);
+          drawerSwipeSuppressClickUntil = performance.now() + 360;
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        drawerPointerStartX = null;
         drawerPointerStartY = null;
       });
-      drawerPeek?.addEventListener('pointercancel', () => { drawerPointerStartY = null; });
+      drawerPeek?.addEventListener('pointercancel', () => {
+        drawerPointerStartX = null;
+        drawerPointerStartY = null;
+      });
 
       boothSearchInput?.addEventListener('input', (event) => {
         syncSearchIdleState();
@@ -7079,16 +7240,20 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
 
       renderer.domElement.addEventListener('pointerdown', (event) => {
         if (event.pointerType === 'touch') {
+          event.preventDefault();
           activeTouchPointerIds.add(event.pointerId);
+          updateTouchPointer(event);
+          try { renderer.domElement.setPointerCapture?.(event.pointerId); } catch (err) {}
           if (activeTouchPointerIds.size >= 2) {
             endGroundPlanePan();
+            beginTouchPinch();
           }
         }
 
         applyOrbitMouseMapping(event);
 
         const isPrimaryMousePan = event.pointerType === 'mouse' && event.button === 0 && !(event.metaKey || event.ctrlKey);
-        const isSingleFingerPan = event.pointerType === 'touch' && activeTouchPointerIds.size === 1;
+        const isSingleFingerPan = event.pointerType === 'touch' && activeTouchPointerIds.size === 1 && !touchPinchState;
         const isPenPan = event.pointerType === 'pen' && event.button === 0 && !(event.metaKey || event.ctrlKey);
 
         if (isPrimaryMousePan || isSingleFingerPan || isPenPan) {
@@ -7097,7 +7262,17 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       }, true);
 
       renderer.domElement.addEventListener('pointermove', (event) => {
+        if (event.pointerType === 'touch') {
+          if (!activeTouchPointerIds.has(event.pointerId)) return;
+          event.preventDefault();
+          updateTouchPointer(event);
+          if (touchPinchState && updateTouchPinch()) {
+            needsRaycast = false;
+            return;
+          }
+        }
         if (groundPanState && updateGroundPlanePan(event)) {
+          if (event.pointerType === 'touch') event.preventDefault();
           needsRaycast = false;
         }
       }, true);
@@ -7105,6 +7280,9 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       window.addEventListener('pointerup', (event) => {
         if (event.pointerType === 'touch') {
           activeTouchPointerIds.delete(event.pointerId);
+          activeTouchPointers.delete(event.pointerId);
+          endTouchPinchIfNeeded();
+          try { renderer.domElement.releasePointerCapture?.(event.pointerId); } catch (err) {}
         }
         endGroundPlanePan(event.pointerId);
         applyOrbitMouseMapping();
@@ -7113,6 +7291,9 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       window.addEventListener('pointercancel', (event) => {
         if (event.pointerType === 'touch') {
           activeTouchPointerIds.delete(event.pointerId);
+          activeTouchPointers.delete(event.pointerId);
+          endTouchPinchIfNeeded();
+          try { renderer.domElement.releasePointerCapture?.(event.pointerId); } catch (err) {}
         }
         endGroundPlanePan(event.pointerId);
         applyOrbitMouseMapping();
@@ -7120,7 +7301,10 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
 
       window.addEventListener('blur', () => {
         activeTouchPointerIds.clear();
+        activeTouchPointers.clear();
+        touchPinchState = null;
         endGroundPlanePan();
+        controls.enabled = true;
         applyOrbitMouseMapping();
       });
 
@@ -7141,8 +7325,10 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
 
       renderer.domElement.addEventListener('pointerdown', (event) => {
         if (event.button !== 0 && event.pointerType !== 'touch' && event.pointerType !== 'pen') return;
+        if (event.pointerType === 'touch' && (activeTouchPointerIds.size !== 1 || touchPinchState)) return;
         pointerDownState = {
           pointerId: event.pointerId,
+          pointerType: event.pointerType || 'mouse',
           startX: event.clientX,
           startY: event.clientY,
           mesh: raycastBoothAtClient(event.clientX, event.clientY)
@@ -7150,6 +7336,12 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       });
 
       renderer.domElement.addEventListener('pointermove', (event) => {
+        if (event.pointerType === 'touch' && isTouchNavigationActive()) {
+          event.preventDefault();
+          needsRaycast = false;
+          clearTouchHoverState();
+          return;
+        }
         const hoveredIcon = raycastActionIconAtClient(event.clientX, event.clientY);
         const nextPreviewTier = hoveredIcon?.userData?.tier || null;
         if (actionMenuState && nextPreviewTier !== (actionMenuState.previewTier || null)) {
@@ -7174,6 +7366,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         const state = pointerDownState;
         pointerDownState = null;
         if (!state || event.pointerId !== state.pointerId) return;
+        if (state.pointerType === 'touch' && performance.now() < suppressCanvasTapUntil) return;
         const dx = event.clientX - state.startX;
         const dy = event.clientY - state.startY;
         const dist = Math.hypot(dx, dy);
@@ -7226,7 +7419,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       });
 
       function doRaycast() {
-        if (gestureState || menuGesture) return;
+        if (gestureState || menuGesture || isTouchNavigationActive()) return;
         const hoveredIcon = raycastActionIconAtClient(
           ((pointer.x + 1) * 0.5) * renderer.domElement.getBoundingClientRect().width + renderer.domElement.getBoundingClientRect().left,
           ((-pointer.y + 1) * 0.5) * renderer.domElement.getBoundingClientRect().height + renderer.domElement.getBoundingClientRect().top
