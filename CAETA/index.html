@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CAETA | 文学フリマ東京42 3Dブース配置図</title>
+  <title>CAETA | 文学フリマ東京42 3Dデジタルツイン</title>
   <style>
     :root {
       --bg: #f7f5fb;
@@ -2313,6 +2313,60 @@
         touch-action: manipulation !important;
       }
 
+      body.is-mobile-framed .mobile-frame-heading,
+      body.is-mobile-framed .mobile-frame-title,
+      body.is-mobile-framed .mobile-frame-subtitle,
+      body.is-mobile-framed .mobile-map-label {
+        display: none !important;
+      }
+
+      body.is-mobile-framed #mobileListFrame {
+        display: flex;
+        flex-direction: column;
+        max-height: min(58dvh, 520px);
+        min-height: 0;
+        overflow: hidden;
+      }
+      body.is-mobile-framed #mobileListFrameBody {
+        display: block;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+      }
+      body.is-mobile-framed #mobileListFrameBody #bottomDrawer {
+        min-height: 0;
+      }
+
+      body.is-mobile-framed #mobileMapLegendSlot {
+        min-height: 0;
+      }
+      body.is-mobile-framed #categoryLegend.is-visible {
+        display: flex !important;
+        flex-direction: column;
+      }
+      body.is-mobile-framed #categoryLegend {
+        max-height: min(34dvh, 300px) !important;
+        overflow: hidden !important;
+        min-height: 0;
+      }
+      body.is-mobile-framed #categoryLegendHeader {
+        flex: 0 0 auto;
+      }
+      body.is-mobile-framed #categoryLegendList {
+        flex: 1 1 auto;
+        min-height: 0;
+        max-height: min(24dvh, 220px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+      }
+
       body.is-mobile-framed #toast {
         position: fixed !important;
         left: 50% !important;
@@ -2365,6 +2419,15 @@
       body.is-mobile-framed #drawerUtilityBar,
       body.is-mobile-framed #infoActions {
         grid-template-columns: 1fr;
+      }
+      body.is-mobile-framed #mobileListFrame {
+        max-height: min(56dvh, 480px);
+      }
+      body.is-mobile-framed #categoryLegend {
+        max-height: min(30dvh, 260px) !important;
+      }
+      body.is-mobile-framed #categoryLegendList {
+        max-height: min(21dvh, 190px) !important;
       }
     }
 
@@ -2807,19 +2870,13 @@
       }
 
       mobileFrameLayout = createMobileFrameElement('main', 'mobileFrameLayout', 'mobile-frame-layout');
-      mobileFrameLayout.setAttribute('aria-label', '文学フリマ東京42 3Dブース地図');
+      mobileFrameLayout.setAttribute('aria-label', '文フリブースマップ');
 
       const mapFrame = createMobileFrameElement('section', 'mobileMapFrame', 'mobile-frame mobile-map-frame');
-      mapFrame.setAttribute('aria-labelledby', 'mobileMapFrameTitle');
-      const mapHeading = createMobileFrameElement('div', null, 'mobile-frame-heading');
-      const mapHeadingTitleWrap = createMobileFrameElement('div');
-      mapHeadingTitleWrap.append(mapHeadingTitle, mapHeadingSub);
-      mapHeading.appendChild(mapHeadingTitleWrap);
+      mapFrame.setAttribute('aria-label', 'ブース配置図');
 
       const mapHeader = createMobileFrameElement('div', 'mobileMapHeader', 'mobile-map-header');
-      const mapLabel = createMobileFrameElement('div', null, 'mobile-map-label', 'ブース配置図');
       if (brand) mapHeader.appendChild(brand);
-      mapHeader.appendChild(mapLabel);
 
       const mapControls = createMobileFrameElement('div', 'mobileMapControls', 'mobile-map-controls');
       if (actionDock) mapControls.appendChild(actionDock);
@@ -2827,31 +2884,19 @@
       mobileMapViewport = createMobileFrameElement('div', 'mobileMapViewport', 'mobile-map-viewport');
       const mapLegendSlot = createMobileFrameElement('div', 'mobileMapLegendSlot', 'mobile-map-legend-slot');
       if (categoryLegend) mapLegendSlot.appendChild(categoryLegend);
-      mapFrame.append(mapHeading, mapHeader, mapControls, mobileMapViewport, mapLegendSlot);
+      mapFrame.append(mapHeader, mapControls, mobileMapViewport, mapLegendSlot);
 
       const infoFrame = createMobileFrameElement('section', 'mobileInfoFrame', 'mobile-frame mobile-info-frame');
-      infoFrame.setAttribute('aria-labelledby', 'mobileInfoFrameTitle');
-      const infoHeading = createMobileFrameElement('div', null, 'mobile-frame-heading');
-      const infoHeadingWrap = createMobileFrameElement('div');
-      const infoTitle = createMobileFrameElement('h2', 'mobileInfoFrameTitle', 'mobile-frame-title', 'ブース情報');
-      const infoSub = createMobileFrameElement('div', null, 'mobile-frame-subtitle', '検索結果と選択中ブースの詳細を表示します');
-      infoHeadingWrap.append(infoTitle, infoSub);
-      infoHeading.appendChild(infoHeadingWrap);
+      infoFrame.setAttribute('aria-label', 'ブース情報');
       const infoBody = createMobileFrameElement('div', 'mobileInfoFrameBody', 'mobile-frame-body');
       if (infoPanel) infoBody.appendChild(infoPanel);
-      infoFrame.append(infoHeading, infoBody);
+      infoFrame.append(infoBody);
 
       const listFrame = createMobileFrameElement('section', 'mobileListFrame', 'mobile-frame mobile-list-frame');
-      listFrame.setAttribute('aria-labelledby', 'mobileListFrameTitle');
-      const listHeading = createMobileFrameElement('div', null, 'mobile-frame-heading');
-      const listHeadingWrap = createMobileFrameElement('div');
-      const listTitle = createMobileFrameElement('h2', 'mobileListFrameTitle', 'mobile-frame-title', '最優先・気になるリスト');
-      const listSub = createMobileFrameElement('div', null, 'mobile-frame-subtitle', '巡回ルート順で確認できます');
-      listHeadingWrap.append(listTitle, listSub);
-      listHeading.appendChild(listHeadingWrap);
+      listFrame.setAttribute('aria-label', '選択リスト');
       const listBody = createMobileFrameElement('div', 'mobileListFrameBody', 'mobile-frame-body');
       if (bottomDrawer) listBody.appendChild(bottomDrawer);
-      listFrame.append(listHeading, listBody);
+      listFrame.append(listBody);
 
       const anchor = loadingOverlay && loadingOverlay.parentNode === app ? loadingOverlay.nextSibling : app.firstChild;
       app.insertBefore(mobileFrameLayout, anchor);
