@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CAETA | 文学フリマ東京42 3Dデジタルツイン</title>
+  <title>CAETA | 文学フリマ東京42 3Dブース図</title>
   <style>
     :root {
       --bg: #f7f5fb;
@@ -5272,6 +5272,232 @@
   }
 </style>
 
+
+
+<style id="v78-overrides">
+  /* v78: smoother mobile map gestures and restore 3D-pane neumorphic framing */
+  @media (max-width: 900px) {
+    body.is-mobile-framed #mobileMapFrame {
+      padding: 8px !important;
+      border: 1px solid var(--neo-light-stroke) !important;
+      border-radius: 24px !important;
+      background: var(--neo-light-surface) !important;
+      box-shadow:
+        -8px -8px 18px var(--neo-light-highlight),
+        10px 10px 22px var(--neo-light-shadow) !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileMapFrame {
+      background: var(--neo-light-surface) !important;
+      box-shadow:
+        -7px -7px 16px var(--neo-light-highlight),
+        10px 10px 24px var(--neo-light-shadow-strong) !important;
+    }
+
+    body.is-mobile-framed #mobileMapHeader,
+    body.is-mobile-framed #mobileMapControls,
+    body.is-mobile-framed #mobileMapLegendSlot {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      border-radius: 18px !important;
+      overflow: visible !important;
+    }
+
+    body.is-mobile-framed #mobileMapViewport {
+      margin: 8px 0 0 !important;
+      border-radius: 22px !important;
+      border: 1px solid var(--neo-light-stroke) !important;
+      background: var(--neo-light-surface-soft) !important;
+      box-shadow:
+        inset 3px 3px 10px rgba(142,152,176,0.22),
+        inset -3px -3px 10px rgba(255,255,255,0.70),
+        -5px -5px 12px var(--neo-light-highlight),
+        7px 7px 15px var(--neo-light-shadow) !important;
+      overflow: hidden !important;
+      isolation: isolate !important;
+      touch-action: none !important;
+      -webkit-user-select: none !important;
+      user-select: none !important;
+      box-sizing: border-box !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileMapViewport {
+      background: var(--neo-light-surface-soft) !important;
+      box-shadow:
+        inset 3px 3px 10px rgba(0,0,0,0.46),
+        inset -3px -3px 9px rgba(255,255,255,0.035),
+        -5px -5px 12px var(--neo-light-highlight),
+        8px 8px 18px var(--neo-light-shadow-strong) !important;
+    }
+
+    body.is-mobile-framed #mobileMapViewport > canvas:not(#labelCanvas),
+    body.is-mobile-framed #mobileMapViewport canvas {
+      border-radius: inherit !important;
+      touch-action: none !important;
+      -webkit-user-select: none !important;
+      user-select: none !important;
+      will-change: transform !important;
+    }
+  }
+</style>
+
+
+<style id="v79-mobile-pane-visual-restore">
+  /* v79: keep v78 mobile gestures, but restore the previous mobile 3D pane structure.
+     Only the outer light/shadow around the 3D pane is made neumorphic. */
+  @media (max-width: 900px) {
+    body.is-mobile-framed #mobileMapFrame {
+      padding: 0 !important;
+      overflow: hidden !important;
+      border-radius: 22px !important;
+      border: 1px solid var(--line) !important;
+      background: var(--panel) !important;
+      box-shadow:
+        -10px -10px 24px rgba(255,255,255,0.54),
+        12px 12px 28px rgba(120,132,160,0.24),
+        0 14px 38px rgba(36,24,56,0.10) !important;
+      backdrop-filter: blur(22px) saturate(1.12) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(1.12) !important;
+      box-sizing: border-box !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileMapFrame {
+      border-color: var(--line) !important;
+      background: var(--panel) !important;
+      box-shadow:
+        -8px -8px 18px rgba(255,255,255,0.035),
+        12px 12px 30px rgba(0,0,0,0.44),
+        0 18px 44px rgba(0,0,0,0.30) !important;
+    }
+
+    body.is-mobile-framed #mobileMapHeader {
+      margin: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 10px !important;
+      padding: 12px 14px 10px !important;
+      border-radius: 0 !important;
+      border: 0 !important;
+      border-bottom: 1px solid var(--line) !important;
+      background: var(--surface-muted) !important;
+      box-shadow: none !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileMapControls {
+      margin: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 8px !important;
+      padding: 8px 10px !important;
+      border-radius: 0 !important;
+      border: 0 !important;
+      border-bottom: 1px solid var(--line) !important;
+      background: var(--surface-soft) !important;
+      box-shadow: none !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileMapLegendSlot {
+      margin: 0 !important;
+      display: block !important;
+      border-radius: 0 !important;
+      border: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileMapViewport {
+      margin: 0 !important;
+      display: block !important;
+      position: relative !important;
+      width: 100% !important;
+      height: clamp(320px, 56dvh, 520px) !important;
+      min-height: 320px !important;
+      border-radius: 0 !important;
+      border: 0 !important;
+      background: var(--app-bg) !important;
+      box-shadow: none !important;
+      overflow: hidden !important;
+      isolation: auto !important;
+      touch-action: none !important;
+      -webkit-user-select: none !important;
+      user-select: none !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileMapViewport > canvas:not(#labelCanvas),
+    body.is-mobile-framed #mobileMapViewport canvas {
+      border-radius: 0 !important;
+      touch-action: none !important;
+      -webkit-user-select: none !important;
+      user-select: none !important;
+      will-change: auto !important;
+    }
+  }
+
+  @media (max-width: 900px) and (max-height: 680px) {
+    body.is-mobile-framed #mobileMapViewport {
+      height: clamp(300px, 52dvh, 430px) !important;
+      min-height: 300px !important;
+    }
+  }
+</style>
+
+
+<style id="v80-about-content-notice-overrides">
+  /* v80: about modal notice and slightly wider inner padding */
+  #aboutDialog {
+    padding-left: 34px !important;
+    padding-right: 34px !important;
+  }
+
+  #aboutContent .about-separator {
+    height: 1px;
+    width: 100%;
+    margin: 26px 0 22px;
+    background: linear-gradient(90deg, transparent, rgba(93, 94, 114, 0.34), transparent);
+  }
+
+  html[data-theme='dark'] #aboutContent .about-separator {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  }
+
+  #aboutContent .about-notice {
+    color: var(--hint);
+  }
+
+  #aboutContent .about-notice .body {
+    font-size: 13px;
+    line-height: 1.95;
+    color: var(--hint);
+    letter-spacing: -0.01em;
+  }
+
+  #aboutContent .about-notice p + p {
+    margin-top: 16px;
+  }
+
+  @media (max-width: 900px) {
+    #aboutDialog {
+      padding-left: 26px !important;
+      padding-right: 26px !important;
+    }
+
+    #aboutContent .about-separator {
+      margin: 24px 0 20px;
+    }
+  }
+</style>
+
 </head>
 <body>
   <div id="app">
@@ -5470,6 +5696,20 @@
 そんな景色を見てみたい。</p>
 
           <div class="signature">習作派</div>
+
+          <div class="about-separator" aria-hidden="true"></div>
+          <div class="about-notice">
+            <p class="body">CAETA（Creator-Audience Event Topology Assistant）は、文学フリマ東京42出展サークル・習作派によるオープンソースの「同人アプリ」です。
+あくまで文学フリマ東京42を楽しむことを目的に作成した「同人アプリ」ですので、不具合修正については可能な限り対応を行いますが、確実な動作を保証するものではありません。</p>
+
+            <p class="body">CAETAおよび習作派は、そのコードのいかなる内容についても著作権を主張しません。
+文学フリマを楽しむことを目的としたあらゆる形態での改変・再配布を歓迎します。
+ただし、掲載されているブースやサークル情報についてはその限りではありません。
+文学フリマ事務局による規約に従ってください。</p>
+
+            <p class="body">また、掲載されている情報は文学フリマ東京42公式WEBカタログ（2026年4月25日時点）のものです。
+最新の正確な情報については、ご自身で文学フリマ公式WEBカタログや各サークルの発表をご覧ください。</p>
+          </div>
         </div>
       </div>
     </div>
@@ -5945,7 +6185,7 @@
       scene.background = new THREE.Color(0x11141c);
 
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobileFrameViewport() ? 1.15 : 1.5));
       const initialRenderSize = currentRendererViewportSize();
       renderer.setSize(initialRenderSize.width, initialRenderSize.height);
       renderer.shadowMap.enabled = true;
@@ -5988,7 +6228,7 @@
         const size = currentRendererViewportSize();
         camera.aspect = size.width / size.height;
         camera.updateProjectionMatrix();
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobileFrameViewport() ? 1.15 : 1.5));
         renderer.setSize(size.width, size.height);
         if (labelCtx) resizeLabelCanvas();
         overlayDirty = true;
@@ -6029,6 +6269,17 @@
       const touchPinchStartCameraPosition = new THREE.Vector3();
       const touchPinchStartTarget = new THREE.Vector3();
       const touchPinchOffset = new THREE.Vector3();
+      const touchPinchStartSpherical = new THREE.Spherical();
+      const touchPinchWorkingSpherical = new THREE.Spherical();
+      const touchOrbitOffset = new THREE.Vector3();
+      const touchCameraOffset = new THREE.Vector3();
+      const touchPanRight = new THREE.Vector3();
+      const touchPanUp = new THREE.Vector3();
+      const touchPanDelta = new THREE.Vector3();
+      const TOUCH_ROTATE_AZIMUTH_SPEED = Math.PI * 0.92;
+      const TOUCH_ROTATE_POLAR_SPEED = Math.PI * 0.72;
+      const TOUCH_MIN_POLAR = 0.16;
+      const TOUCH_MAX_POLAR = Math.PI * 0.47;
       let groundPanState = null;
       let touchPinchState = null;
       let suppressCanvasTapUntil = 0;
@@ -6113,6 +6364,8 @@
           pointerType: event.pointerType || 'mouse',
           startClientX: event.clientX,
           startClientY: event.clientY,
+          lastClientX: event.clientX,
+          lastClientY: event.clientY,
           moved: false
         };
         if (event.pointerType === 'touch' || event.pointerType === 'pen' || event.pointerType === 'mouse') {
@@ -6121,10 +6374,8 @@
         controls.enabled = false;
         return true;
       }
-
       function updateGroundPlanePan(event) {
         if (!groundPanState || event.pointerId !== groundPanState.pointerId) return false;
-        if (!intersectGroundPlaneAtClient(event.clientX, event.clientY, groundPanCurrentPoint)) return false;
         const dragDistance = Math.hypot(event.clientX - groundPanState.startClientX, event.clientY - groundPanState.startClientY);
         if (groundPanState.pointerType === 'touch' && dragDistance < 3) return true;
         if (dragDistance > TAP_THRESHOLD) {
@@ -6137,6 +6388,44 @@
             clearTouchHoverState();
           }
         }
+
+        if (groundPanState.pointerType === 'touch') {
+          const dx = event.clientX - groundPanState.lastClientX;
+          const dy = event.clientY - groundPanState.lastClientY;
+          groundPanState.lastClientX = event.clientX;
+          groundPanState.lastClientY = event.clientY;
+          if (Math.abs(dx) < 0.01 && Math.abs(dy) < 0.01) return true;
+
+          const rect = renderer.domElement.getBoundingClientRect();
+          const viewportHeight = Math.max(1, rect.height || window.innerHeight || 1);
+          const cameraDistance = Math.max(controls.minDistance, camera.position.distanceTo(controls.target));
+          const panScale = (2 * cameraDistance * Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5))) / viewportHeight;
+
+          touchPanRight.setFromMatrixColumn(camera.matrix, 0);
+          touchPanRight.y = 0;
+          if (touchPanRight.lengthSq() < 0.000001) touchPanRight.set(1, 0, 0);
+          else touchPanRight.normalize();
+
+          touchPanUp.setFromMatrixColumn(camera.matrix, 1);
+          touchPanUp.y = 0;
+          if (touchPanUp.lengthSq() < 0.000001) {
+            touchPanUp.setFromMatrixColumn(camera.matrix, 2).multiplyScalar(-1);
+            touchPanUp.y = 0;
+          }
+          if (touchPanUp.lengthSq() < 0.000001) touchPanUp.set(0, 0, 1);
+          else touchPanUp.normalize();
+
+          touchPanDelta.copy(touchPanRight).multiplyScalar(-dx * panScale);
+          touchPanDelta.addScaledVector(touchPanUp, dy * panScale);
+          camera.position.add(touchPanDelta);
+          controls.target.add(touchPanDelta);
+          clampGroundPanToGrid();
+          controls.update();
+          overlayDirty = true;
+          return true;
+        }
+
+        if (!intersectGroundPlaneAtClient(event.clientX, event.clientY, groundPanCurrentPoint)) return false;
         groundPanDelta.copy(groundPanLastPoint).sub(groundPanCurrentPoint);
         camera.position.add(groundPanDelta);
         controls.target.add(groundPanDelta);
@@ -6146,7 +6435,6 @@
         overlayDirty = true;
         return true;
       }
-
       function endGroundPlanePan(pointerId = null) {
         if (!groundPanState) return;
         if (pointerId !== null && groundPanState.pointerId !== pointerId) return;
@@ -6164,10 +6452,16 @@
         const [a, b] = points;
         const distance = Math.hypot(a.x - b.x, a.y - b.y);
         if (!Number.isFinite(distance) || distance < 2) return false;
+        const midX = (a.x + b.x) * 0.5;
+        const midY = (a.y + b.y) * 0.5;
         touchPinchStartCameraPosition.copy(camera.position);
         touchPinchStartTarget.copy(controls.target);
+        touchPinchOffset.copy(touchPinchStartCameraPosition).sub(touchPinchStartTarget);
+        touchPinchStartSpherical.setFromVector3(touchPinchOffset);
         touchPinchState = {
           startDistance: distance,
+          startMidX: midX,
+          startMidY: midY,
           moved: false
         };
         controls.enabled = false;
@@ -6178,20 +6472,27 @@
         clearTouchHoverState();
         return true;
       }
-
       function updateTouchPinch() {
         if (!touchPinchState || activeTouchPointers.size < 2) return false;
         const points = touchPointsArray();
         const [a, b] = points;
         const distance = Math.hypot(a.x - b.x, a.y - b.y);
         if (!Number.isFinite(distance) || distance < 2) return false;
+        const midX = (a.x + b.x) * 0.5;
+        const midY = (a.y + b.y) * 0.5;
+        const rect = renderer.domElement.getBoundingClientRect();
+        const width = Math.max(1, rect.width || window.innerWidth || 1);
+        const height = Math.max(1, rect.height || window.innerHeight || 1);
         const ratio = Math.max(0.18, Math.min(5.5, touchPinchState.startDistance / distance));
-        touchPinchOffset.copy(touchPinchStartCameraPosition).sub(touchPinchStartTarget).multiplyScalar(ratio);
-        const offsetLength = touchPinchOffset.length();
-        if (offsetLength > controls.maxDistance) touchPinchOffset.setLength(controls.maxDistance);
-        if (offsetLength < controls.minDistance) touchPinchOffset.setLength(controls.minDistance);
-        camera.position.copy(touchPinchStartTarget).add(touchPinchOffset);
+        const radius = THREE.MathUtils.clamp(touchPinchStartSpherical.radius * ratio, controls.minDistance, controls.maxDistance);
+        const deltaTheta = ((midX - touchPinchState.startMidX) / width) * TOUCH_ROTATE_AZIMUTH_SPEED;
+        const deltaPhi = ((midY - touchPinchState.startMidY) / height) * TOUCH_ROTATE_POLAR_SPEED;
+        const nextTheta = touchPinchStartSpherical.theta - deltaTheta;
+        const nextPhi = THREE.MathUtils.clamp(touchPinchStartSpherical.phi - deltaPhi, TOUCH_MIN_POLAR, TOUCH_MAX_POLAR);
+        touchPinchWorkingSpherical.set(radius, nextPhi, nextTheta);
+        touchOrbitOffset.setFromSpherical(touchPinchWorkingSpherical);
         controls.target.copy(touchPinchStartTarget);
+        camera.position.copy(touchPinchStartTarget).add(touchOrbitOffset);
         clampGroundPanToGrid();
         controls.update();
         touchPinchState.moved = true;
@@ -6201,7 +6502,6 @@
         overlayDirty = true;
         return true;
       }
-
       function endTouchPinchIfNeeded() {
         if (!touchPinchState || activeTouchPointers.size >= 2) return;
         touchPinchState = null;
