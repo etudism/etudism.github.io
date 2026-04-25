@@ -5091,6 +5091,187 @@
   }
 </style>
 
+
+<style id="v77-overrides">
+  /* v77: robust mobile booth-info layout */
+  @media (max-width: 900px) {
+    #integratedInfoTopPane,
+    body.is-mobile-framed #integratedInfoTopPane {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+
+    #integratedInfoTopScroll,
+    body.is-mobile-framed #integratedInfoTopScroll {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      height: auto !important;
+      min-height: 0 !important;
+      box-sizing: border-box !important;
+      overflow: visible !important;
+      padding: 14px !important;
+    }
+
+    #placeholder,
+    #detail,
+    body.is-mobile-framed #placeholder,
+    body.is-mobile-framed #detail {
+      min-height: 0 !important;
+      height: auto !important;
+      max-height: none !important;
+    }
+
+    #detail,
+    body.is-mobile-framed #detail {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
+    }
+
+    #boothId,
+    #boothName,
+    #boothMeta,
+    #boothDesc,
+    body.is-mobile-framed #boothId,
+    body.is-mobile-framed #boothName,
+    body.is-mobile-framed #boothMeta,
+    body.is-mobile-framed #boothDesc {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+      writing-mode: horizontal-tb !important;
+      text-orientation: mixed !important;
+      overflow-wrap: anywhere !important;
+      word-break: normal !important;
+    }
+
+    #boothId,
+    body.is-mobile-framed #boothId {
+      margin-top: 0 !important;
+      font-size: clamp(26px, 8vw, 34px) !important;
+      line-height: 0.98 !important;
+      letter-spacing: -0.045em !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+
+    #boothName,
+    body.is-mobile-framed #boothName {
+      margin-top: 8px !important;
+      font-size: clamp(16px, 4.8vw, 20px) !important;
+      line-height: 1.35 !important;
+      white-space: normal !important;
+    }
+
+    #boothMeta,
+    body.is-mobile-framed #boothMeta {
+      margin-top: 10px !important;
+      font-size: 12px !important;
+      line-height: 1.55 !important;
+      white-space: normal !important;
+      color: var(--muted) !important;
+    }
+
+    #boothDesc,
+    body.is-mobile-framed #boothDesc {
+      margin-top: 12px !important;
+      padding-top: 12px !important;
+      border-top: 1px solid var(--line) !important;
+      font-size: 12.5px !important;
+      line-height: 1.7 !important;
+      white-space: normal !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 6 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+    }
+
+    #linkRow,
+    body.is-mobile-framed #linkRow {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      margin-top: 14px !important;
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)) !important;
+      gap: 8px !important;
+      overflow: visible !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    #linkRow a,
+    #desktopSplitLayout > #integratedInfoTopPane #linkRow a,
+    body.is-mobile-framed #linkRow a {
+      width: auto !important;
+      min-width: 0 !important;
+      max-width: none !important;
+      flex: initial !important;
+      height: 38px !important;
+      min-height: 38px !important;
+      max-height: 38px !important;
+      padding: 0 8px !important;
+      box-sizing: border-box !important;
+    }
+
+    #infoActions,
+    body.is-mobile-framed #infoActions {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      margin-top: 12px !important;
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+      gap: 10px !important;
+      padding: 0 !important;
+      position: static !important;
+      background: transparent !important;
+      box-sizing: border-box !important;
+    }
+
+    #infoActions .state-btn,
+    body.is-mobile-framed #infoActions .state-btn {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      padding-left: 10px !important;
+      padding-right: 10px !important;
+      box-sizing: border-box !important;
+      white-space: nowrap !important;
+    }
+  }
+
+  @media (max-width: 420px) {
+    #infoActions,
+    body.is-mobile-framed #infoActions {
+      grid-template-columns: 1fr 1fr !important;
+    }
+
+    #infoActions .state-btn,
+    body.is-mobile-framed #infoActions .state-btn {
+      font-size: 11px !important;
+      gap: 6px !important;
+    }
+
+    .state-btn-icon {
+      width: 13px !important;
+      height: 13px !important;
+    }
+  }
+</style>
+
 </head>
 <body>
   <div id="app">
