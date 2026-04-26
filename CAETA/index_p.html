@@ -6389,133 +6389,127 @@
 
 
 
-<style id="v92-mobile-unified-map-and-flat-info">
-  /* v92: mobile map header, controls, and WebGL viewport are one continuous rounded panel. */
+<style id="v92-mobile-unified-map-panel-overrides">
+  /* v92: mobile map header, controls, and 3D viewport are visually unified into one rounded panel. */
   @media (max-width: 900px) {
     body.is-mobile-framed #mobileMapFrame {
+      display: block !important;
       padding: 0 !important;
       overflow: hidden !important;
       border-radius: 30px !important;
-      border: 1px solid var(--neo-light-stroke) !important;
-      background: var(--neo-light-surface) !important;
+      border: 1px solid rgba(17, 17, 24, 0.08) !important;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(246,247,252,0.92) 100%) !important;
       box-shadow:
-        -10px -10px 24px var(--neo-light-highlight),
-        12px 12px 28px var(--neo-light-shadow) !important;
+        -10px -10px 24px rgba(255,255,255,0.72),
+        14px 14px 30px rgba(146,156,184,0.28),
+        0 18px 44px rgba(36,24,56,0.10) !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
-      isolation: isolate !important;
       box-sizing: border-box !important;
+      isolation: isolate !important;
     }
 
     html[data-theme='dark'] body.is-mobile-framed #mobileMapFrame {
-      background: var(--neo-light-surface) !important;
+      border-color: rgba(255,255,255,0.08) !important;
+      background:
+        linear-gradient(180deg, rgba(31,34,44,0.98) 0%, rgba(18,21,30,0.96) 100%) !important;
       box-shadow:
-        -8px -8px 18px var(--neo-light-highlight),
-        12px 12px 30px var(--neo-light-shadow-strong) !important;
+        -8px -8px 18px rgba(255,255,255,0.035),
+        14px 14px 32px rgba(0,0,0,0.46),
+        0 18px 44px rgba(0,0,0,0.28) !important;
     }
 
     body.is-mobile-framed #mobileMapHeader,
-    body.is-mobile-framed #mobileMapControls,
-    body.is-mobile-framed #mobileMapViewport,
-    body.is-mobile-framed #mobileMapLegendSlot {
+    body.is-mobile-framed #mobileMapControls {
       margin: 0 !important;
       border-radius: 0 !important;
+      border: 0 !important;
       box-shadow: none !important;
-      border-left: 0 !important;
-      border-right: 0 !important;
-      background-clip: padding-box !important;
+      background: transparent !important;
+      overflow: hidden !important;
       box-sizing: border-box !important;
     }
 
     body.is-mobile-framed #mobileMapHeader {
-      min-height: clamp(92px, 18dvh, 158px) !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 12px !important;
-      padding: clamp(18px, 5vw, 30px) clamp(20px, 5.2vw, 34px) !important;
-      border: 0 !important;
-      border-bottom: 1px solid var(--line) !important;
-      background: transparent !important;
-      overflow: hidden !important;
-    }
-
-    body.is-mobile-framed #mobileMapHeader #brand {
-      min-width: 0 !important;
-      pointer-events: auto !important;
-    }
-
-    body.is-mobile-framed #mobileMapHeader #brandRow {
-      --brand-logo-width: clamp(176px, 52vw, 286px) !important;
-      --about-icon-size: clamp(18px, 5.2vw, 24px) !important;
-      gap: clamp(5px, 1.6vw, 9px) !important;
-      align-items: center !important;
-      max-width: 100% !important;
-    }
-
-    body.is-mobile-framed #mobileMapHeader #brandLogoSvg {
-      width: var(--brand-logo-width) !important;
-      max-width: var(--brand-logo-width) !important;
-      height: auto !important;
-    }
-
-    body.is-mobile-framed #mobileMapControls {
-      min-height: 64px !important;
+      min-height: 78px !important;
+      padding: 16px 18px 14px !important;
       display: flex !important;
       align-items: center !important;
       justify-content: space-between !important;
       gap: 10px !important;
-      padding: 10px clamp(14px, 4vw, 22px) !important;
-      border: 0 !important;
-      border-bottom: 1px solid var(--line) !important;
-      background: color-mix(in srgb, var(--neo-light-surface-soft) 78%, transparent) !important;
-      overflow: hidden !important;
+      border-bottom: 1px solid rgba(17,17,24,0.08) !important;
+      background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.68)) !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileMapHeader {
+      border-bottom-color: rgba(255,255,255,0.08) !important;
+      background: linear-gradient(180deg, rgba(31,34,44,0.82), rgba(28,31,41,0.62)) !important;
+    }
+
+    body.is-mobile-framed #mobileMapControls {
+      min-height: 64px !important;
+      padding: 10px 18px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 10px !important;
+      border-bottom: 1px solid rgba(17,17,24,0.08) !important;
+      background: linear-gradient(180deg, rgba(250,251,254,0.72), rgba(244,246,251,0.58)) !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileMapControls {
+      border-bottom-color: rgba(255,255,255,0.08) !important;
+      background: linear-gradient(180deg, rgba(27,31,41,0.74), rgba(22,25,34,0.58)) !important;
     }
 
     body.is-mobile-framed #mobileMapControls #actionDock,
     body.is-mobile-framed #mobileMapControls #rightUtilityDock {
-      background: transparent !important;
       border: 0 !important;
-      border-radius: 0 !important;
+      background: transparent !important;
       box-shadow: none !important;
-      padding: 0 !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
-    }
-
-    body.is-mobile-framed #mobileMapControls .icon-btn,
-    body.is-mobile-framed #mobileMapExpandBtn {
-      width: 42px !important;
-      height: 42px !important;
-      min-width: 42px !important;
-      border-radius: 14px !important;
+      overflow: visible !important;
     }
 
     body.is-mobile-framed #mobileMapViewport {
-      display: block !important;
-      position: relative !important;
+      margin: 0 !important;
       width: 100% !important;
-      height: clamp(320px, 56dvh, 520px) !important;
       min-height: 320px !important;
+      height: clamp(330px, 58dvh, 540px) !important;
+      border-radius: 0 !important;
       border: 0 !important;
       background: var(--app-bg) !important;
+      box-shadow: none !important;
       overflow: hidden !important;
       isolation: auto !important;
       touch-action: none !important;
-      -webkit-user-select: none !important;
-      user-select: none !important;
+      box-sizing: border-box !important;
     }
 
     body.is-mobile-framed #mobileMapViewport::after {
-      content: none !important;
-      display: none !important;
+      content: '' !important;
+      position: absolute !important;
+      inset: 0 !important;
+      z-index: 3 !important;
+      pointer-events: none !important;
+      border-radius: 0 !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.54),
+        inset 0 18px 28px rgba(146,156,184,0.10),
+        inset 0 -20px 30px rgba(255,255,255,0.16) !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileMapViewport::after {
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.045),
+        inset 0 18px 28px rgba(0,0,0,0.18),
+        inset 0 -18px 28px rgba(255,255,255,0.025) !important;
     }
 
     body.is-mobile-framed #mobileMapViewport > canvas:not(#labelCanvas),
     body.is-mobile-framed #mobileMapViewport canvas {
-      display: block !important;
-      width: 100% !important;
-      height: 100% !important;
       border-radius: 0 !important;
       touch-action: none !important;
       -webkit-user-select: none !important;
@@ -6524,18 +6518,18 @@
     }
 
     body.is-mobile-framed #mobileMapLegendSlot {
+      margin: 0 !important;
       padding: 0 !important;
+      border-radius: 0 !important;
       border: 0 !important;
       background: transparent !important;
+      box-shadow: none !important;
       overflow: visible !important;
     }
 
     body.is-mobile-framed #mobileMapLegendSlot #categoryLegend.is-visible {
-      margin: 10px !important;
+      margin: 10px 12px 12px !important;
       border-radius: 20px !important;
-      border: 1px solid var(--neo-light-stroke) !important;
-      background: var(--neo-light-surface-soft) !important;
-      box-shadow: none !important;
     }
 
     body.is-mobile-framed.is-mobile-map-expanded #mobileMapFrame {
@@ -6551,123 +6545,210 @@
     }
 
     body.is-mobile-framed.is-mobile-map-expanded #mobileMapViewport {
-      height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 224px) !important;
-      min-height: 320px !important;
+      height: auto !important;
+      min-height: 0 !important;
       flex: 1 1 auto !important;
     }
   }
 
-  @media (max-width: 900px) and (max-height: 680px) {
+  @media (max-width: 420px) {
     body.is-mobile-framed #mobileMapHeader {
-      min-height: 86px !important;
-      padding-top: 16px !important;
-      padding-bottom: 16px !important;
+      min-height: 72px !important;
+      padding: 14px 16px 12px !important;
+    }
+
+    body.is-mobile-framed #mobileMapControls {
+      min-height: 58px !important;
+      padding: 9px 14px !important;
+      align-items: center !important;
     }
 
     body.is-mobile-framed #mobileMapViewport {
-      height: clamp(300px, 52dvh, 430px) !important;
+      height: clamp(318px, 56dvh, 510px) !important;
+    }
+  }
+
+  @media (max-width: 900px) and (max-height: 680px) {
+    body.is-mobile-framed #mobileMapViewport {
+      height: clamp(300px, 53dvh, 450px) !important;
       min-height: 300px !important;
     }
   }
 
-  @media (max-width: 420px) {
-    body.is-mobile-framed #mobileMapHeader #brandRow {
-      --brand-logo-width: clamp(162px, 54vw, 224px) !important;
-      --about-icon-size: clamp(17px, 5.4vw, 22px) !important;
-    }
-
-    body.is-mobile-framed #mobileMapControls {
-      gap: 8px !important;
-      padding-left: 12px !important;
-      padding-right: 12px !important;
-    }
-
-    body.is-mobile-framed #mobileMapControls .icon-btn,
-    body.is-mobile-framed #mobileMapExpandBtn {
-      width: 39px !important;
-      height: 39px !important;
-      min-width: 39px !important;
-      border-radius: 13px !important;
-    }
+  /* v92: robustly center the search magnifier in the mobile search input. */
+  #boothSearchBar.is-idle::before {
+    left: 16px !important;
+    top: 50% !important;
+    width: 16px !important;
+    height: 16px !important;
+    transform: translate3d(0, -50%, 0) !important;
+    z-index: 2 !important;
   }
 
-  /* v92: search icon vertical alignment on mobile. */
+  #boothSearchBar.is-idle #boothSearchInput {
+    padding-left: 42px !important;
+  }
+
   @media (max-width: 900px) {
     body.is-mobile-framed #boothSearchBar {
-      position: relative !important;
-      display: grid !important;
-      grid-template-columns: minmax(0, 1fr) 44px !important;
       align-items: center !important;
-      gap: 8px !important;
-      min-height: 44px !important;
-      overflow: visible !important;
+      grid-template-columns: minmax(0, 1fr) 40px !important;
+      column-gap: 8px !important;
+      min-height: 42px !important;
+    }
+
+    body.is-mobile-framed #boothSearchBar.is-idle::before {
+      left: 16px !important;
+      top: 21px !important;
+      transform: translateY(-50%) !important;
     }
 
     body.is-mobile-framed #boothSearchInput {
-      height: 44px !important;
-      min-height: 44px !important;
-      padding: 0 13px !important;
+      height: 42px !important;
+      min-height: 42px !important;
       line-height: 20px !important;
+      padding-top: 10px !important;
+      padding-bottom: 10px !important;
+    }
+
+    body.is-mobile-framed #boothSearchBar.is-idle #boothSearchInput {
+      padding-left: 42px !important;
+    }
+
+    body.is-mobile-framed #boothSearchClear {
+      width: 40px !important;
+      min-width: 40px !important;
+      height: 40px !important;
+    }
+  }
+</style>
+
+
+
+<style id="v93-mobile-search-icon-position-fix">
+  /* v93: keep the mobile search icon anchored to the search input, not to the surrounding info pane. */
+  @media (max-width: 900px) {
+    body.is-mobile-framed #integratedInfoBottomScroll > #boothSearchBar,
+    body.is-mobile-framed #boothSearchBar {
+      position: relative !important;
+      display: grid !important;
+      align-items: center !important;
+      grid-template-columns: minmax(0, 1fr) 40px !important;
+      column-gap: 8px !important;
+      min-height: 42px !important;
+      overflow: visible !important;
+    }
+
+    body.is-mobile-framed #boothSearchBar.is-idle::before {
+      content: '' !important;
+      position: absolute !important;
+      left: 16px !important;
+      top: 50% !important;
+      width: 17px !important;
+      height: 17px !important;
+      transform: translateY(-50%) !important;
+      pointer-events: none !important;
+      z-index: 3 !important;
+      opacity: 0.92 !important;
+    }
+
+    body.is-mobile-framed #boothSearchInput {
+      height: 42px !important;
+      min-height: 42px !important;
+      line-height: 20px !important;
+      padding-top: 10px !important;
+      padding-bottom: 10px !important;
       box-sizing: border-box !important;
     }
 
     body.is-mobile-framed #boothSearchBar.is-idle #boothSearchInput {
-      padding-left: 43px !important;
-    }
-
-    body.is-mobile-framed #boothSearchBar.is-idle::before {
-      left: 17px !important;
-      top: 50% !important;
-      width: 17px !important;
-      height: 17px !important;
-      transform: translate3d(0, -50%, 0) !important;
-      z-index: 3 !important;
-      opacity: 0.78 !important;
+      padding-left: 44px !important;
     }
 
     body.is-mobile-framed #boothSearchClear {
-      width: 44px !important;
-      min-width: 44px !important;
-      height: 44px !important;
-      line-height: 1 !important;
+      width: 40px !important;
+      min-width: 40px !important;
+      height: 40px !important;
+      align-self: center !important;
+      justify-self: stretch !important;
     }
   }
+</style>
 
-  /* v92: mobile booth info appears directly on the info panel background. */
+
+
+<style id="v94-mobile-info-direct-pane">
+  /* v94: Mobile booth-info pane is rendered directly on the infoPanel surface.
+     integratedInfoTopPane / integratedInfoTopScroll remain in the DOM for desktop layout,
+     but they do not create a separate raised/depressed card on smartphones. */
   @media (max-width: 900px) {
     body.is-mobile-framed #mobileInfoFrame {
-      border-radius: 24px !important;
+      display: block !important;
+      padding: 0 !important;
+      border-radius: 26px !important;
       border: 1px solid var(--neo-light-stroke) !important;
-      background: var(--neo-light-surface) !important;
+      background:
+        radial-gradient(120% 90% at 14% 0%, rgba(255,255,255,0.46), rgba(255,255,255,0) 48%),
+        var(--neo-light-surface) !important;
       box-shadow:
-        -8px -8px 18px var(--neo-light-highlight),
-        10px 10px 22px var(--neo-light-shadow) !important;
+        -10px -10px 24px var(--neo-light-highlight),
+        12px 12px 28px var(--neo-light-shadow),
+        inset 1px 1px 0 rgba(255,255,255,0.46),
+        inset -2px -2px 8px rgba(150,160,184,0.12) !important;
       overflow: hidden !important;
+      box-sizing: border-box !important;
+      isolation: isolate !important;
     }
 
     html[data-theme='dark'] body.is-mobile-framed #mobileInfoFrame {
-      background: var(--neo-light-surface) !important;
+      background:
+        radial-gradient(120% 90% at 14% 0%, rgba(255,255,255,0.038), rgba(255,255,255,0) 48%),
+        var(--neo-light-surface) !important;
       box-shadow:
-        -7px -7px 16px var(--neo-light-highlight),
-        10px 10px 24px var(--neo-light-shadow-strong) !important;
+        -8px -8px 18px var(--neo-light-highlight),
+        12px 12px 30px var(--neo-light-shadow-strong),
+        inset 1px 1px 0 rgba(255,255,255,0.032),
+        inset -2px -2px 8px rgba(0,0,0,0.30) !important;
     }
 
-    body.is-mobile-framed #mobileInfoFrameBody,
-    body.is-mobile-framed #infoPanel {
+    body.is-mobile-framed #mobileInfoFrameBody {
+      display: block !important;
       background: transparent !important;
       border: 0 !important;
       box-shadow: none !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
     }
 
     body.is-mobile-framed #infoPanel {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: auto !important;
+      max-height: none !important;
+      margin: 0 !important;
       padding: 14px !important;
-      gap: 14px !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
     }
 
     body.is-mobile-framed #integratedInfoTopPane,
     body.is-mobile-framed #integratedInfoTopScroll {
+      display: contents !important;
+      width: auto !important;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
       border: 0 !important;
       border-radius: 0 !important;
       background: transparent !important;
@@ -6676,236 +6757,64 @@
       overflow: visible !important;
     }
 
-    body.is-mobile-framed #integratedInfoTopPane {
-      padding: 0 !important;
+    body.is-mobile-framed #placeholder.empty-info-state,
+    body.is-mobile-framed #detail {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
       margin: 0 !important;
-    }
-
-    body.is-mobile-framed #integratedInfoTopScroll {
-      padding: 0 !important;
-      gap: 10px !important;
-    }
-
-    body.is-mobile-framed #integratedInfoTopPane #detail,
-    body.is-mobile-framed #integratedInfoTopPane #placeholder {
-      margin: 0 !important;
-      padding: 0 !important;
-      background: transparent !important;
-      box-shadow: none !important;
-      border: 0 !important;
-      min-height: 0 !important;
-    }
-
-    body.is-mobile-framed #integratedInfoTopPane #linkRow {
-      margin-top: 14px !important;
-    }
-
-    body.is-mobile-framed #integratedInfoTopPane #infoActions {
-      margin-top: 12px !important;
-    }
-
-    body.is-mobile-framed #integratedInfoBottomPane {
-      border-radius: 20px !important;
-    }
-  }
-</style>
-
-
-
-<style id="v92b-mobile-info-panel-direct-fix">
-  @media (max-width: 900px) {
-    body.is-mobile-framed #mobileMapControls {
-      background: var(--neo-light-surface-soft) !important;
-      overflow: visible !important;
-    }
-
-    body.is-mobile-framed #mobileMapHeader {
-      overflow: visible !important;
-    }
-
-    body.is-mobile-framed #mobileInfoFrame,
-    body.is-mobile-framed #mobileInfoFrameBody {
       border: 0 !important;
       border-radius: 0 !important;
       background: transparent !important;
       box-shadow: none !important;
+      outline: 0 !important;
       overflow: visible !important;
-    }
-
-    body.is-mobile-framed #infoPanel {
-      border-radius: 24px !important;
-      border: 1px solid var(--neo-light-stroke) !important;
-      background: var(--neo-light-surface) !important;
-      box-shadow:
-        -8px -8px 18px var(--neo-light-highlight),
-        10px 10px 22px var(--neo-light-shadow) !important;
-      padding: 14px !important;
-      overflow: visible !important;
-    }
-
-    html[data-theme='dark'] body.is-mobile-framed #infoPanel {
-      background: var(--neo-light-surface) !important;
-      box-shadow:
-        -7px -7px 16px var(--neo-light-highlight),
-        10px 10px 24px var(--neo-light-shadow-strong) !important;
-    }
-
-    body.is-mobile-framed #integratedInfoTopPane,
-    body.is-mobile-framed #integratedInfoTopScroll {
-      border: 0 !important;
-      background: transparent !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-    }
-  }
-</style>
-
-
-
-<style id="v94-mobile-brand-and-search-fix">
-  /* v94: mobile brand logo downsizing + search icon alignment.
-     This is CSS-only; WebGL / three.js drawing and route calculation are untouched. */
-  @media (max-width: 900px) {
-    body.is-mobile-framed #mobileMapHeader {
-      min-height: clamp(68px, 10dvh, 96px) !important;
-      padding: clamp(12px, 3.3vw, 18px) clamp(15px, 4vw, 24px) !important;
-      gap: 10px !important;
-    }
-
-    body.is-mobile-framed #mobileMapHeader #brand,
-    body.is-mobile-framed #mobileMapHeader #brandRow {
-      min-width: 0 !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-    }
-
-    body.is-mobile-framed #mobileMapHeader #brandRow {
-      --brand-logo-width: clamp(104px, 32vw, 148px) !important;
-      --about-icon-size: clamp(15px, 4vw, 18px) !important;
-      gap: clamp(3px, 1vw, 6px) !important;
-      align-items: center !important;
-      justify-content: flex-start !important;
-      width: auto !important;
-      max-width: min(66vw, 180px) !important;
-    }
-
-    body.is-mobile-framed #mobileMapHeader #brandLogo,
-    body.is-mobile-framed #mobileMapHeader #brandLogoSvg,
-    body.is-mobile-framed #mobileMapHeader #brandLogo svg {
-      width: var(--brand-logo-width) !important;
-      max-width: var(--brand-logo-width) !important;
-      height: auto !important;
-      flex: 0 1 auto !important;
-      display: block !important;
-    }
-
-    body.is-mobile-framed #mobileMapHeader #aboutInfoBtn {
-      width: max(var(--about-icon-size), 16px) !important;
-      height: max(var(--about-icon-size), 16px) !important;
-      min-width: max(var(--about-icon-size), 16px) !important;
-      flex: 0 0 auto !important;
-      margin: 0 !important;
-      transform: none !important;
-    }
-
-    body.is-mobile-framed #mobileMapHeader #aboutInfoBtn svg {
-      width: max(var(--about-icon-size), 16px) !important;
-      height: max(var(--about-icon-size), 16px) !important;
-    }
-
-    body.is-mobile-framed #mobileMapControls {
-      min-height: 60px !important;
-    }
-
-    body.is-mobile-framed #boothSearchBar {
-      position: relative !important;
-      display: grid !important;
-      grid-template-columns: minmax(0, 1fr) 44px !important;
-      align-items: center !important;
-      gap: 8px !important;
-      min-height: 44px !important;
-      overflow: visible !important;
-    }
-
-    body.is-mobile-framed #boothSearchBar.is-idle::before {
-      content: none !important;
-      display: none !important;
-      width: 0 !important;
-      height: 0 !important;
-      opacity: 0 !important;
-      background: none !important;
-      -webkit-mask: none !important;
-      mask: none !important;
-    }
-
-    body.is-mobile-framed #boothSearchInput {
-      -webkit-appearance: none !important;
-      appearance: none !important;
-      display: block !important;
-      width: 100% !important;
-      height: 44px !important;
-      min-height: 44px !important;
-      max-height: 44px !important;
-      padding: 0 14px !important;
-      line-height: normal !important;
-      font-size: 14px !important;
-      text-align: left !important;
       box-sizing: border-box !important;
-      background: var(--neo-light-surface-soft) !important;
-      background-clip: padding-box !important;
     }
 
-    body.is-mobile-framed #boothSearchBar.is-idle #boothSearchInput {
-      padding-left: 44px !important;
-      background:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='6.5' fill='none' stroke='%23111111' stroke-width='2.15'/%3E%3Cpath d='M16 16l5 5' fill='none' stroke='%23111111' stroke-width='2.15' stroke-linecap='round'/%3E%3C/svg%3E") 16px 50% / 17px 17px no-repeat,
-        var(--neo-light-surface-soft) !important;
-    }
-
-    html[data-theme='dark'] body.is-mobile-framed #boothSearchBar.is-idle #boothSearchInput {
-      background:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='6.5' fill='none' stroke='%23ffffff' stroke-width='2.15'/%3E%3Cpath d='M16 16l5 5' fill='none' stroke='%23ffffff' stroke-width='2.15' stroke-linecap='round'/%3E%3C/svg%3E") 16px 50% / 17px 17px no-repeat,
-        var(--neo-light-surface-soft) !important;
-    }
-
-    body.is-mobile-framed #boothSearchInput:focus {
-      background-position: 16px 50%, 0 0 !important;
-    }
-
-    body.is-mobile-framed #boothSearchClear {
-      width: 44px !important;
-      min-width: 44px !important;
-      height: 44px !important;
-      min-height: 44px !important;
-      max-height: 44px !important;
-      padding: 0 !important;
-      line-height: 1 !important;
-      display: inline-flex !important;
+    body.is-mobile-framed #placeholder.empty-info-state {
+      min-height: clamp(220px, 42dvh, 400px) !important;
+      padding: 18px 8px !important;
       align-items: center !important;
       justify-content: center !important;
+    }
+
+    body.is-mobile-framed #detail {
+      padding: 2px 2px 0 !important;
+    }
+
+    body.is-mobile-framed #placeholder[style*="display: none"],
+    body.is-mobile-framed #detail[style*="display: none"] {
+      display: none !important;
+    }
+
+    body.is-mobile-framed #placeholder[style*="display: flex"] {
+      display: flex !important;
+    }
+
+    body.is-mobile-framed #detail[style*="display: flex"] {
+      display: block !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomPane {
+      flex: none !important;
+      border-radius: 22px !important;
+      border: 1px solid var(--neo-light-stroke) !important;
+      background: var(--neo-light-surface-soft) !important;
+      box-shadow:
+        var(--neo-light-inset),
+        -5px -5px 12px var(--neo-light-highlight),
+        7px 7px 15px var(--neo-light-shadow) !important;
+      overflow: hidden !important;
       box-sizing: border-box !important;
     }
-  }
 
-  @media (max-width: 420px) {
-    body.is-mobile-framed #mobileMapHeader {
-      min-height: clamp(64px, 9dvh, 88px) !important;
-      padding-left: 14px !important;
-      padding-right: 12px !important;
-    }
-
-    body.is-mobile-framed #mobileMapHeader #brandRow {
-      --brand-logo-width: clamp(100px, 30vw, 136px) !important;
-      --about-icon-size: clamp(14px, 3.8vw, 17px) !important;
-      max-width: min(62vw, 160px) !important;
-      gap: 3px !important;
-    }
-
-    body.is-mobile-framed #mobileMapControls .icon-btn,
-    body.is-mobile-framed #mobileMapExpandBtn {
-      width: 38px !important;
-      height: 38px !important;
-      min-width: 38px !important;
+    html[data-theme='dark'] body.is-mobile-framed #integratedInfoBottomPane {
+      background: var(--neo-light-surface-soft) !important;
+      box-shadow:
+        var(--neo-light-inset),
+        -5px -5px 12px var(--neo-light-highlight),
+        8px 8px 18px var(--neo-light-shadow-strong) !important;
     }
   }
 </style>
@@ -6961,7 +6870,7 @@
           <div id="emptyInfoLogo" class="empty-info-logo"><svg class="empty-info-logo-svg" aria-hidden="true" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 769.99 827.63"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M118.15,455.33c42.49-24.6,68.63-70.01,68.57-119.11l-.07-56.97c-.06-51.54-41.9-93.28-93.44-93.21h0C41.67,186.1-.06,227.94,0,279.48l.33,272.28c8.43-23.14,24.55-42.42,46.12-54.91l71.7-41.51Z"/><path class="cls-1" d="M215.61,202.65c42.52,24.55,94.92,24.55,137.44,0l49.34-28.48c44.64-25.77,59.93-82.85,34.16-127.49h0c-25.77-44.64-82.85-59.93-127.49-34.16L73.26,148.66c24.26-4.24,49.01.11,70.6,12.57l71.75,41.42Z"/><path class="cls-1" d="M479.67,160.99c0,49.1,26.2,94.48,68.72,119.03l49.34,28.48c44.64,25.77,101.72,10.48,127.49-34.16h0c25.77-44.64,10.48-101.72-34.16-127.49L455.25,10.71c15.8,18.89,24.41,42.5,24.41,67.43v82.85Z"/><path class="cls-1" d="M651.84,372.3c-42.49,24.6-68.63,70.01-68.57,119.11l.07,56.97c.06,51.54,41.9,93.28,93.44,93.21h0c51.54-.06,93.28-41.9,93.21-93.44l-.33-272.28c-8.43,23.14-24.55,42.42-46.12,54.91l-71.7,41.51Z"/><path class="cls-1" d="M554.38,624.98c-42.52-24.55-94.92-24.55-137.44,0l-49.34,28.48c-44.64,25.77-59.93,82.85-34.16,127.49h0c25.77,44.64,82.85,59.93,127.49,34.16l235.8-136.14c-24.26,4.24-49.01-.11-70.6-12.57l-71.75-41.42Z"/><path class="cls-1" d="M290.32,666.65c0-49.1-26.2-94.48-68.72-119.03l-49.34-28.48c-44.64-25.77-101.72-10.48-127.49,34.16h0c-25.77,44.64-10.48,101.72,34.16,127.49l235.8,136.14c-15.8-18.89-24.41-42.5-24.41-67.43v-82.85Z"/></g></svg></div>
           <div id="emptyInfoForeground" aria-hidden="true">
             <div id="emptyInfoForegroundLogo"><svg id="emptyInfoForegroundLogoSvg" class="empty-info-foreground-logo-svg" aria-hidden="true" focusable="false" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 823.75 29"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M0,12.4v-.07C0,5.91,4.81.58,11.37.58c4.06,0,6.49,1.49,8.83,3.64l-1.2,1.23c-1.98-1.92-4.25-3.34-7.66-3.34C5.88,2.11,1.75,6.56,1.75,12.27v.06c0,5.75,4.19,10.23,9.61,10.23,3.28,0,5.52-1.27,7.83-3.54l1.14,1.1c-2.4,2.37-5,3.96-9.03,3.96C4.81,24.09,0,18.93,0,12.4Z"/><path class="cls-1" d="M28.02,7.14h1.59v4.71c1.3-2.96,4.06-5.1,7.34-4.97v1.75h-.16c-3.83,0-7.18,2.89-7.18,8.28v6.79h-1.59V7.14Z"/><path class="cls-1" d="M42.31,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM56.04,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M64.29,18.9v-.07c0-3.44,2.95-5.39,7.24-5.39,2.3,0,3.9.29,5.49.71v-.71c0-3.34-2.05-5.07-5.46-5.07-2.01,0-3.67.55-5.2,1.33l-.58-1.4c1.82-.84,3.6-1.43,5.88-1.43s4.03.62,5.23,1.82c1.1,1.1,1.69,2.63,1.69,4.68v10.33h-1.56v-2.76c-1.14,1.59-3.18,3.15-6.33,3.15s-6.4-1.75-6.4-5.2ZM77.05,17.5v-1.88c-1.4-.36-3.25-.75-5.62-.75-3.51,0-5.46,1.56-5.46,3.86v.06c0,2.4,2.27,3.8,4.81,3.8,3.38,0,6.27-2.08,6.27-5.1Z"/><path class="cls-1" d="M88.26,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.44-.58v1.49c-.84.39-1.66.58-2.7.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M101.99,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.47,3.96,8.47,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.47-3.96-8.47-8.6ZM117.28,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M127.16,7.14h1.59v4.71c1.3-2.96,4.06-5.1,7.34-4.97v1.75h-.16c-3.83,0-7.18,2.89-7.18,8.28v6.79h-1.59V7.14Z"/><path class="cls-1" d="M142.64,13.15h8.7v1.82h-8.7v-1.82Z"/><path class="cls-1" d="M167.58.81h1.62l10.59,22.89h-1.85l-2.89-6.36h-13.41l-2.89,6.36h-1.75L167.58.81ZM174.34,15.81l-5.97-13.15-6.01,13.15h11.98Z"/><path class="cls-1" d="M186.84,17.27V7.14h1.59v9.84c0,3.41,1.92,5.65,5.26,5.65s5.75-2.47,5.75-5.91V7.14h1.59v16.56h-1.59v-3.08c-1.1,1.95-2.96,3.47-5.97,3.47-4.19,0-6.62-2.86-6.62-6.82Z"/><path class="cls-1" d="M209.24,15.49v-.07c0-5.39,4.06-8.67,8.05-8.67,3.31,0,5.46,1.88,6.82,3.96V0h1.59v23.7h-1.59v-3.7c-1.43,2.17-3.54,4.09-6.82,4.09-3.99,0-8.05-3.21-8.05-8.6ZM224.21,15.46v-.06c0-4.25-3.31-7.11-6.75-7.11s-6.49,2.63-6.49,7.08v.06c0,4.35,3.02,7.14,6.49,7.14s6.75-2.89,6.75-7.11Z"/><path class="cls-1" d="M235.02.65h1.98v2.18h-1.98V.65ZM235.22,7.14h1.59v16.56h-1.59V7.14Z"/><path class="cls-1" d="M245.19,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.74c.29,4.12,3.25,6.53,6.49,6.53,2.57,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM258.92,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.11,6.43h12.05Z"/><path class="cls-1" d="M268.53,7.14h1.59v3.08c1.1-1.95,2.95-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M290.55,15.49v-.07c0-4.64,3.7-8.67,8.44-8.67,3.12,0,5.07,1.43,6.62,3.05l-1.14,1.17c-1.43-1.46-3.05-2.73-5.52-2.73-3.77,0-6.69,3.15-6.69,7.11v.06c0,3.99,3.02,7.18,6.82,7.18,2.34,0,4.16-1.2,5.55-2.76l1.1.97c-1.69,1.92-3.7,3.28-6.75,3.28-4.77,0-8.44-3.96-8.44-8.6Z"/><path class="cls-1" d="M311.85,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM325.58,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M348.54.97h16.17v1.56h-14.48v8.93h13.02v1.56h-13.02v9.12h14.64v1.56h-16.33V.97Z"/><path class="cls-1" d="M371.17,7.14h1.85l6.27,14.77,6.33-14.77h1.79l-7.44,16.69h-1.36l-7.44-16.69Z"/><path class="cls-1" d="M392.9,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM406.63,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M416.24,7.14h1.59v3.08c1.1-1.95,2.96-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M440.27,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.44-.58v1.49c-.84.39-1.66.58-2.7.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M475.11,2.53h-7.92V.97h17.53v1.56h-7.92v21.17h-1.69V2.53Z"/><path class="cls-1" d="M487.22,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.48,3.96,8.48,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.48-3.96-8.48-8.6ZM502.52,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M512.39,7.14h1.59v3.7c1.43-2.18,3.54-4.09,6.82-4.09,3.99,0,8.05,3.21,8.05,8.6v.06c0,5.39-4.06,8.67-8.05,8.67-3.31,0-5.46-1.88-6.82-3.96v8.77h-1.59V7.14ZM527.13,15.49v-.07c0-4.35-3.02-7.14-6.49-7.14s-6.75,2.89-6.75,7.11v.06c0,4.25,3.31,7.11,6.75,7.11s6.49-2.63,6.49-7.08Z"/><path class="cls-1" d="M535.93,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.47,3.96,8.47,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.47-3.96-8.47-8.6ZM551.22,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M561.32,0h1.59v23.7h-1.59V0Z"/><path class="cls-1" d="M571.29,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.48,3.96,8.48,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.48-3.96-8.48-8.6ZM586.58,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M596.13,26.43l.94-1.3c1.98,1.53,4.25,2.34,6.69,2.34,3.8,0,6.49-2.18,6.49-6.43v-2.4c-1.43,2.05-3.64,3.83-6.92,3.83-3.99,0-7.96-3.05-7.96-7.79v-.06c0-4.77,3.96-7.86,7.96-7.86,3.31,0,5.55,1.75,6.92,3.7v-3.31h1.59v14c0,2.4-.78,4.29-2.11,5.62-1.43,1.43-3.57,2.21-6.01,2.21-2.76,0-5.33-.84-7.6-2.53ZM610.35,14.64v-.06c0-3.83-3.41-6.3-6.85-6.3s-6.4,2.4-6.4,6.27v.06c0,3.73,2.99,6.33,6.4,6.33s6.85-2.53,6.85-6.3Z"/><path class="cls-1" d="M634.09,7.14h1.75l-7.18,17.14c-1.46,3.47-3.15,4.71-5.52,4.71-1.27,0-2.18-.23-3.28-.71l.55-1.4c.88.42,1.59.62,2.82.62,1.72,0,2.86-1.01,4.09-3.9l-7.96-16.46h1.85l6.88,14.81,5.97-14.81Z"/><path class="cls-1" d="M665.46.81h1.62l10.59,22.89h-1.85l-2.89-6.36h-13.41l-2.89,6.36h-1.75l10.59-22.89ZM672.21,15.81l-5.97-13.15-6.01,13.15h11.98Z"/><path class="cls-1" d="M683.93,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.7-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M702.99,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.69-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M723.84.65h1.98v2.18h-1.98V.65ZM724.03,7.14h1.59v16.56h-1.59V7.14Z"/><path class="cls-1" d="M733.71,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.69-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M755.07,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.43-.58v1.49c-.84.39-1.66.58-2.69.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M769.07,18.9v-.07c0-3.44,2.95-5.39,7.24-5.39,2.3,0,3.9.29,5.49.71v-.71c0-3.34-2.05-5.07-5.46-5.07-2.01,0-3.67.55-5.2,1.33l-.58-1.4c1.82-.84,3.6-1.43,5.88-1.43s4.03.62,5.23,1.82c1.1,1.1,1.69,2.63,1.69,4.68v10.33h-1.56v-2.76c-1.14,1.59-3.18,3.15-6.33,3.15s-6.4-1.75-6.4-5.2ZM781.83,17.5v-1.88c-1.4-.36-3.25-.75-5.62-.75-3.51,0-5.46,1.56-5.46,3.86v.06c0,2.4,2.27,3.8,4.81,3.8,3.38,0,6.27-2.08,6.27-5.1Z"/><path class="cls-1" d="M792.32,7.14h1.59v3.08c1.1-1.95,2.96-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M816.34,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.43-.58v1.49c-.84.39-1.66.58-2.69.58-2.57,0-4.64-1.4-4.64-4.55Z"/></g></svg></div>
-            <div id="emptyInfoVersion">Ver.1.1.2</div>
+            <div id="emptyInfoVersion">Ver.1.1.3</div>
           </div>
         </div>
       <div id="detail" style="display:none;">
@@ -7582,12 +7491,31 @@
       btn.setAttribute('title', collapsed ? '右パネルを表示' : '右パネルを最小化');
     }
 
+    function getMobileMapExpandIcon(isExpanded) {
+      if (isExpanded) {
+        // 54860: shrink / return to standard size. Diagonal arrows point inward.
+        return `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M20 4l-6 6"></path>
+          <path d="M14 4v6h6"></path>
+          <path d="M4 20l6-6"></path>
+          <path d="M10 20v-6H4"></path>
+        </svg>`;
+      }
+      // 54301-1: expand. Diagonal arrows point outward.
+      return `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M14 10l6-6"></path>
+        <path d="M15 4h5v5"></path>
+        <path d="M10 14l-6 6"></path>
+        <path d="M4 15v5h5"></path>
+      </svg>`;
+    }
+
     function setMobileMapExpanded(expanded) {
       const shouldExpand = !!expanded;
       document.body.classList.toggle('is-mobile-map-expanded', shouldExpand);
       const btn = document.getElementById('mobileMapExpandBtn');
       if (btn) {
-        btn.textContent = shouldExpand ? '↙' : '⤢';
+        btn.innerHTML = getMobileMapExpandIcon(shouldExpand);
         btn.setAttribute('aria-pressed', shouldExpand ? 'true' : 'false');
         btn.setAttribute('aria-label', shouldExpand ? '3Dペインを標準サイズに戻す' : '3Dペインを縦幅いっぱいに拡大');
         btn.setAttribute('title', shouldExpand ? '3Dペインを標準サイズに戻す' : '3Dペインを縦幅いっぱいに拡大');
@@ -7609,7 +7537,7 @@
       }
       if (btn.parentElement !== rightUtilityDock) rightUtilityDock.appendChild(btn);
       const expanded = document.body.classList.contains('is-mobile-map-expanded');
-      btn.textContent = expanded ? '↙' : '⤢';
+      btn.innerHTML = getMobileMapExpandIcon(expanded);
       btn.setAttribute('aria-pressed', expanded ? 'true' : 'false');
       btn.setAttribute('aria-label', expanded ? '3Dペインを標準サイズに戻す' : '3Dペインを縦幅いっぱいに拡大');
       btn.setAttribute('title', expanded ? '3Dペインを標準サイズに戻す' : '3Dペインを縦幅いっぱいに拡大');
@@ -8313,16 +8241,16 @@
 
       const ROUTE_GRID_DATA = {"1":{"rows":108,"cols":76,"walkBits":"000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000110000000000111111111111100000000011000000000000011100000011110000000000000011000000000011111111111110000000001100000000000001110000001111000000000000001100000000001111111111111000000000110000000000000111000000111100000000000000110000000000111111111111100000000011000000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000001100000000000000011100000000000000110000000000000111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001110000001111000000000000001100000000000000011100000000000000110000000000000111000000111111111111111111111111111111111111111111111111111111111111111111111100000011110000000000000011000000000000000111000000000000001100000000000001110000001111000000000000001100000000000000011100000000000000110000000000000111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001111000001111111111111111111111111111111111111111111111111111111111111111111111100000111100000000000000110000000000000001110000000000000011000000000000011110000011110000000000000011000000000000000111000000000000001100000000000001111000001111000000000000001100000000000000011100000000000000110000000000000111100000111111111111111111111111111111111111111111111111111111111111111111111110000011110000000000000011000000000000000111000000000000001100000000000001110000001111000000000000001100000000000000011100000000000000110000000000000111000000111100000000000000110000000000000001110000000000000011000000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000001100000000000000011100000000000000110000000000000111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111111111111111111111111111111111111111111111111111111111111111111111100000011110000000000000011000000000000000111000000000000001100000000000001110000001111000000000000001100000000000000011100000000000000110000000000000111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001000000001111000000000000001100000000000000011100000000000000110000000000000100000000111111111111111111111111111111111111111111111111111111111111111111110000000011110000000000000011000000000000000111000000000000001100000000000001000000001111000000000000001100000000000000011100000000000000110000000000000100000000111100000000000000110000000000000001110000000000000011000000000000010000000011111111111111111111111111111111111111111111111111111111111111111111000000001111000000000000001100000000000000011100000000000000110000000000000100000000111100000000000000110000000000000001110000000000000011000000000000010000000011110000000000000011000000000000000111000000000000001100000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001110000001111000000000000001100000000000000011100000000000000110000000000000111000000111100000000000000110000000000000001110000000000000011000000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000001100000000000000011100000000000000110000000000000111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001110000001111000000000000001100000000000000011100000000000000110000000000000111000000111111111111111111111111111111111111111111111111111111111111111111111100000011110000000000000011000000000000000111000000000000001100000000000001110000001111000000000000001100000000000000011100000000000000110000000000000111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001110000001111000000000000001100000000000000011100000000000000110000000000000111000000111111111111111111111111111111111111111111111111111111111111111111111100000011110000000000000011000000000000000111000000000000001100000000000001110000001111000000000000001100000000000000011100000000000000110000000000000111000000111100000000000000110000000000000001110000000000000011000000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000001100000000000000011100000000000000110000000000000111100000111100000000000000110000000000000001110000000000000011000000000000011110000011110000000000000011000000000000000111000000000000001100000000000001111000001111000000000000001110000000000000011100000000000000110000000000000111100000111100000000000000110000000000000001110000000000000011000000000000011110000011110000000000000011000000000000000111000000000000001100000000000001111000001111000000000000001100000000000000011100000000000000110000000000000111100000111100000000000000110000000000000001110000000000000011000000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000001100000000000000011100000000000000110000000000000111000000111100000000000000110000000000000001110000000000000011000000000000011100000011110000000000000011000000000000000111000000000000001100000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111111111111111111111111111111111111111111111111111111111111111111111100000011110000000000000011000000000000000111000000000000000000000000000001110000001111000000000000001100000000000000011100000000000000000000000000000111000000111100000000000000110000000000000001110000000000000000000000000000011100000011111111111111111111111111111111111111000000000000000000000000000001110000001111111111111111111111111111111111111100000000000000000000000000000111000000111100000000000000110000000000000001110000000000000000000000000000011100000011110000000000000011000000000000000111000000000000000000000000000001110000001111000000000000001100000000000000011100000000000000000000000000000111000000111111111111111111111111111111111111110000000000000000000000000000011100000011110000000000000011000000000000000111000000000000000000000000000001110000001111000000000000001100000000000000011100000000000000000000000000000111000000111100000000000000110000000000000001110000000000000000000000000000011100000011111111111111111111111111111111111111000000000000000000000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111111111111111111111111111111111111111111111111111111111111111111111100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","cellSize":6,"minX":-226.29184877999995,"minZ":-322.14082628,"portalNodes":{"entrance":1519,"exit":5927}},"2":{"rows":108,"cols":76,"walkBits":"000001111111111111111111111111111111111111111111111111111111111111111111111000000111111111111111111111111111111111111111111111111111111111111111111111100000011110000000000000001100000001111111111111110000000000110000000000001110000001111000000000000000110000000111111111111111000000000011000000000000111000000111100000000000000011000000011111111111111100000000001100000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000000110000000000000011100000000000000011000000000000111000000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111000000000000000110000000000000011100000000000000011000000000000111000000111100000000000000011000000000000001110000000000000001100000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000000110000000000000011100000000000000011000000000000111000000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111000000000000000110000000000000011100000000000000011000000000000111000000111100000000000000011000000000000001110000000000000001100000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000000110000000000000011100000000000000011000000000000111000000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000011000000000000001110000000000000001100000000000011110000011110000000000000001100000000000000111000000000000000110000000000001111000001111000000000000000110000000000000011100000000000000011000000000000111100000111111111111111111111111111111111111111111111111111111111111111111111110000011111111111111111111111111111111111111111111111111111111111111111111111000001111000000000000000110000000000000011100000000000000011000000000000111100000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111000000000000000110000000000000011100000000000000011000000000000100000000111111111111111111111111111111111111111111111111111111111111111111110000000011110000000000000001100000000000000111000000000000000110000000000001000000001111000000000000000110000000000000011100000000000000011000000000000100000000111100000000000000011000000000000001110000000000000001100000000000010000000011111111111111111111111111111111111111111111111111111111111111111111000000001111000000000000000110000000000000011100000000000000011000000000000100000000111100000000000000011000000000000001110000000000000001100000000000010000000011110000000000000001100000000000000111000000000000000110000000000001000000001111000000000000000110000000000000011100000000000000011000000000000111000000111111111111111111111111111111111111111111111111111111111111111111111100000011110000000000000001100000000000000111000000000000000110000000000001110000001111000000000000000110000000000000011100000000000000011000000000000111000000111100000000000000011000000000000001110000000000000001100000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000000110000000000000011100000000000000011000000000000111000000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111000000000000000110000000000000011100000000000000011000000000000111000000111100000000000000011000000000000001110000000000000001100000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000000110000000000000011100000000000000011000000000000111000000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111000000000000000110000000000000011100000000000000011000000000000111000000111111111111111111111111111111111111111111111111111111111111111111111100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000000110000000000000011100000000000000011000000000000111000000111100000000000000011000000000000001110000000000000001100000000000011100000011110000000000000001100000000000000111000000000000000110000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111111111111111111111111111111111111111111111111111111111111111111111100000011110000000000000001100000000000000111000000000000000110000000000001110000001111000000000000000110000000000000011100000000000000011000000000000111000000111100000000000000011000000000000001110000000000000001100000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000000110000000000000011100000000000000011000000000000111100000111100000000000000011000000000000001110000000000000001100000000000011110000011110000000000000001100000000000000111000000000000000110000000000001111000001111111111111111111111111111111111111111111111111111111111111111111111100000111100000000000000011000000000000001110000000000000001100000000000011110000011110000000000000001100000000000000111000000000000000110000000000001111000001111000000000000000110000000000000011100000000000000011000000000000111100000111100000000000000011000000000000001110000000000000001100000000000011100000011111111111111111111111111111111111111111111111111111111111111111111110000001111000000000000000110000000000000011100000000000000000000000000000111000000111100000000000000011000000000000001110000000000000000000000000000011100000011110000000000000001100000000000000111000000000000000000000000000001110000001111111111111111111111111111111111111100000000000000000000000000000111000000111100000000000000011000000000000001110000000000000000000000000000011100000011110000000000000001100000000000000111000000000000000000000000000001110000001111000000000000000110000000000000011100000000000000000000000000000111000000111111111111111111111111111111111111110000000000000000000000000000011100000011110000000000000001100000000000000111000000000000000000000000000001110000001111000000000000000110000000000000011100000000000000000000000000000111000000111100000000000000011000000000000001110000000000000000000000000000011100000011110000000000000001100000000000000111000000000000000000000000000001110000001111111111111111111111111111111111111111111111111111111111111111111111000000111111111111111111111111111111111111111111111111111111111111111111111100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","cellSize":6,"minX":-226.47499540999996,"minZ":-322.31930976,"portalNodes":{"entrance":2355,"exit":6383}}};
 
-      let themeMode = window.innerWidth <= 900 ? 'light' : 'dark';
+      let themeMode = 'light';
 
       const SPECIAL_OBJECTS = {
         1: {
-          office: { type: 'rect', xRatio: 0.93023, yRatio: 0.42078, wRatio: 0.02326, hRatio: 0.07613, color: themeMode === 'dark' ? 0x22aee8 : 0xf5f5f7, label: '事\n務\n局\n本\n部', textColor: themeMode === 'dark' ? '#ffffff' : '#111111' },
-          reading: { type: 'rect', xRatio: 0.73304, yRatio: 0.85562, wRatio: 0.32849, hRatio: 0.10219, color: themeMode === 'dark' ? 0xe7a0a0 : 0xffffff, label: '試し読みコーナー', sublabel: '12:00〜16:30', textColor: themeMode === 'dark' ? '#ffffff' : '#111111' }
+          office: { type: 'rect', xRatio: 0.93023, yRatio: 0.42078, wRatio: 0.02326, hRatio: 0.07613, color: 0x22aee8, label: '事\n務\n局\n本\n部', textColor: '#ffffff' },
+          reading: { type: 'rect', xRatio: 0.73304, yRatio: 0.85562, wRatio: 0.32849, hRatio: 0.10219, color: 0xe7a0a0, label: '試し読みコーナー', sublabel: '12:00〜16:30', textColor: '#ffffff' }
         },
         2: {
-          office: { type: 'rect', xRatio: 0.93411, yRatio: 0.42833, wRatio: 0.02326, hRatio: 0.07613, color: themeMode === 'dark' ? 0x22aee8 : 0xf5f5f7, label: '事\n務\n局\n本\n部', textColor: themeMode === 'dark' ? '#ffffff' : '#111111' },
-          reading: { type: 'rect', xRatio: 0.74079, yRatio: 0.86562, wRatio: 0.32849, hRatio: 0.10219, color: themeMode === 'dark' ? 0xe7a0a0 : 0xffffff, label: '試し読みコーナー', sublabel: '12:00〜16:30', textColor: themeMode === 'dark' ? '#ffffff' : '#111111' }
+          office: { type: 'rect', xRatio: 0.93411, yRatio: 0.42833, wRatio: 0.02326, hRatio: 0.07613, color: 0x22aee8, label: '事\n務\n局\n本\n部', textColor: '#ffffff' },
+          reading: { type: 'rect', xRatio: 0.74079, yRatio: 0.86562, wRatio: 0.32849, hRatio: 0.10219, color: 0xe7a0a0, label: '試し読みコーナー', sublabel: '12:00〜16:30', textColor: '#ffffff' }
         }
       };
 
@@ -8942,7 +8870,7 @@
         }, w, h, { resolutionScale: options.resolutionScale || 4 });
         const mesh = new THREE.Mesh(
           new THREE.PlaneGeometry(options.worldW || 44, options.worldH || 12),
-          new THREE.MeshBasicMaterial({ map: texture, color: currentMapLabelTintHex(), transparent: true, depthWrite: false, alphaTest: 0.01, premultipliedAlpha: true, toneMapped: false })
+          new THREE.MeshBasicMaterial({ map: texture, color: options.color || currentMapLabelTintHex(), transparent: true, depthWrite: false, alphaTest: 0.01, premultipliedAlpha: true, toneMapped: false })
         );
         mesh.rotation.x = -Math.PI / 2;
         mesh.renderOrder = 7;
@@ -8989,7 +8917,7 @@
 
         const mesh = new THREE.Mesh(
           new THREE.PlaneGeometry(planeW, planeH),
-          new THREE.MeshBasicMaterial({ map: texture, color: currentMapLabelTintHex(), transparent: true, depthWrite: false, alphaTest: 0.01, premultipliedAlpha: true, toneMapped: false })
+          new THREE.MeshBasicMaterial({ map: texture, color: options.color || currentMapLabelTintHex(), transparent: true, depthWrite: false, alphaTest: 0.01, premultipliedAlpha: true, toneMapped: false })
         );
         mesh.rotation.x = -Math.PI / 2;
         mesh.renderOrder = 7;
@@ -11407,7 +11335,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       let selectedPrimaryIds = [];
       let selectedSecondaryIds = [];
       let categoryLayerVisible = false;
-      themeMode = window.innerWidth <= 900 ? 'light' : 'dark';
+      themeMode = 'dark';
       let legendHoveredCategory = null;
       let drawerDragState = null;
       let drawerDragSuppressUntil = 0;
@@ -15003,7 +14931,7 @@ self.onmessage = function(event) {
         animateCamera(DEFAULT_CAMERA_POS.clone(), DEFAULT_CAMERA_TARGET.clone());
       }
 
-      themeMode = restoreState?.themeMode ? (restoreState.themeMode === 'dark' ? 'dark' : 'light') : (isMobileViewport() ? 'light' : 'dark');
+      themeMode = restoreState?.themeMode ? (restoreState.themeMode === 'dark' ? 'dark' : 'light') : 'light';
       routeModeEnabled = !!restoreState?.routeModeEnabled;
       applyThemeMode(themeMode, { save: false });
       updateRouteModeButton();
