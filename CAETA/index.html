@@ -5855,6 +5855,144 @@
     }
   }
 </style>
+
+
+<style id="v88-mobile-info-scroll-split">
+  /* v88: smartphone info-panel scroll structure.
+     Booth detail uses normal page scrolling; search, priority/interest lists,
+     and utility buttons scroll inside the lower panel only. */
+  @media (max-width: 900px) {
+    body.is-mobile-framed #mobileInfoFrame {
+      display: block !important;
+      max-height: none !important;
+      min-height: 0 !important;
+      overflow: visible !important;
+    }
+
+    body.is-mobile-framed #mobileInfoFrameBody {
+      display: block !important;
+      flex: none !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      overflow: visible !important;
+      -webkit-overflow-scrolling: auto !important;
+      overscroll-behavior: auto !important;
+      touch-action: auto !important;
+    }
+
+    body.is-mobile-framed #infoPanel {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+      overflow: visible !important;
+      max-height: none !important;
+      height: auto !important;
+    }
+
+    body.is-mobile-framed #integratedInfoTopPane {
+      flex: none !important;
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
+    }
+
+    body.is-mobile-framed #integratedInfoTopScroll {
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
+      padding: 14px !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomPane {
+      display: flex !important;
+      flex-direction: column !important;
+      flex: none !important;
+      height: min(62dvh, 560px) !important;
+      max-height: min(62dvh, 560px) !important;
+      min-height: 180px !important;
+      overflow: hidden !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomScroll {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      max-height: 100% !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding: 14px !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior: contain !important;
+      touch-action: pan-y !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomScroll > #boothSearchBar,
+    body.is-mobile-framed #integratedInfoBottomScroll > #boothSearchMeta,
+    body.is-mobile-framed #integratedInfoBottomScroll > #boothSearchResults,
+    body.is-mobile-framed #integratedInfoBottomScroll > #bottomDrawer {
+      flex: 0 0 auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomScroll > #boothSearchBar {
+      position: static !important;
+      top: auto !important;
+      margin: 0 !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomScroll > #boothSearchMeta {
+      margin: 0 !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomScroll > #boothSearchResults {
+      max-height: min(34dvh, 300px) !important;
+      overflow: hidden !important;
+    }
+
+    body.is-mobile-framed #boothSearchResultsList {
+      max-height: min(30dvh, 260px) !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    body.is-mobile-framed #bottomDrawer,
+    body.is-mobile-framed #bottomDrawer.is-integrated-right-menu {
+      margin-top: 0 !important;
+      min-height: 0 !important;
+      overflow: visible !important;
+    }
+
+    body.is-mobile-framed #bottomDrawer #drawerPanelInner {
+      max-height: none !important;
+      overflow: visible !important;
+      padding: 0 !important;
+    }
+
+    body.is-mobile-framed #bottomDrawer .drawer-list {
+      max-height: none !important;
+      overflow: visible !important;
+    }
+  }
+
+  @media (max-width: 420px) {
+    body.is-mobile-framed #integratedInfoBottomPane {
+      height: min(66dvh, 540px) !important;
+      max-height: min(66dvh, 540px) !important;
+      min-height: 170px !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomScroll {
+      padding: 12px !important;
+    }
+  }
+</style>
+
 </head>
 <body>
   <div id="app">
@@ -6513,6 +6651,19 @@
       if (categoryLegend && mapLegendSlot && categoryLegend.parentElement !== mapLegendSlot) mapLegendSlot.appendChild(categoryLegend);
       if (infoPanel && topPane && topPane.parentElement !== infoPanel) infoPanel.appendChild(topPane);
       if (infoPanel && bottomPane && bottomPane.parentElement !== infoPanel) infoPanel.appendChild(bottomPane);
+
+      const bottomScroll = document.getElementById('integratedInfoBottomScroll');
+      if (bottomScroll) {
+        const searchNodes = [boothSearchBar, boothSearchMeta, boothSearchResults].filter(Boolean);
+        const insertBeforeNode = bottomDrawer && bottomDrawer.parentElement === bottomScroll ? bottomDrawer : bottomScroll.firstChild;
+        for (const node of searchNodes) {
+          if (node.parentElement !== bottomScroll) {
+            bottomScroll.insertBefore(node, insertBeforeNode);
+          }
+        }
+        if (bottomDrawer && bottomDrawer.parentElement !== bottomScroll) bottomScroll.appendChild(bottomDrawer);
+      }
+
       if (infoPanel && infoBody && infoPanel.parentElement !== infoBody) infoBody.appendChild(infoPanel);
       syncMobileFrameClass();
       return mobileMapViewport;
