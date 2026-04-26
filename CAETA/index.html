@@ -6058,6 +6058,335 @@
   }
 </style>
 
+
+
+<style id="v90-empty-info-foreground-logo">
+  /* v90: ブース未選択時は、既存ロゴを背景に残しつつ、中央に添付SVGとVer.表記を小さく表示する */
+  #placeholder.empty-info-state {
+    position: relative !important;
+    overflow: hidden !important;
+    display: none;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100% !important;
+    isolation: isolate;
+  }
+
+  #integratedInfoTopPane.is-empty #placeholder.empty-info-state {
+    display: flex !important;
+  }
+
+  #placeholder.empty-info-state #emptyInfoLogo {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 0 !important;
+    width: min(46%, 164px) !important;
+    max-width: 164px !important;
+    min-width: 96px !important;
+    opacity: 0.72 !important;
+    pointer-events: none !important;
+  }
+
+  #emptyInfoForeground {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    color: rgba(17,17,24,0.68);
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  html[data-theme='dark'] #emptyInfoForeground {
+    color: rgba(255,255,255,0.72);
+  }
+
+  #emptyInfoForeground {
+    width: min(90%, 380px) !important;
+  }
+
+  #emptyInfoForegroundLogo {
+    width: min(52%, 168px);
+    max-width: 168px;
+    min-width: 112px;
+    line-height: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    filter:
+      drop-shadow(-2px -2px 4px rgba(255,255,255,0.42))
+      drop-shadow(3px 3px 6px rgba(150,160,184,0.22));
+  }
+
+  html[data-theme='dark'] #emptyInfoForegroundLogo {
+    filter:
+      drop-shadow(-2px -2px 4px rgba(255,255,255,0.035))
+      drop-shadow(3px 3px 7px rgba(0,0,0,0.42));
+  }
+
+  #emptyInfoForegroundLogoSvg,
+  #emptyInfoForegroundLogo .empty-info-foreground-logo-svg {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    color: currentColor !important;
+    overflow: visible !important;
+  }
+
+  #emptyInfoForegroundLogoSvg *,
+  #emptyInfoForegroundLogo .empty-info-foreground-logo-svg * {
+    fill: currentColor !important;
+    stroke: none !important;
+  }
+
+  #emptyInfoVersion {
+    font-family: "Inter", "游ゴシック", "ヒラギノ角ゴシック", sans-serif;
+    font-size: 9px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: rgba(17,17,24,0.46);
+  }
+
+  html[data-theme='dark'] #emptyInfoVersion {
+    color: rgba(255,255,255,0.46);
+  }
+
+  @media (max-width: 900px) {
+    body.is-mobile-framed #placeholder.empty-info-state {
+      min-height: clamp(150px, 34vw, 220px) !important;
+    }
+
+    body.is-mobile-framed #placeholder.empty-info-state #emptyInfoLogo {
+      width: min(40%, 138px) !important;
+      max-width: 138px !important;
+      min-width: 86px !important;
+      opacity: 0.62 !important;
+    }
+
+    body.is-mobile-framed #emptyInfoForeground {
+      gap: 6px;
+    }
+
+    body.is-mobile-framed #emptyInfoForegroundLogo {
+      width: min(58vw, 156px);
+      max-width: 156px;
+      min-width: 108px;
+    }
+  }
+</style>
+
+
+<style id="v91-panel-toggle-logo-2x">
+  #emptyInfoForeground {
+    width: min(90%, 380px) !important;
+  }
+
+  #emptyInfoForegroundLogo {
+    width: min(88%, 336px) !important;
+    max-width: 336px !important;
+    min-width: min(216px, 82vw) !important;
+  }
+
+  @media (max-width: 900px) {
+    body.is-mobile-framed #integratedInfoTopPane.is-empty {
+      min-height: clamp(240px, 42vh, 420px) !important;
+    }
+
+    body.is-mobile-framed #integratedInfoTopPane.is-empty #integratedInfoTopScroll {
+      min-height: clamp(240px, 42vh, 420px) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #integratedInfoTopPane.is-empty #placeholder.empty-info-state {
+      width: 100% !important;
+      min-height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    body.is-mobile-framed #emptyInfoForegroundLogo {
+      width: min(78vw, 312px) !important;
+      max-width: 312px !important;
+      min-width: min(216px, 72vw) !important;
+    }
+
+    body.is-mobile-framed #emptyInfoForeground {
+      width: 100% !important;
+      transform: translateY(-2px);
+    }
+  }
+
+  #desktopPanelToggleBtn,
+  #mobileMapExpandBtn {
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: "Inter", "游ゴシック", "ヒラギノ角ゴシック", sans-serif !important;
+  }
+
+  @media (min-width: 901px) {
+    #desktopPanelToggleBtn {
+      position: absolute;
+      right: -17px;
+      top: 50%;
+      z-index: 42;
+      width: 34px;
+      height: 66px;
+      padding: 0;
+      border-radius: 999px;
+      border: 1px solid var(--neo-light-stroke);
+      background: var(--neo-light-surface-soft);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1;
+      box-shadow:
+        var(--neo-light-inset),
+        -6px -6px 14px var(--neo-light-highlight),
+        8px 8px 18px var(--neo-light-shadow);
+      transform: translateY(-50%);
+    }
+
+    #desktopPanelToggleBtn:hover,
+    #desktopPanelToggleBtn:focus-visible {
+      transform: translateY(calc(-50% - 1px));
+      outline: none;
+      background: var(--neo-light-surface);
+      box-shadow:
+        var(--neo-light-inset),
+        -8px -8px 16px var(--neo-light-highlight),
+        10px 10px 20px var(--neo-light-shadow-strong);
+    }
+
+    #desktopPanelToggleBtn:active {
+      transform: translateY(calc(-50% + 1px));
+      box-shadow:
+        inset 2px 2px 6px rgba(142,152,176,0.30),
+        inset -2px -2px 6px rgba(255,255,255,0.72);
+    }
+
+    html[data-theme='dark'] #desktopPanelToggleBtn:active {
+      box-shadow:
+        inset 2px 2px 6px rgba(0,0,0,0.48),
+        inset -2px -2px 6px rgba(255,255,255,0.035);
+    }
+
+    body.is-desktop-panel-collapsed #desktopSplitLayout {
+      grid-template-columns: minmax(0, 1fr) 0 !important;
+      column-gap: 0 !important;
+    }
+
+    body.is-desktop-panel-collapsed #desktopMapPane {
+      grid-column: 1 / -1 !important;
+      grid-row: 1 / span 2 !important;
+    }
+
+    body.is-desktop-panel-collapsed #desktopSplitLayout > #integratedInfoTopPane,
+    body.is-desktop-panel-collapsed #desktopSplitLayout > #integratedInfoBottomPane {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    body.is-desktop-panel-collapsed #desktopPanelToggleBtn {
+      right: 14px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    #desktopPanelToggleBtn {
+      display: none !important;
+    }
+
+    #mobileMapExpandBtn {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      padding: 0;
+      border-radius: 12px;
+      border: 1px solid var(--neo-light-stroke) !important;
+      background: var(--neo-light-surface-soft) !important;
+      color: var(--text) !important;
+      box-shadow:
+        var(--neo-light-inset),
+        -4px -4px 10px var(--neo-light-highlight),
+        5px 5px 12px var(--neo-light-shadow) !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1;
+      transform: translateY(0) !important;
+    }
+
+    #mobileMapExpandBtn:hover,
+    #mobileMapExpandBtn:focus-visible {
+      background: var(--neo-light-surface) !important;
+      outline: none !important;
+      box-shadow:
+        var(--neo-light-inset),
+        -5px -5px 12px var(--neo-light-highlight),
+        7px 7px 15px var(--neo-light-shadow-strong) !important;
+    }
+
+    #mobileMapExpandBtn:active {
+      transform: translateY(1px) !important;
+      box-shadow:
+        inset 2px 2px 6px rgba(142,152,176,0.30),
+        inset -2px -2px 6px rgba(255,255,255,0.72) !important;
+    }
+
+    html[data-theme='dark'] #mobileMapExpandBtn:active {
+      box-shadow:
+        inset 2px 2px 6px rgba(0,0,0,0.48),
+        inset -2px -2px 6px rgba(255,255,255,0.035) !important;
+    }
+
+    body.is-mobile-framed.is-mobile-map-expanded #mobileMapFrame {
+      min-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 20px) !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    body.is-mobile-framed.is-mobile-map-expanded #mobileMapHeader,
+    body.is-mobile-framed.is-mobile-map-expanded #mobileMapControls,
+    body.is-mobile-framed.is-mobile-map-expanded #mobileMapLegendSlot {
+      flex: 0 0 auto !important;
+    }
+
+    body.is-mobile-framed.is-mobile-map-expanded #mobileMapViewport {
+      height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 140px) !important;
+      min-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 140px) !important;
+      flex: 1 1 auto !important;
+    }
+
+    body.is-mobile-framed.is-mobile-map-expanded #mobileMapLegendSlot #categoryLegend.is-visible {
+      max-height: min(24dvh, 220px) !important;
+    }
+  }
+
+  @media (min-width: 901px) {
+    #mobileMapExpandBtn {
+      display: none !important;
+    }
+  }
+</style>
+
 </head>
 <body>
   <div id="app">
@@ -6107,6 +6436,10 @@
       </div>
       <div id="placeholder" class="empty-info-state" aria-label="ブース未選択">
           <div id="emptyInfoLogo" class="empty-info-logo"><svg class="empty-info-logo-svg" aria-hidden="true" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 769.99 827.63"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M118.15,455.33c42.49-24.6,68.63-70.01,68.57-119.11l-.07-56.97c-.06-51.54-41.9-93.28-93.44-93.21h0C41.67,186.1-.06,227.94,0,279.48l.33,272.28c8.43-23.14,24.55-42.42,46.12-54.91l71.7-41.51Z"/><path class="cls-1" d="M215.61,202.65c42.52,24.55,94.92,24.55,137.44,0l49.34-28.48c44.64-25.77,59.93-82.85,34.16-127.49h0c-25.77-44.64-82.85-59.93-127.49-34.16L73.26,148.66c24.26-4.24,49.01.11,70.6,12.57l71.75,41.42Z"/><path class="cls-1" d="M479.67,160.99c0,49.1,26.2,94.48,68.72,119.03l49.34,28.48c44.64,25.77,101.72,10.48,127.49-34.16h0c25.77-44.64,10.48-101.72-34.16-127.49L455.25,10.71c15.8,18.89,24.41,42.5,24.41,67.43v82.85Z"/><path class="cls-1" d="M651.84,372.3c-42.49,24.6-68.63,70.01-68.57,119.11l.07,56.97c.06,51.54,41.9,93.28,93.44,93.21h0c51.54-.06,93.28-41.9,93.21-93.44l-.33-272.28c-8.43,23.14-24.55,42.42-46.12,54.91l-71.7,41.51Z"/><path class="cls-1" d="M554.38,624.98c-42.52-24.55-94.92-24.55-137.44,0l-49.34,28.48c-44.64,25.77-59.93,82.85-34.16,127.49h0c25.77,44.64,82.85,59.93,127.49,34.16l235.8-136.14c-24.26,4.24-49.01-.11-70.6-12.57l-71.75-41.42Z"/><path class="cls-1" d="M290.32,666.65c0-49.1-26.2-94.48-68.72-119.03l-49.34-28.48c-44.64-25.77-101.72-10.48-127.49,34.16h0c-25.77,44.64-10.48,101.72,34.16,127.49l235.8,136.14c-15.8-18.89-24.41-42.5-24.41-67.43v-82.85Z"/></g></svg></div>
+          <div id="emptyInfoForeground" aria-hidden="true">
+            <div id="emptyInfoForegroundLogo"><svg id="emptyInfoForegroundLogoSvg" class="empty-info-foreground-logo-svg" aria-hidden="true" focusable="false" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 823.75 29"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M0,12.4v-.07C0,5.91,4.81.58,11.37.58c4.06,0,6.49,1.49,8.83,3.64l-1.2,1.23c-1.98-1.92-4.25-3.34-7.66-3.34C5.88,2.11,1.75,6.56,1.75,12.27v.06c0,5.75,4.19,10.23,9.61,10.23,3.28,0,5.52-1.27,7.83-3.54l1.14,1.1c-2.4,2.37-5,3.96-9.03,3.96C4.81,24.09,0,18.93,0,12.4Z"/><path class="cls-1" d="M28.02,7.14h1.59v4.71c1.3-2.96,4.06-5.1,7.34-4.97v1.75h-.16c-3.83,0-7.18,2.89-7.18,8.28v6.79h-1.59V7.14Z"/><path class="cls-1" d="M42.31,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM56.04,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M64.29,18.9v-.07c0-3.44,2.95-5.39,7.24-5.39,2.3,0,3.9.29,5.49.71v-.71c0-3.34-2.05-5.07-5.46-5.07-2.01,0-3.67.55-5.2,1.33l-.58-1.4c1.82-.84,3.6-1.43,5.88-1.43s4.03.62,5.23,1.82c1.1,1.1,1.69,2.63,1.69,4.68v10.33h-1.56v-2.76c-1.14,1.59-3.18,3.15-6.33,3.15s-6.4-1.75-6.4-5.2ZM77.05,17.5v-1.88c-1.4-.36-3.25-.75-5.62-.75-3.51,0-5.46,1.56-5.46,3.86v.06c0,2.4,2.27,3.8,4.81,3.8,3.38,0,6.27-2.08,6.27-5.1Z"/><path class="cls-1" d="M88.26,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.44-.58v1.49c-.84.39-1.66.58-2.7.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M101.99,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.47,3.96,8.47,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.47-3.96-8.47-8.6ZM117.28,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M127.16,7.14h1.59v4.71c1.3-2.96,4.06-5.1,7.34-4.97v1.75h-.16c-3.83,0-7.18,2.89-7.18,8.28v6.79h-1.59V7.14Z"/><path class="cls-1" d="M142.64,13.15h8.7v1.82h-8.7v-1.82Z"/><path class="cls-1" d="M167.58.81h1.62l10.59,22.89h-1.85l-2.89-6.36h-13.41l-2.89,6.36h-1.75L167.58.81ZM174.34,15.81l-5.97-13.15-6.01,13.15h11.98Z"/><path class="cls-1" d="M186.84,17.27V7.14h1.59v9.84c0,3.41,1.92,5.65,5.26,5.65s5.75-2.47,5.75-5.91V7.14h1.59v16.56h-1.59v-3.08c-1.1,1.95-2.96,3.47-5.97,3.47-4.19,0-6.62-2.86-6.62-6.82Z"/><path class="cls-1" d="M209.24,15.49v-.07c0-5.39,4.06-8.67,8.05-8.67,3.31,0,5.46,1.88,6.82,3.96V0h1.59v23.7h-1.59v-3.7c-1.43,2.17-3.54,4.09-6.82,4.09-3.99,0-8.05-3.21-8.05-8.6ZM224.21,15.46v-.06c0-4.25-3.31-7.11-6.75-7.11s-6.49,2.63-6.49,7.08v.06c0,4.35,3.02,7.14,6.49,7.14s6.75-2.89,6.75-7.11Z"/><path class="cls-1" d="M235.02.65h1.98v2.18h-1.98V.65ZM235.22,7.14h1.59v16.56h-1.59V7.14Z"/><path class="cls-1" d="M245.19,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.74c.29,4.12,3.25,6.53,6.49,6.53,2.57,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM258.92,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.11,6.43h12.05Z"/><path class="cls-1" d="M268.53,7.14h1.59v3.08c1.1-1.95,2.95-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M290.55,15.49v-.07c0-4.64,3.7-8.67,8.44-8.67,3.12,0,5.07,1.43,6.62,3.05l-1.14,1.17c-1.43-1.46-3.05-2.73-5.52-2.73-3.77,0-6.69,3.15-6.69,7.11v.06c0,3.99,3.02,7.18,6.82,7.18,2.34,0,4.16-1.2,5.55-2.76l1.1.97c-1.69,1.92-3.7,3.28-6.75,3.28-4.77,0-8.44-3.96-8.44-8.6Z"/><path class="cls-1" d="M311.85,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM325.58,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M348.54.97h16.17v1.56h-14.48v8.93h13.02v1.56h-13.02v9.12h14.64v1.56h-16.33V.97Z"/><path class="cls-1" d="M371.17,7.14h1.85l6.27,14.77,6.33-14.77h1.79l-7.44,16.69h-1.36l-7.44-16.69Z"/><path class="cls-1" d="M392.9,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM406.63,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M416.24,7.14h1.59v3.08c1.1-1.95,2.96-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M440.27,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.44-.58v1.49c-.84.39-1.66.58-2.7.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M475.11,2.53h-7.92V.97h17.53v1.56h-7.92v21.17h-1.69V2.53Z"/><path class="cls-1" d="M487.22,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.48,3.96,8.48,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.48-3.96-8.48-8.6ZM502.52,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M512.39,7.14h1.59v3.7c1.43-2.18,3.54-4.09,6.82-4.09,3.99,0,8.05,3.21,8.05,8.6v.06c0,5.39-4.06,8.67-8.05,8.67-3.31,0-5.46-1.88-6.82-3.96v8.77h-1.59V7.14ZM527.13,15.49v-.07c0-4.35-3.02-7.14-6.49-7.14s-6.75,2.89-6.75,7.11v.06c0,4.25,3.31,7.11,6.75,7.11s6.49-2.63,6.49-7.08Z"/><path class="cls-1" d="M535.93,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.47,3.96,8.47,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.47-3.96-8.47-8.6ZM551.22,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M561.32,0h1.59v23.7h-1.59V0Z"/><path class="cls-1" d="M571.29,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.48,3.96,8.48,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.48-3.96-8.48-8.6ZM586.58,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M596.13,26.43l.94-1.3c1.98,1.53,4.25,2.34,6.69,2.34,3.8,0,6.49-2.18,6.49-6.43v-2.4c-1.43,2.05-3.64,3.83-6.92,3.83-3.99,0-7.96-3.05-7.96-7.79v-.06c0-4.77,3.96-7.86,7.96-7.86,3.31,0,5.55,1.75,6.92,3.7v-3.31h1.59v14c0,2.4-.78,4.29-2.11,5.62-1.43,1.43-3.57,2.21-6.01,2.21-2.76,0-5.33-.84-7.6-2.53ZM610.35,14.64v-.06c0-3.83-3.41-6.3-6.85-6.3s-6.4,2.4-6.4,6.27v.06c0,3.73,2.99,6.33,6.4,6.33s6.85-2.53,6.85-6.3Z"/><path class="cls-1" d="M634.09,7.14h1.75l-7.18,17.14c-1.46,3.47-3.15,4.71-5.52,4.71-1.27,0-2.18-.23-3.28-.71l.55-1.4c.88.42,1.59.62,2.82.62,1.72,0,2.86-1.01,4.09-3.9l-7.96-16.46h1.85l6.88,14.81,5.97-14.81Z"/><path class="cls-1" d="M665.46.81h1.62l10.59,22.89h-1.85l-2.89-6.36h-13.41l-2.89,6.36h-1.75l10.59-22.89ZM672.21,15.81l-5.97-13.15-6.01,13.15h11.98Z"/><path class="cls-1" d="M683.93,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.7-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M702.99,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.69-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M723.84.65h1.98v2.18h-1.98V.65ZM724.03,7.14h1.59v16.56h-1.59V7.14Z"/><path class="cls-1" d="M733.71,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.69-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M755.07,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.43-.58v1.49c-.84.39-1.66.58-2.69.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M769.07,18.9v-.07c0-3.44,2.95-5.39,7.24-5.39,2.3,0,3.9.29,5.49.71v-.71c0-3.34-2.05-5.07-5.46-5.07-2.01,0-3.67.55-5.2,1.33l-.58-1.4c1.82-.84,3.6-1.43,5.88-1.43s4.03.62,5.23,1.82c1.1,1.1,1.69,2.63,1.69,4.68v10.33h-1.56v-2.76c-1.14,1.59-3.18,3.15-6.33,3.15s-6.4-1.75-6.4-5.2ZM781.83,17.5v-1.88c-1.4-.36-3.25-.75-5.62-.75-3.51,0-5.46,1.56-5.46,3.86v.06c0,2.4,2.27,3.8,4.81,3.8,3.38,0,6.27-2.08,6.27-5.1Z"/><path class="cls-1" d="M792.32,7.14h1.59v3.08c1.1-1.95,2.96-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M816.34,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.43-.58v1.49c-.84.39-1.66.58-2.69.58-2.57,0-4.64-1.4-4.64-4.55Z"/></g></svg></div>
+            <div id="emptyInfoVersion">Ver.1.1.2</div>
+          </div>
         </div>
       <div id="detail" style="display:none;">
         <div id="boothId"></div>
@@ -6676,6 +7009,91 @@
       return el;
     }
 
+    const DESKTOP_PANEL_COLLAPSED_STORAGE_KEY = 'caeta_desktop_panel_collapsed_v91';
+
+    function requestViewportResizeAfterUiToggle() {
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event('resize'));
+      });
+    }
+
+    function setDesktopPanelCollapsed(collapsed, persist = true) {
+      const shouldCollapse = !!collapsed;
+      document.body.classList.toggle('is-desktop-panel-collapsed', shouldCollapse);
+      const btn = document.getElementById('desktopPanelToggleBtn');
+      if (btn) {
+        btn.textContent = shouldCollapse ? '‹' : '›';
+        btn.setAttribute('aria-pressed', shouldCollapse ? 'true' : 'false');
+        btn.setAttribute('aria-label', shouldCollapse ? '右パネルを表示' : '右パネルを最小化');
+        btn.setAttribute('title', shouldCollapse ? '右パネルを表示' : '右パネルを最小化');
+      }
+      if (persist) {
+        try { localStorage.setItem(DESKTOP_PANEL_COLLAPSED_STORAGE_KEY, shouldCollapse ? '1' : '0'); } catch (err) {}
+      }
+      requestViewportResizeAfterUiToggle();
+    }
+
+    function restoreDesktopPanelCollapsedState() {
+      let collapsed = false;
+      try { collapsed = localStorage.getItem(DESKTOP_PANEL_COLLAPSED_STORAGE_KEY) === '1'; } catch (err) {}
+      setDesktopPanelCollapsed(collapsed, false);
+    }
+
+    function ensureDesktopPanelToggle() {
+      const mapPane = document.getElementById('desktopMapPane');
+      if (!mapPane) return;
+      let btn = document.getElementById('desktopPanelToggleBtn');
+      if (!btn) {
+        btn = document.createElement('button');
+        btn.id = 'desktopPanelToggleBtn';
+        btn.type = 'button';
+        btn.addEventListener('click', () => {
+          setDesktopPanelCollapsed(!document.body.classList.contains('is-desktop-panel-collapsed'));
+        });
+      }
+      if (btn.parentElement !== mapPane) mapPane.appendChild(btn);
+      const collapsed = document.body.classList.contains('is-desktop-panel-collapsed');
+      btn.textContent = collapsed ? '‹' : '›';
+      btn.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
+      btn.setAttribute('aria-label', collapsed ? '右パネルを表示' : '右パネルを最小化');
+      btn.setAttribute('title', collapsed ? '右パネルを表示' : '右パネルを最小化');
+    }
+
+    function setMobileMapExpanded(expanded) {
+      const shouldExpand = !!expanded;
+      document.body.classList.toggle('is-mobile-map-expanded', shouldExpand);
+      const btn = document.getElementById('mobileMapExpandBtn');
+      if (btn) {
+        btn.textContent = shouldExpand ? '↙' : '⤢';
+        btn.setAttribute('aria-pressed', shouldExpand ? 'true' : 'false');
+        btn.setAttribute('aria-label', shouldExpand ? '3Dペインを標準サイズに戻す' : '3Dペインを縦幅いっぱいに拡大');
+        btn.setAttribute('title', shouldExpand ? '3Dペインを標準サイズに戻す' : '3Dペインを縦幅いっぱいに拡大');
+      }
+      requestViewportResizeAfterUiToggle();
+    }
+
+    function ensureMobileMapExpandButton() {
+      if (!rightUtilityDock) return;
+      let btn = document.getElementById('mobileMapExpandBtn');
+      if (!btn) {
+        btn = document.createElement('button');
+        btn.id = 'mobileMapExpandBtn';
+        btn.className = 'icon-btn';
+        btn.type = 'button';
+        btn.addEventListener('click', () => {
+          setMobileMapExpanded(!document.body.classList.contains('is-mobile-map-expanded'));
+        });
+      }
+      if (btn.parentElement !== rightUtilityDock) rightUtilityDock.appendChild(btn);
+      const expanded = document.body.classList.contains('is-mobile-map-expanded');
+      btn.textContent = expanded ? '↙' : '⤢';
+      btn.setAttribute('aria-pressed', expanded ? 'true' : 'false');
+      btn.setAttribute('aria-label', expanded ? '3Dペインを標準サイズに戻す' : '3Dペインを縦幅いっぱいに拡大');
+      btn.setAttribute('title', expanded ? '3Dペインを標準サイズに戻す' : '3Dペインを縦幅いっぱいに拡大');
+    }
+
+    restoreDesktopPanelCollapsedState();
+
     function setupMobileFrameScaffold() {
       if (!app) return null;
       const existing = document.getElementById('mobileFrameLayout');
@@ -6713,6 +7131,7 @@
       if (brand && mapHeader && brand.parentElement !== mapHeader) mapHeader.appendChild(brand);
       if (actionDock && mapControls && actionDock.parentElement !== mapControls) mapControls.appendChild(actionDock);
       if (rightUtilityDock && mapControls && rightUtilityDock.parentElement !== mapControls) mapControls.appendChild(rightUtilityDock);
+      ensureMobileMapExpandButton();
       if (categoryLegend && mapLegendSlot && categoryLegend.parentElement !== mapLegendSlot) mapLegendSlot.appendChild(categoryLegend);
       if (infoPanel && topPane && topPane.parentElement !== infoPanel) infoPanel.appendChild(topPane);
       if (infoPanel && bottomPane && bottomPane.parentElement !== infoPanel) infoPanel.appendChild(bottomPane);
@@ -6761,6 +7180,7 @@
       if (actionDock && mapPane && actionDock.parentElement !== mapPane) mapPane.appendChild(actionDock);
       if (rightUtilityDock && mapPane && rightUtilityDock.parentElement !== mapPane) mapPane.appendChild(rightUtilityDock);
       if (categoryLegend && mapPane && categoryLegend.parentElement !== mapPane) mapPane.appendChild(categoryLegend);
+      ensureDesktopPanelToggle();
       if (topPane && topPane.parentElement !== desktopSplitLayout) desktopSplitLayout.appendChild(topPane);
       if (bottomPane && bottomPane.parentElement !== desktopSplitLayout) desktopSplitLayout.appendChild(bottomPane);
       syncMobileFrameClass();
