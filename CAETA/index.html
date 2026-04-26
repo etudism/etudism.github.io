@@ -4,6 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>CAETA | 文学フリマ東京42（非公式）3Dブース図</title>
+  <script>
+    (() => {
+      const isHttp = location.protocol === 'http:' || location.protocol === 'https:';
+      if (isHttp && /\/index\.html$/i.test(location.pathname)) {
+        location.replace(location.href.replace(/\/index\.html(?=([?#]|$))/i, '/'));
+        return;
+      }
+
+      const ua = navigator.userAgent || '';
+      const isIOSDevice = /iPad|iPhone|iPod/i.test(ua);
+      const isIPadOS = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+      const isIOSWebKit = isIOSDevice || isIPadOS;
+      const lowDeviceMemory = typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4;
+
+      if (isIOSWebKit || lowDeviceMemory) {
+        document.documentElement.classList.add('caeta-safe-mode');
+      }
+      if (isIOSWebKit) {
+        document.documentElement.classList.add('caeta-ios');
+      }
+    })();
+  </script>
   <style>
     :root {
       --bg: #f7f5fb;
@@ -4881,6 +4903,113 @@
         drop-shadow(-2.5px -2.5px 2.5px rgba(255,255,255,0.045))
         drop-shadow(4px 4px 5px rgba(0,0,0,0.48)) !important;
     }
+
+    /* iOS/WebKit safety mode: reduce compositor and GPU pressure before WebGL starts. */
+    html.caeta-safe-mode *,
+    html.caeta-safe-mode *::before,
+    html.caeta-safe-mode *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    html.caeta-safe-mode .glass,
+    html.caeta-safe-mode #loadingOverlay,
+    html.caeta-safe-mode #loadingCard,
+    html.caeta-safe-mode #aboutOverlay,
+    html.caeta-safe-mode #aboutDialog,
+    html.caeta-safe-mode .action-node {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      filter: none !important;
+    }
+
+    html.caeta-safe-mode #loadingOverlay::before,
+    html.caeta-safe-mode #loadingOverlay::after,
+    html.caeta-safe-mode #desktopMapPane::before,
+    html.caeta-safe-mode #desktopMapPane::after {
+      display: none !important;
+      content: none !important;
+    }
+
+    html.caeta-safe-mode #desktopMapPane > #actionDock,
+    html.caeta-safe-mode #desktopMapPane > #rightUtilityDock,
+    html.caeta-safe-mode #desktopMapPane > #categoryLegend,
+    html.caeta-safe-mode #integratedInfoTopPane,
+    html.caeta-safe-mode #integratedInfoBottomPane,
+    html.caeta-safe-mode .mobile-frame {
+      box-shadow: 0 8px 22px rgba(36,24,56,0.10) !important;
+    }
+
+    html.caeta-safe-mode #app > canvas,
+    html.caeta-safe-mode #desktopMapViewport > canvas,
+    html.caeta-safe-mode #mobileMapViewport > canvas {
+      will-change: auto !important;
+    }
+
+    #caetaLiteFallback {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      overflow: auto;
+      padding: max(16px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+      background: var(--app-bg);
+      color: var(--text);
+      font-family: "Inter", "游ゴシック", "SF Pro JP", "ヒラギノ角ゴシック", sans-serif;
+    }
+    #caetaLiteFallback .caeta-lite-card {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: 0 14px 38px rgba(36,24,56,0.12);
+      padding: 18px;
+    }
+    #caetaLiteFallback h1 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      line-height: 1.35;
+      letter-spacing: -0.03em;
+    }
+    #caetaLiteFallback p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    #caetaLiteFallback input {
+      width: 100%;
+      margin: 0 0 12px;
+      min-height: 44px;
+    }
+    #caetaLiteFallback .caeta-lite-list {
+      display: grid;
+      gap: 8px;
+    }
+    #caetaLiteFallback .caeta-lite-item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface-soft);
+      padding: 11px 12px;
+    }
+    #caetaLiteFallback .caeta-lite-id {
+      font-weight: 800;
+      font-size: 13px;
+    }
+    #caetaLiteFallback .caeta-lite-name {
+      margin-top: 3px;
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    #caetaLiteFallback .caeta-lite-meta {
+      margin-top: 4px;
+      color: var(--hint);
+      font-size: 11px;
+      line-height: 1.5;
+    }
 </style>
 
 <style id="v74-overrides">
@@ -5546,54 +5675,7 @@
         <div id="hoverHint"></div>
       </div>
       <div id="placeholder" class="empty-info-state" aria-label="ブース未選択">
-          <div id="emptyInfoLogo" class="empty-info-logo"><svg class="empty-info-logo-svg" aria-hidden="true" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 769.99 827.63"><defs><style>.cls-1{fill:currentColor;}
-
-    /* Final bottom-pane search structure: no boothSearch wrapper; direct children on integratedInfoBottomPane */
-    #desktopSplitLayout > #integratedInfoBottomPane > #boothSearchBar,
-    #desktopSplitLayout > #integratedInfoBottomPane > #boothSearchMeta,
-    #desktopSplitLayout > #integratedInfoBottomPane > #boothSearchResults,
-    #bottomDrawer.is-integrated-right-menu ~ #boothSearchBar,
-    #bottomDrawer.is-integrated-right-menu ~ #boothSearchMeta,
-    #bottomDrawer.is-integrated-right-menu ~ #boothSearchResults {
-      position: relative;
-      z-index: 2;
-      margin-left: 0;
-      margin-right: 0;
-    }
-
-    #desktopSplitLayout > #integratedInfoBottomPane > #boothSearchBar {
-      margin: 0 0 10px 0 !important;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    #desktopSplitLayout > #integratedInfoBottomPane > #boothSearchMeta {
-      margin: 0 0 8px 0 !important;
-      padding: 0 2px;
-      box-sizing: border-box;
-    }
-
-    #desktopSplitLayout > #integratedInfoBottomPane > #boothSearchResults {
-      margin: 0 0 12px 0 !important;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    #desktopSplitLayout > #integratedInfoBottomPane #integratedInfoBottomScroll {
-      min-height: 0;
-    }
-
-    #drawerPrimaryList,
-    #drawerSecondaryList,
-    #bottomDrawer.is-integrated-right-menu #drawerPrimaryList,
-    #bottomDrawer.is-integrated-right-menu #drawerSecondaryList,
-    #infoPanel > #bottomDrawer #drawerPrimaryList,
-    #infoPanel > #bottomDrawer #drawerSecondaryList {
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-    }
-
-</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M118.15,455.33c42.49-24.6,68.63-70.01,68.57-119.11l-.07-56.97c-.06-51.54-41.9-93.28-93.44-93.21h0C41.67,186.1-.06,227.94,0,279.48l.33,272.28c8.43-23.14,24.55-42.42,46.12-54.91l71.7-41.51Z"/><path class="cls-1" d="M215.61,202.65c42.52,24.55,94.92,24.55,137.44,0l49.34-28.48c44.64-25.77,59.93-82.85,34.16-127.49h0c-25.77-44.64-82.85-59.93-127.49-34.16L73.26,148.66c24.26-4.24,49.01.11,70.6,12.57l71.75,41.42Z"/><path class="cls-1" d="M479.67,160.99c0,49.1,26.2,94.48,68.72,119.03l49.34,28.48c44.64,25.77,101.72,10.48,127.49-34.16h0c25.77-44.64,10.48-101.72-34.16-127.49L455.25,10.71c15.8,18.89,24.41,42.5,24.41,67.43v82.85Z"/><path class="cls-1" d="M651.84,372.3c-42.49,24.6-68.63,70.01-68.57,119.11l.07,56.97c.06,51.54,41.9,93.28,93.44,93.21h0c51.54-.06,93.28-41.9,93.21-93.44l-.33-272.28c-8.43,23.14-24.55,42.42-46.12,54.91l-71.7,41.51Z"/><path class="cls-1" d="M554.38,624.98c-42.52-24.55-94.92-24.55-137.44,0l-49.34,28.48c-44.64,25.77-59.93,82.85-34.16,127.49h0c25.77,44.64,82.85,59.93,127.49,34.16l235.8-136.14c-24.26,4.24-49.01-.11-70.6-12.57l-71.75-41.42Z"/><path class="cls-1" d="M290.32,666.65c0-49.1-26.2-94.48-68.72-119.03l-49.34-28.48c-44.64-25.77-101.72-10.48-127.49,34.16h0c-25.77,44.64-10.48,101.72,34.16,127.49l235.8,136.14c-15.8-18.89-24.41-42.5-24.41-67.43v-82.85Z"/></g></svg></div>
+          <div id="emptyInfoLogo" class="empty-info-logo"><svg class="empty-info-logo-svg" aria-hidden="true" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 769.99 827.63"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M118.15,455.33c42.49-24.6,68.63-70.01,68.57-119.11l-.07-56.97c-.06-51.54-41.9-93.28-93.44-93.21h0C41.67,186.1-.06,227.94,0,279.48l.33,272.28c8.43-23.14,24.55-42.42,46.12-54.91l71.7-41.51Z"/><path class="cls-1" d="M215.61,202.65c42.52,24.55,94.92,24.55,137.44,0l49.34-28.48c44.64-25.77,59.93-82.85,34.16-127.49h0c-25.77-44.64-82.85-59.93-127.49-34.16L73.26,148.66c24.26-4.24,49.01.11,70.6,12.57l71.75,41.42Z"/><path class="cls-1" d="M479.67,160.99c0,49.1,26.2,94.48,68.72,119.03l49.34,28.48c44.64,25.77,101.72,10.48,127.49-34.16h0c25.77-44.64,10.48-101.72-34.16-127.49L455.25,10.71c15.8,18.89,24.41,42.5,24.41,67.43v82.85Z"/><path class="cls-1" d="M651.84,372.3c-42.49,24.6-68.63,70.01-68.57,119.11l.07,56.97c.06,51.54,41.9,93.28,93.44,93.21h0c51.54-.06,93.28-41.9,93.21-93.44l-.33-272.28c-8.43,23.14-24.55,42.42-46.12,54.91l-71.7,41.51Z"/><path class="cls-1" d="M554.38,624.98c-42.52-24.55-94.92-24.55-137.44,0l-49.34,28.48c-44.64,25.77-59.93,82.85-34.16,127.49h0c25.77,44.64,82.85,59.93,127.49,34.16l235.8-136.14c-24.26,4.24-49.01-.11-70.6-12.57l-71.75-41.42Z"/><path class="cls-1" d="M290.32,666.65c0-49.1-26.2-94.48-68.72-119.03l-49.34-28.48c-44.64-25.77-101.72-10.48-127.49,34.16h0c-25.77,44.64-10.48,101.72,34.16,127.49l235.8,136.14c-15.8-18.89-24.41-42.5-24.41-67.43v-82.85Z"/></g></svg></div>
         </div>
       <div id="detail" style="display:none;">
         <div id="boothId"></div>
@@ -5779,6 +5861,125 @@
     const loadingBar = document.getElementById('loadingBar') || document.getElementById('loadingProgressBar');
 
     const REMOTE_BOOTH_INFO_URL = 'https://etudism.github.io/CAETA/bunfree_tokyo42_booth_slots.json';
+
+    function detectIOSWebKit() {
+      const ua = navigator.userAgent || '';
+      const isIOSDevice = /iPad|iPhone|iPod/i.test(ua);
+      const isIPadOS = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+      return isIOSDevice || isIPadOS;
+    }
+
+    const CAETA_IOS_WEBKIT = detectIOSWebKit();
+    const CAETA_LOW_MEMORY_DEVICE = typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4;
+    const CAETA_SAFE_MODE = CAETA_IOS_WEBKIT || CAETA_LOW_MEMORY_DEVICE || new URLSearchParams(location.search).has('lite');
+
+    if (CAETA_SAFE_MODE) document.documentElement.classList.add('caeta-safe-mode');
+    if (CAETA_IOS_WEBKIT) document.documentElement.classList.add('caeta-ios');
+
+    function safeRendererPixelRatio() {
+      const dpr = window.devicePixelRatio || 1;
+      if (CAETA_SAFE_MODE) return 1;
+      return Math.min(dpr, isMobileFrameViewport() ? 1.05 : 1.5);
+    }
+
+    function safeTextureAnisotropy(renderer, preferred = 4) {
+      if (CAETA_SAFE_MODE) return 1;
+      const max = renderer?.capabilities?.getMaxAnisotropy?.() || 1;
+      return Math.max(1, Math.min(max, preferred));
+    }
+
+    function safeCanvasResolutionScale(requested = 2) {
+      if (CAETA_SAFE_MODE) return Math.max(1, Math.min(requested, 1.35));
+      return Math.max(1, Math.min(requested, 3));
+    }
+
+    function pageLabelTextureSize(frame, renderer) {
+      const deviceMaxTexture = renderer?.capabilities?.maxTextureSize || 2048;
+      const maxTextureSize = Math.max(512, Math.min(deviceMaxTexture, CAETA_SAFE_MODE ? 2048 : 4096));
+      const maxPixels = CAETA_SAFE_MODE ? 1800000 : 8000000;
+      const preferredWidth = CAETA_SAFE_MODE ? 1024 : 2048;
+
+      let texW = Math.max(512, Math.min(preferredWidth, maxTextureSize));
+      let texH = Math.max(256, Math.round(texW * frame.h / frame.w));
+
+      if (texH > maxTextureSize) {
+        const scale = maxTextureSize / texH;
+        texW = Math.max(512, Math.floor(texW * scale));
+        texH = maxTextureSize;
+      }
+
+      if (texW * texH > maxPixels) {
+        const scale = Math.sqrt(maxPixels / (texW * texH));
+        texW = Math.max(512, Math.floor(texW * scale));
+        texH = Math.max(256, Math.floor(texH * scale));
+      }
+
+      return { texW, texH };
+    }
+
+    function renderLiteFallback(error) {
+      hideLoadingOverlay();
+      document.body.classList.add('caeta-lite-mode');
+      const existing = document.getElementById('caetaLiteFallback');
+      if (existing) existing.remove();
+
+      const root = document.createElement('div');
+      root.id = 'caetaLiteFallback';
+      const card = document.createElement('div');
+      card.className = 'caeta-lite-card';
+
+      const title = document.createElement('h1');
+      title.textContent = '軽量表示で起動しました';
+      const description = document.createElement('p');
+      description.textContent = 'この端末では3D描画の負荷が高かったため、検索できる一覧表示に切り替えました。URL末尾の「?lite」を外すと3D表示を再試行できます。';
+
+      const input = document.createElement('input');
+      input.type = 'search';
+      input.placeholder = 'ブース番号・サークル名・カテゴリで検索';
+      input.setAttribute('aria-label', 'ブース検索');
+
+      const list = document.createElement('div');
+      list.className = 'caeta-lite-list';
+
+      const normalize = (value) => String(value || '').toLowerCase().replace(/\s+/g, '');
+      const boothLabel = (booth) => {
+        const info = booth.info || {};
+        return [booth.id, booth.n, info.booth_name, info.category, info.members, info.description].map(normalize).join(' ');
+      };
+      const render = () => {
+        const q = normalize(input.value);
+        const rows = DATA.booths
+          .filter((booth) => !q || boothLabel(booth).includes(q))
+          .slice(0, 120);
+        list.innerHTML = '';
+        if (!rows.length) {
+          const empty = document.createElement('p');
+          empty.textContent = '該当するブースはありません。';
+          list.appendChild(empty);
+          return;
+        }
+        rows.forEach((booth) => {
+          const info = booth.info || {};
+          const item = document.createElement('div');
+          item.className = 'caeta-lite-item';
+          item.innerHTML = `
+            <div class="caeta-lite-id">${String(booth.id || '').replace(/[<>&]/g, '')}</div>
+            <div class="caeta-lite-name">${String(info.booth_name || booth.n || '名称未設定').replace(/[<>&]/g, '')}</div>
+            <div class="caeta-lite-meta">${booth.page === 1 ? '南1・2ホール' : '南3・4ホール'}${info.category ? ' / ' + String(info.category).replace(/[<>&]/g, '') : ''}</div>
+          `;
+          list.appendChild(item);
+        });
+      };
+
+      input.addEventListener('input', render);
+      card.append(title, description, input, list);
+      root.appendChild(card);
+      app?.appendChild(root);
+      render();
+
+      if (error) console.error('[CAETA] Lite fallback activated', error);
+    }
+
 
     function stripEmbeddedBoothInfo() {
       return;
@@ -6032,16 +6233,6 @@
       return window.innerWidth <= 900;
     }
 
-    function isIOSWebKitRuntime() {
-      const ua = navigator.userAgent || '';
-      const platform = navigator.platform || '';
-      return /iPad|iPhone|iPod/.test(ua) || (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    }
-
-    function shouldUseMobileSafeRendering() {
-      return isIOSWebKitRuntime() || isMobileFrameViewport();
-    }
-
     function syncMobileFrameClass() {
       document.body.classList.toggle('is-mobile-framed', isMobileFrameViewport());
     }
@@ -6159,7 +6350,7 @@
 
     function resizeLabelCanvas() {
       if (!labelCanvas || !labelCtx) return;
-      overlayDpr = Math.min(window.devicePixelRatio || 1, 2);
+      overlayDpr = CAETA_SAFE_MODE ? 1 : Math.min(window.devicePixelRatio || 1, 2);
       labelCanvas.width = Math.max(1, Math.floor(window.innerWidth * overlayDpr));
       labelCanvas.height = Math.max(1, Math.floor(window.innerHeight * overlayDpr));
       labelCanvas.style.width = `${window.innerWidth}px`;
@@ -6194,17 +6385,20 @@
       setLoadingProgress(42, 'Building Scene');
       scene.background = new THREE.Color(0x11141c);
 
-      const mobileSafeRendering = shouldUseMobileSafeRendering();
       const renderer = new THREE.WebGLRenderer({
-        antialias: !mobileSafeRendering,
+        antialias: !CAETA_SAFE_MODE,
         alpha: false,
-        powerPreference: mobileSafeRendering ? 'default' : 'high-performance'
+        depth: true,
+        stencil: false,
+        preserveDrawingBuffer: false,
+        precision: CAETA_SAFE_MODE ? 'mediump' : 'highp',
+        powerPreference: CAETA_SAFE_MODE ? 'low-power' : 'high-performance'
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobileSafeRendering ? 1 : 1.5));
+      renderer.setPixelRatio(safeRendererPixelRatio());
       const initialRenderSize = currentRendererViewportSize();
       renderer.setSize(initialRenderSize.width, initialRenderSize.height);
-      renderer.shadowMap.enabled = !mobileSafeRendering;
-      if (renderer.shadowMap.enabled) renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.shadowMap.enabled = !CAETA_SAFE_MODE;
+      if (!CAETA_SAFE_MODE) renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       (getActiveMapViewport() || app).appendChild(renderer.domElement);
       renderer.domElement.style.touchAction = 'none';
@@ -6243,7 +6437,7 @@
         const size = currentRendererViewportSize();
         camera.aspect = size.width / size.height;
         camera.updateProjectionMatrix();
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobileFrameViewport() ? 1.15 : 1.5));
+        renderer.setPixelRatio(safeRendererPixelRatio());
         renderer.setSize(size.width, size.height);
         if (labelCtx) resizeLabelCanvas();
         overlayDirty = true;
@@ -7033,17 +7227,17 @@
       }
 
       function createTextTexture(drawFn, width, height, options = {}) {
-        const resolutionScale = Math.max(1, options.resolutionScale || 2);
+        const resolutionScale = safeCanvasResolutionScale(options.resolutionScale || 2);
         const canvas = document.createElement('canvas');
         canvas.width = Math.max(1, Math.round(width * resolutionScale));
         canvas.height = Math.max(1, Math.round(height * resolutionScale));
         const ctx = canvas.getContext('2d');
         ctx.setTransform(resolutionScale, 0, 0, resolutionScale, 0, 0);
         ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
+        ctx.imageSmoothingQuality = CAETA_SAFE_MODE ? 'medium' : 'high';
         drawFn(ctx, width, height);
         const texture = new THREE.CanvasTexture(canvas);
-        texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 4);
+        texture.anisotropy = safeTextureAnisotropy(renderer, 4);
         texture.minFilter = THREE.LinearFilter;
         texture.magFilter = THREE.LinearFilter;
         texture.generateMipmaps = false;
@@ -7527,7 +7721,7 @@
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(8, 11);
-        texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        texture.anisotropy = safeTextureAnisotropy(renderer, 2);
         texture.needsUpdate = true;
         return texture;
       }
@@ -7955,8 +8149,8 @@
         );
         mesh.scale.set(geo.w, BOOTH_H, geo.h);
         mesh.position.set(geo.x, BOOTH_H / 2, geo.z);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+        mesh.castShadow = !CAETA_SAFE_MODE;
+        mesh.receiveShadow = !CAETA_SAFE_MODE;
         mesh.userData = { kind: 'special', page, label: spec.label };
         mesh.renderOrder = 3;
         group.add(mesh);
@@ -8112,7 +8306,7 @@
         if (pageTextureCache.has(pageInfo.page)) return pageTextureCache.get(pageInfo.page);
         const texture = new THREE.TextureLoader().load(pageInfo.image);
         if ('colorSpace' in texture && THREE.SRGBColorSpace) texture.colorSpace = THREE.SRGBColorSpace;
-        texture.anisotropy = mobileSafeRendering ? 1 : renderer.capabilities.getMaxAnisotropy();
+        texture.anisotropy = safeTextureAnisotropy(renderer, 2);
         pageTextureCache.set(pageInfo.page, texture);
         return texture;
       }
@@ -8122,12 +8316,7 @@
         if (pageLabelTextureCache.has(pageInfo.page)) return pageLabelTextureCache.get(pageInfo.page);
 
         const frame = getHallFrame(pageInfo.page);
-        // iOS WebKit is prone to tab/GPU-process crashes when large canvas-backed
-        // textures are allocated during startup. 4096px wide label atlases become
-        // roughly 4096 x 5800 each for this venue map, so mobile/iOS uses a
-        // smaller atlas while desktop keeps the high-resolution version.
-        const texW = mobileSafeRendering ? 1536 : 4096;
-        const texH = Math.max(256, Math.round(texW * frame.h / frame.w));
+        const { texW, texH } = pageLabelTextureSize(frame, renderer);
         const canvas = document.createElement('canvas');
         canvas.width = texW;
         canvas.height = texH;
@@ -8150,7 +8339,7 @@
           const maxW = Math.max(6, w * sx * 0.64);
           const maxH = Math.max(6, h * sy * 0.54);
           let fontSize = Math.min(maxH, maxW / Math.max(0.64, text.length * 0.58));
-          fontSize = Math.max(7, fontSize);
+          fontSize = Math.max(CAETA_SAFE_MODE ? 4 : 7, fontSize);
 
           ctx.font = `600 ${fontSize}px "Inter", "游ゴシック", "SF Pro JP", "ヒラギノ角ゴシック", sans-serif`;
           ctx.fillStyle = '#ffffff';
@@ -8159,7 +8348,7 @@
 
         const texture = new THREE.CanvasTexture(canvas);
         if ('colorSpace' in texture && THREE.SRGBColorSpace) texture.colorSpace = THREE.SRGBColorSpace;
-        texture.anisotropy = mobileSafeRendering ? 1 : renderer.capabilities.getMaxAnisotropy();
+        texture.anisotropy = safeTextureAnisotropy(renderer, 2);
         texture.minFilter = THREE.LinearFilter;
         texture.magFilter = THREE.LinearFilter;
         texture.generateMipmaps = false;
@@ -8211,7 +8400,7 @@
           new THREE.PlaneGeometry(geo.w, geo.h),
           new THREE.MeshStandardMaterial({ color: labelColor(page, band.label), transparent: true, opacity: 0.56, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 })
         );
-        mesh.receiveShadow = true;
+        mesh.receiveShadow = !CAETA_SAFE_MODE;
         mesh.rotation.x = -Math.PI / 2;
         mesh.position.set(geo.x, ZONE_Y, geo.z);
         mesh.userData.page = page;
@@ -8229,7 +8418,7 @@
         );
         floor.rotation.x = -Math.PI / 2;
         floor.position.y = 0;
-        floor.receiveShadow = true;
+        floor.receiveShadow = !CAETA_SAFE_MODE;
         floor.userData.page = pageInfo.page;
         floor.userData.kind = 'hall-base-floor';
         floor.renderOrder = 0;
@@ -8258,7 +8447,13 @@
       }
 
       DATA.pages.forEach(makeHallBase);
-      DATA.pages.forEach(makeHallArchitecture);
+      if (!CAETA_SAFE_MODE) {
+        DATA.pages.forEach(makeHallArchitecture);
+      } else if (hallModelBtn) {
+        hallModelBtn.disabled = true;
+        hallModelBtn.title = '軽量モードでは会場モデルを省略しています';
+        hallModelBtn.setAttribute('aria-disabled', 'true');
+      }
       DATA.pages.forEach(makeFrameWalls);
 
       DATA.bands.forEach((band) => {
@@ -8302,8 +8497,8 @@
         const mesh = new THREE.Mesh(boothGeometry, booth.page === 2 ? hall2Material : hall1Material);
         mesh.scale.set(geo.w, BOOTH_H, geo.h);
         mesh.position.set(geo.x, BOOTH_H / 2, geo.z);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+        mesh.castShadow = !CAETA_SAFE_MODE;
+        mesh.receiveShadow = !CAETA_SAFE_MODE;
         mesh.userData = { ...booth, page: booth.page, base: 'normal' };
         mesh.userData.sceneRect = { w: geo.w, d: geo.h };
         mesh.renderOrder = 2;
@@ -11429,6 +11624,10 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
 
       hallModelBtn?.addEventListener('click', () => {
         closeActionMenu();
+        if (CAETA_SAFE_MODE) {
+          showToast('軽量モードでは会場モデルを省略しています');
+          return;
+        }
         setHallModelVisible(!hallModelVisible);
       });
 
@@ -13388,6 +13587,7 @@ self.onmessage = function(event) {
       console.error(err);
       showError(err);
       setLoadingProgress(100, 'Error');
+      renderLiteFallback(err);
     }
   </script>
 </body>
