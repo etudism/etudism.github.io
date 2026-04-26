@@ -6387,69 +6387,6 @@
   }
 </style>
 
-
-<style id="v93-shared-import-mode-overrides">
-  /* v93: shared URL is shown as a temporary preview until the user explicitly imports it. */
-  #sharedImportBanner {
-    display: none;
-    margin: 0 14px 14px;
-    padding: 12px;
-    border-radius: 20px;
-    border: 1px solid rgba(59, 130, 246, 0.20);
-    background:
-      linear-gradient(145deg, rgba(67, 183, 255, 0.12), rgba(255,255,255,0.02)),
-      var(--neo-light-surface-soft);
-    color: var(--text);
-    box-shadow:
-      var(--neo-light-inset),
-      -5px -5px 11px var(--neo-light-highlight),
-      7px 7px 13px var(--neo-light-shadow);
-    box-sizing: border-box;
-  }
-  #sharedImportBanner.is-visible { display: grid; gap: 10px; }
-  .shared-import-title { font-size: 12px; line-height: 1.45; font-weight: 850; letter-spacing: -0.02em; }
-  .shared-import-body { font-size: 11px; line-height: 1.65; color: var(--muted); }
-  .shared-import-actions { display: grid; grid-template-columns: 1fr; gap: 8px; }
-  #sharedImportSaveBtn,
-  #sharedImportLocalBtn {
-    min-height: 40px;
-    padding: 0 12px;
-    border-radius: 15px;
-    border: 1px solid var(--neo-light-stroke);
-    background: var(--neo-light-surface-soft);
-    color: var(--text);
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    box-shadow:
-      var(--neo-light-inset),
-      -4px -4px 10px var(--neo-light-highlight),
-      5px 5px 12px var(--neo-light-shadow);
-  }
-  #sharedImportSaveBtn {
-    background: linear-gradient(135deg, #43c7ff 0%, #78e2ff 52%, #a6f1ff 100%);
-    color: #051018;
-    border-color: rgba(255,255,255,0.30);
-    box-shadow:
-      inset 1px 1px 0 rgba(255,255,255,0.45),
-      inset -3px -3px 8px rgba(19, 111, 154, 0.14),
-      6px 6px 14px rgba(67, 183, 255, 0.22);
-  }
-  #sharedImportSaveBtn:hover,
-  #sharedImportLocalBtn:hover { transform: translateY(-1px); filter: brightness(1.02); }
-  #sharedImportSaveBtn:active,
-  #sharedImportLocalBtn:active { transform: translateY(1px); }
-  html[data-theme='dark'] #sharedImportBanner {
-    border-color: rgba(120, 226, 255, 0.16);
-    background:
-      linear-gradient(145deg, rgba(67, 183, 255, 0.12), rgba(255,255,255,0.02)),
-      var(--neo-light-surface-soft);
-  }
-  html[data-theme='dark'] #sharedImportSaveBtn { background: linear-gradient(135deg, #8ee8ff 0%, #c8f7ff 100%); color: #061018; }
-  body.is-mobile-framed #sharedImportBanner { margin: 0 0 12px; }
-  @media (min-width: 901px) { #desktopSplitLayout > #integratedInfoBottomPane #sharedImportBanner { margin: 0 7px 14px; } }
-</style>
-
 </head>
 <body>
   <div id="app">
@@ -6457,7 +6394,7 @@
     <div id="loadingOverlay" aria-live="polite" aria-label="Loading">
       <div id="loadingCard">
         <svg id="loadingLogo" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1061.12 218.51"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M0,109.85v-.6C0,46.7,48.79,0,111.35,0c46.1,0,77.23,22.45,94.89,54.48l-57.77,33.82c-7.78-14.97-18.86-25.44-38.02-25.44-23.65,0-39.21,20.65-39.21,45.8v.6c0,27.24,16.16,46.4,39.21,46.4,19.76,0,30.83-10.78,39.51-26.34l57.77,32.63c-17.66,31.13-46.99,56.57-99.08,56.57C50.59,218.51,0,174.81,0,109.85Z"/><path class="cls-1" d="M290.65,2.99h69.45l88.3,211.03h-76.03l-11.08-28.14h-73.34l-10.78,28.14h-74.83L290.65,2.99ZM343.93,136.2l-19.16-50.89-19.16,50.89h38.31Z"/><path class="cls-1" d="M457.07,4.49h178.7v57.47h-109.85v21.25h102.37v50.59h-102.37v22.75h111.35v57.47h-180.2V4.49Z"/><path class="cls-1" d="M709.7,63.76h-61.66V4.49h193.37v59.27h-61.66v150.26h-70.04V63.76Z"/><path class="cls-1" d="M903.37,2.99h69.45l88.3,211.03h-76.03l-11.08-28.14h-73.34l-10.78,28.14h-74.83L903.37,2.99ZM956.65,136.2l-19.16-50.89-19.16,50.89h38.31Z"/></g></svg>
-        <div id="loadingSubtitle">文学フリマ東京42 （非公式）3Dブース地図</div>
+        <div id="loadingSubtitle">文学フリマ東京42 3Dブース地図</div>
         <h1 id="loadingTitle">Loading</h1>
         <div id="loadingProgress" aria-hidden="true">
           <div id="loadingProgressBar"></div>
@@ -6501,7 +6438,7 @@
           <div id="emptyInfoLogo" class="empty-info-logo"><svg class="empty-info-logo-svg" aria-hidden="true" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 769.99 827.63"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M118.15,455.33c42.49-24.6,68.63-70.01,68.57-119.11l-.07-56.97c-.06-51.54-41.9-93.28-93.44-93.21h0C41.67,186.1-.06,227.94,0,279.48l.33,272.28c8.43-23.14,24.55-42.42,46.12-54.91l71.7-41.51Z"/><path class="cls-1" d="M215.61,202.65c42.52,24.55,94.92,24.55,137.44,0l49.34-28.48c44.64-25.77,59.93-82.85,34.16-127.49h0c-25.77-44.64-82.85-59.93-127.49-34.16L73.26,148.66c24.26-4.24,49.01.11,70.6,12.57l71.75,41.42Z"/><path class="cls-1" d="M479.67,160.99c0,49.1,26.2,94.48,68.72,119.03l49.34,28.48c44.64,25.77,101.72,10.48,127.49-34.16h0c25.77-44.64,10.48-101.72-34.16-127.49L455.25,10.71c15.8,18.89,24.41,42.5,24.41,67.43v82.85Z"/><path class="cls-1" d="M651.84,372.3c-42.49,24.6-68.63,70.01-68.57,119.11l.07,56.97c.06,51.54,41.9,93.28,93.44,93.21h0c51.54-.06,93.28-41.9,93.21-93.44l-.33-272.28c-8.43,23.14-24.55,42.42-46.12,54.91l-71.7,41.51Z"/><path class="cls-1" d="M554.38,624.98c-42.52-24.55-94.92-24.55-137.44,0l-49.34,28.48c-44.64,25.77-59.93,82.85-34.16,127.49h0c25.77,44.64,82.85,59.93,127.49,34.16l235.8-136.14c-24.26,4.24-49.01-.11-70.6-12.57l-71.75-41.42Z"/><path class="cls-1" d="M290.32,666.65c0-49.1-26.2-94.48-68.72-119.03l-49.34-28.48c-44.64-25.77-101.72-10.48-127.49,34.16h0c-25.77,44.64-10.48,101.72,34.16,127.49l235.8,136.14c-15.8-18.89-24.41-42.5-24.41-67.43v-82.85Z"/></g></svg></div>
           <div id="emptyInfoForeground" aria-hidden="true">
             <div id="emptyInfoForegroundLogo"><svg id="emptyInfoForegroundLogoSvg" class="empty-info-foreground-logo-svg" aria-hidden="true" focusable="false" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 823.75 29"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M0,12.4v-.07C0,5.91,4.81.58,11.37.58c4.06,0,6.49,1.49,8.83,3.64l-1.2,1.23c-1.98-1.92-4.25-3.34-7.66-3.34C5.88,2.11,1.75,6.56,1.75,12.27v.06c0,5.75,4.19,10.23,9.61,10.23,3.28,0,5.52-1.27,7.83-3.54l1.14,1.1c-2.4,2.37-5,3.96-9.03,3.96C4.81,24.09,0,18.93,0,12.4Z"/><path class="cls-1" d="M28.02,7.14h1.59v4.71c1.3-2.96,4.06-5.1,7.34-4.97v1.75h-.16c-3.83,0-7.18,2.89-7.18,8.28v6.79h-1.59V7.14Z"/><path class="cls-1" d="M42.31,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM56.04,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M64.29,18.9v-.07c0-3.44,2.95-5.39,7.24-5.39,2.3,0,3.9.29,5.49.71v-.71c0-3.34-2.05-5.07-5.46-5.07-2.01,0-3.67.55-5.2,1.33l-.58-1.4c1.82-.84,3.6-1.43,5.88-1.43s4.03.62,5.23,1.82c1.1,1.1,1.69,2.63,1.69,4.68v10.33h-1.56v-2.76c-1.14,1.59-3.18,3.15-6.33,3.15s-6.4-1.75-6.4-5.2ZM77.05,17.5v-1.88c-1.4-.36-3.25-.75-5.62-.75-3.51,0-5.46,1.56-5.46,3.86v.06c0,2.4,2.27,3.8,4.81,3.8,3.38,0,6.27-2.08,6.27-5.1Z"/><path class="cls-1" d="M88.26,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.44-.58v1.49c-.84.39-1.66.58-2.7.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M101.99,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.47,3.96,8.47,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.47-3.96-8.47-8.6ZM117.28,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M127.16,7.14h1.59v4.71c1.3-2.96,4.06-5.1,7.34-4.97v1.75h-.16c-3.83,0-7.18,2.89-7.18,8.28v6.79h-1.59V7.14Z"/><path class="cls-1" d="M142.64,13.15h8.7v1.82h-8.7v-1.82Z"/><path class="cls-1" d="M167.58.81h1.62l10.59,22.89h-1.85l-2.89-6.36h-13.41l-2.89,6.36h-1.75L167.58.81ZM174.34,15.81l-5.97-13.15-6.01,13.15h11.98Z"/><path class="cls-1" d="M186.84,17.27V7.14h1.59v9.84c0,3.41,1.92,5.65,5.26,5.65s5.75-2.47,5.75-5.91V7.14h1.59v16.56h-1.59v-3.08c-1.1,1.95-2.96,3.47-5.97,3.47-4.19,0-6.62-2.86-6.62-6.82Z"/><path class="cls-1" d="M209.24,15.49v-.07c0-5.39,4.06-8.67,8.05-8.67,3.31,0,5.46,1.88,6.82,3.96V0h1.59v23.7h-1.59v-3.7c-1.43,2.17-3.54,4.09-6.82,4.09-3.99,0-8.05-3.21-8.05-8.6ZM224.21,15.46v-.06c0-4.25-3.31-7.11-6.75-7.11s-6.49,2.63-6.49,7.08v.06c0,4.35,3.02,7.14,6.49,7.14s6.75-2.89,6.75-7.11Z"/><path class="cls-1" d="M235.02.65h1.98v2.18h-1.98V.65ZM235.22,7.14h1.59v16.56h-1.59V7.14Z"/><path class="cls-1" d="M245.19,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.74c.29,4.12,3.25,6.53,6.49,6.53,2.57,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM258.92,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.11,6.43h12.05Z"/><path class="cls-1" d="M268.53,7.14h1.59v3.08c1.1-1.95,2.95-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M290.55,15.49v-.07c0-4.64,3.7-8.67,8.44-8.67,3.12,0,5.07,1.43,6.62,3.05l-1.14,1.17c-1.43-1.46-3.05-2.73-5.52-2.73-3.77,0-6.69,3.15-6.69,7.11v.06c0,3.99,3.02,7.18,6.82,7.18,2.34,0,4.16-1.2,5.55-2.76l1.1.97c-1.69,1.92-3.7,3.28-6.75,3.28-4.77,0-8.44-3.96-8.44-8.6Z"/><path class="cls-1" d="M311.85,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM325.58,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M348.54.97h16.17v1.56h-14.48v8.93h13.02v1.56h-13.02v9.12h14.64v1.56h-16.33V.97Z"/><path class="cls-1" d="M371.17,7.14h1.85l6.27,14.77,6.33-14.77h1.79l-7.44,16.69h-1.36l-7.44-16.69Z"/><path class="cls-1" d="M392.9,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM406.63,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M416.24,7.14h1.59v3.08c1.1-1.95,2.96-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M440.27,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.44-.58v1.49c-.84.39-1.66.58-2.7.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M475.11,2.53h-7.92V.97h17.53v1.56h-7.92v21.17h-1.69V2.53Z"/><path class="cls-1" d="M487.22,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.48,3.96,8.48,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.48-3.96-8.48-8.6ZM502.52,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M512.39,7.14h1.59v3.7c1.43-2.18,3.54-4.09,6.82-4.09,3.99,0,8.05,3.21,8.05,8.6v.06c0,5.39-4.06,8.67-8.05,8.67-3.31,0-5.46-1.88-6.82-3.96v8.77h-1.59V7.14ZM527.13,15.49v-.07c0-4.35-3.02-7.14-6.49-7.14s-6.75,2.89-6.75,7.11v.06c0,4.25,3.31,7.11,6.75,7.11s6.49-2.63,6.49-7.08Z"/><path class="cls-1" d="M535.93,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.47,3.96,8.47,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.47-3.96-8.47-8.6ZM551.22,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M561.32,0h1.59v23.7h-1.59V0Z"/><path class="cls-1" d="M571.29,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.48,3.96,8.48,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.48-3.96-8.48-8.6ZM586.58,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M596.13,26.43l.94-1.3c1.98,1.53,4.25,2.34,6.69,2.34,3.8,0,6.49-2.18,6.49-6.43v-2.4c-1.43,2.05-3.64,3.83-6.92,3.83-3.99,0-7.96-3.05-7.96-7.79v-.06c0-4.77,3.96-7.86,7.96-7.86,3.31,0,5.55,1.75,6.92,3.7v-3.31h1.59v14c0,2.4-.78,4.29-2.11,5.62-1.43,1.43-3.57,2.21-6.01,2.21-2.76,0-5.33-.84-7.6-2.53ZM610.35,14.64v-.06c0-3.83-3.41-6.3-6.85-6.3s-6.4,2.4-6.4,6.27v.06c0,3.73,2.99,6.33,6.4,6.33s6.85-2.53,6.85-6.3Z"/><path class="cls-1" d="M634.09,7.14h1.75l-7.18,17.14c-1.46,3.47-3.15,4.71-5.52,4.71-1.27,0-2.18-.23-3.28-.71l.55-1.4c.88.42,1.59.62,2.82.62,1.72,0,2.86-1.01,4.09-3.9l-7.96-16.46h1.85l6.88,14.81,5.97-14.81Z"/><path class="cls-1" d="M665.46.81h1.62l10.59,22.89h-1.85l-2.89-6.36h-13.41l-2.89,6.36h-1.75l10.59-22.89ZM672.21,15.81l-5.97-13.15-6.01,13.15h11.98Z"/><path class="cls-1" d="M683.93,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.7-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M702.99,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.69-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M723.84.65h1.98v2.18h-1.98V.65ZM724.03,7.14h1.59v16.56h-1.59V7.14Z"/><path class="cls-1" d="M733.71,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.69-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M755.07,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.43-.58v1.49c-.84.39-1.66.58-2.69.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M769.07,18.9v-.07c0-3.44,2.95-5.39,7.24-5.39,2.3,0,3.9.29,5.49.71v-.71c0-3.34-2.05-5.07-5.46-5.07-2.01,0-3.67.55-5.2,1.33l-.58-1.4c1.82-.84,3.6-1.43,5.88-1.43s4.03.62,5.23,1.82c1.1,1.1,1.69,2.63,1.69,4.68v10.33h-1.56v-2.76c-1.14,1.59-3.18,3.15-6.33,3.15s-6.4-1.75-6.4-5.2ZM781.83,17.5v-1.88c-1.4-.36-3.25-.75-5.62-.75-3.51,0-5.46,1.56-5.46,3.86v.06c0,2.4,2.27,3.8,4.81,3.8,3.38,0,6.27-2.08,6.27-5.1Z"/><path class="cls-1" d="M792.32,7.14h1.59v3.08c1.1-1.95,2.96-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M816.34,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.43-.58v1.49c-.84.39-1.66.58-2.69.58-2.57,0-4.64-1.4-4.64-4.55Z"/></g></svg></div>
-            <div id="emptyInfoVersion">Ver.1.1.3</div>
+            <div id="emptyInfoVersion">Ver.1.1.2</div>
           </div>
         </div>
       <div id="detail" style="display:none;">
@@ -7034,137 +6971,7 @@
       }
     }
 
-
-    var isSharedLinkPreviewMode = false;
-    var sharedImportBanner = null;
-    var sharedImportSaveBtn = null;
-    var sharedImportLocalBtn = null;
-
-    function urlHasShareState() {
-      const params = new URLSearchParams(window.location.search);
-      if (!params.toString()) return false;
-      if (params.get('v') && params.get('v') !== URL_STATE_VERSION) return false;
-      return ['p', 's', 'c', 'r', 't'].some((key) => params.has(key));
-    }
-
-    function clearShareQueryFromAddressBar() {
-      try {
-        const url = new URL(window.location.href);
-        ['v', 'p', 's', 'c', 'r', 't'].forEach((key) => url.searchParams.delete(key));
-        const nextSearch = url.searchParams.toString();
-        const next = url.pathname + (nextSearch ? '?' + nextSearch : '') + url.hash;
-        const current = window.location.pathname + window.location.search + window.location.hash;
-        if (next !== current) history.replaceState(null, '', next);
-      } catch (err) {
-        console.warn('share query cleanup failed', err);
-      }
-    }
-
-    function sharedImportCountsText() {
-      const primaryCount = uniqueValidBoothIds(selectedPrimaryIds).length;
-      const secondaryCount = uniqueValidBoothIds(selectedSecondaryIds).length;
-      return '最優先 ' + primaryCount + '件 / 気になる ' + secondaryCount + '件';
-    }
-
-    function updateSharedImportBanner() {
-      const banner = sharedImportBanner || document.getElementById('sharedImportBanner');
-      if (!banner) return;
-      const visible = !!isSharedLinkPreviewMode;
-      banner.hidden = !visible;
-      banner.classList.toggle('is-visible', visible);
-      banner.setAttribute('aria-hidden', visible ? 'false' : 'true');
-      const body = banner.querySelector('.shared-import-body');
-      if (body) {
-        body.textContent = visible
-          ? '共有リンクのリストを一時表示中です（' + sharedImportCountsText() + '）。保存ボタンを押すまで、この端末の保存済みリストは上書きされません。'
-          : '';
-      }
-    }
-
-    function importSharedPreviewToLocalStorage() {
-      if (!isSharedLinkPreviewMode) return;
-      isSharedLinkPreviewMode = false;
-      clearTimeout(persistTimer);
-      saveState(true);
-      clearShareQueryFromAddressBar();
-      updateSharedImportBanner();
-      showToast('共有リストを自分のリストとして保存しました');
-    }
-
-    function restoreLocalStateFromSharedPreview() {
-      if (!isSharedLinkPreviewMode) return;
-      const localState = loadState();
-      isSharedLinkPreviewMode = false;
-      clearShareQueryFromAddressBar();
-      if (!localState) {
-        selectedPrimaryIds = [];
-        selectedSecondaryIds = [];
-        pinnedMesh = null;
-        routeModeEnabled = false;
-        categoryLayerVisible = false;
-        applyThemeMode(themeMode, { save: false });
-      } else {
-        selectedPrimaryIds = uniqueValidBoothIds(localState.primaryBoothIds || []);
-        selectedSecondaryIds = uniqueValidBoothIds(localState.secondaryBoothIds || []);
-        categoryLayerVisible = !!localState.categoryLayerVisible;
-        routeModeEnabled = !!localState.routeModeEnabled;
-        themeMode = localState.themeMode === 'dark' ? 'dark' : 'light';
-        applyThemeMode(themeMode, { save: false });
-        if (localState.camera) applyCameraState(localState.camera);
-        const localPinned = localState.pinnedBoothId ? boothById.get(normalizeBoothId(localState.pinnedBoothId)) : null;
-        pinnedMesh = localPinned || null;
-      }
-      updateRouteModeButton();
-      updateCategoryLayerButton();
-      updateCategoryLegendVisibility();
-      syncPinnedBoothLabelState();
-      refreshInfoPanel();
-      renderDrawerLists();
-      refreshMaterials();
-      rebuildRoutes();
-      updateSharedImportBanner();
-      saveState(true);
-      showToast(localState ? '端末に保存済みのリストへ戻しました' : '端末に保存済みのリストはありません');
-    }
-
-    function ensureSharedImportBanner() {
-      const bottomScroll = document.getElementById('integratedInfoBottomScroll');
-      if (!bottomScroll) return;
-      sharedImportBanner = document.getElementById('sharedImportBanner');
-      if (!sharedImportBanner) {
-        sharedImportBanner = document.createElement('div');
-        sharedImportBanner.id = 'sharedImportBanner';
-        sharedImportBanner.hidden = true;
-        sharedImportBanner.setAttribute('aria-hidden', 'true');
-        sharedImportBanner.innerHTML = [
-          '<div class="shared-import-title">共有リストを一時表示中</div>',
-          '<div class="shared-import-body"></div>',
-          '<div class="shared-import-actions">',
-          '<button id="sharedImportSaveBtn" type="button">この共有リストを自分のリストとして保存</button>',
-          '<button id="sharedImportLocalBtn" type="button">保存済みの自分のリストへ戻す</button>',
-          '</div>'
-        ].join('');
-      }
-      if (sharedImportBanner.parentElement !== bottomScroll) {
-        bottomScroll.insertBefore(sharedImportBanner, bottomScroll.firstChild);
-      } else if (bottomScroll.firstChild !== sharedImportBanner) {
-        bottomScroll.insertBefore(sharedImportBanner, bottomScroll.firstChild);
-      }
-      sharedImportSaveBtn = document.getElementById('sharedImportSaveBtn');
-      sharedImportLocalBtn = document.getElementById('sharedImportLocalBtn');
-      if (sharedImportSaveBtn && !sharedImportSaveBtn.dataset.bound) {
-        sharedImportSaveBtn.dataset.bound = '1';
-        sharedImportSaveBtn.addEventListener('click', importSharedPreviewToLocalStorage);
-      }
-      if (sharedImportLocalBtn && !sharedImportLocalBtn.dataset.bound) {
-        sharedImportLocalBtn.dataset.bound = '1';
-        sharedImportLocalBtn.addEventListener('click', restoreLocalStateFromSharedPreview);
-      }
-      updateSharedImportBanner();
-    }
-
     setupIntegratedRightPanelLayout();
-    ensureSharedImportBanner();
     document.getElementById('integratedInfoTopPane')?.classList.add('is-empty');
     if (infoPanelHeader) infoPanelHeader.style.display = 'none';
     if (placeholder) placeholder.style.display = 'flex';
@@ -7331,16 +7138,14 @@
 
       const bottomScroll = document.getElementById('integratedInfoBottomScroll');
       if (bottomScroll) {
-        ensureSharedImportBanner();
         const searchNodes = [boothSearchBar, boothSearchMeta, boothSearchResults].filter(Boolean);
-        const insertBeforeNode = bottomDrawer && bottomDrawer.parentElement === bottomScroll ? bottomDrawer : (sharedImportBanner?.nextSibling || bottomScroll.firstChild);
+        const insertBeforeNode = bottomDrawer && bottomDrawer.parentElement === bottomScroll ? bottomDrawer : bottomScroll.firstChild;
         for (const node of searchNodes) {
           if (node.parentElement !== bottomScroll) {
             bottomScroll.insertBefore(node, insertBeforeNode);
           }
         }
         if (bottomDrawer && bottomDrawer.parentElement !== bottomScroll) bottomScroll.appendChild(bottomDrawer);
-        ensureSharedImportBanner();
       }
 
       if (infoPanel && infoBody && infoPanel.parentElement !== infoBody) infoBody.appendChild(infoPanel);
@@ -7378,7 +7183,6 @@
       ensureDesktopPanelToggle();
       if (topPane && topPane.parentElement !== desktopSplitLayout) desktopSplitLayout.appendChild(topPane);
       if (bottomPane && bottomPane.parentElement !== desktopSplitLayout) desktopSplitLayout.appendChild(bottomPane);
-      ensureSharedImportBanner();
       syncMobileFrameClass();
       return desktopMapViewport;
     }
@@ -12043,7 +11847,6 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       function renderDrawerLists() {
         renderDrawerList(drawerPrimaryList, sortDrawerIdsByRoute(selectedPrimaryIds), 'まだ選択されていません。');
         renderDrawerList(drawerSecondaryList, sortDrawerIdsByRoute(selectedSecondaryIds), 'まだ選択されていません。');
-        updateSharedImportBanner();
         scheduleMobileLayoutMetrics();
       }
 
@@ -12109,7 +11912,6 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         const params = new URLSearchParams(window.location.search);
         if (!params.toString()) return null;
         if (params.get('v') && params.get('v') !== URL_STATE_VERSION) return null;
-        if (!['p', 's', 'c', 'r', 't'].some((key) => params.has(key))) return null;
         return {
           version: 1,
           pinnedBoothId: normalizeBoothId((params.get('p') || '').split(',')[0] || (params.get('s') || '').split(',')[0] || ''),
@@ -12125,16 +11927,12 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       }
 
       function saveState(immediate = false) {
-        if (isSharedLinkPreviewMode) {
-          clearTimeout(persistTimer);
-          updateSharedImportBanner();
-          return;
-        }
         const run = () => {
           try {
             const payload = buildStatePayload();
             localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
             setLoadingProgress(82, 'Finalizing');
+      updateAddressBarFromState();
           } catch (err) {
             console.warn('state save failed', err);
           }
@@ -14669,12 +14467,10 @@ self.onmessage = function(event) {
 
 
 
-      const urlRestoreState = parseStateFromUrl();
-      isSharedLinkPreviewMode = !!urlRestoreState;
-      restoreState = urlRestoreState || loadState();
+      restoreState = parseStateFromUrl() || loadState();
 
-      if (isSharedLinkPreviewMode) {
-        showToast('共有リンクを一時表示中です。保存ボタンを押すまで端末のリストは上書きされません');
+      if (restoreState?.source === 'url') {
+        showToast('共有リンクの状態を反映しました');
       }
 
 
@@ -14710,13 +14506,11 @@ self.onmessage = function(event) {
         }
       }
 
-      if (!isSharedLinkPreviewMode && urlHasShareState()) clearShareQueryFromAddressBar();
-      updateSharedImportBanner();
+      updateAddressBarFromState();
       installMobileLayoutObservers();
       setHallModelVisible(false);
       setDrawerOpen(true);
       renderDrawerLists();
-      ensureSharedImportBanner();
       updateResponsiveUiState();
       scheduleMobileLayoutMetrics();
 
