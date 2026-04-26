@@ -5993,6 +5993,71 @@
   }
 </style>
 
+
+<style id="v89-mobile-list-panel-scroll">
+  /* v89: smartphone list scroll refinement.
+     The priority/interest list containers no longer have their own scroll area;
+     their rows grow vertically, and the lower panel itself owns the scrolling. */
+  @media (max-width: 900px) {
+    body.is-mobile-framed #bottomDrawer .drawer-section,
+    body.is-mobile-framed #bottomDrawer .drawer-section.primary,
+    body.is-mobile-framed #bottomDrawer .drawer-section.secondary {
+      overflow: visible !important;
+      min-height: 0 !important;
+      max-height: none !important;
+    }
+
+    body.is-mobile-framed #bottomDrawer #drawerColumns,
+    body.is-mobile-framed #bottomDrawer #drawerPanel,
+    body.is-mobile-framed #bottomDrawer #drawerPanelInner {
+      overflow: visible !important;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+    }
+
+    body.is-mobile-framed #drawerPrimaryList,
+    body.is-mobile-framed #drawerSecondaryList,
+    body.is-mobile-framed #bottomDrawer .drawer-list-wrap,
+    body.is-mobile-framed #bottomDrawer.is-integrated-right-menu .drawer-list-wrap,
+    body.is-mobile-framed #infoPanel > #bottomDrawer .drawer-list-wrap {
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      overflow: visible !important;
+      -webkit-overflow-scrolling: auto !important;
+      overscroll-behavior: auto !important;
+      touch-action: auto !important;
+    }
+
+    body.is-mobile-framed #drawerPrimaryList .drawer-list,
+    body.is-mobile-framed #drawerSecondaryList .drawer-list,
+    body.is-mobile-framed #bottomDrawer .drawer-list,
+    body.is-mobile-framed #bottomDrawer.is-integrated-right-menu .drawer-list,
+    body.is-mobile-framed #infoPanel > #bottomDrawer .drawer-list {
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      overflow: visible !important;
+      -webkit-overflow-scrolling: auto !important;
+      overscroll-behavior: auto !important;
+      touch-action: auto !important;
+    }
+
+    body.is-mobile-framed #drawerPrimaryList .drawer-empty,
+    body.is-mobile-framed #drawerSecondaryList .drawer-empty {
+      min-height: 0 !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomPane,
+    body.is-mobile-framed #integratedInfoBottomScroll {
+      overscroll-behavior: contain !important;
+      -webkit-overflow-scrolling: touch !important;
+      touch-action: pan-y !important;
+    }
+  }
+</style>
+
 </head>
 <body>
   <div id="app">
