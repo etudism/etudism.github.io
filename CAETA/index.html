@@ -5627,6 +5627,234 @@
   }
 </style>
 
+
+<style id="v81-mobile-action-sprite-off">
+  /* v81: スマートフォン表示では、ブース選択時の最優先／気になる／解除スプライトを出さない */
+  @media (max-width: 900px) {
+    #boothActionMenu,
+    #boothActionMenu.is-open,
+    body.is-mobile-framed #boothActionMenu,
+    body.is-mobile-viewport #boothActionMenu {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+  }
+</style>
+
+
+<style id="v81-mobile-3d-pane-neumorphic">
+  /* v81: smartphone 3D pane neumorphic refinement. */
+  @media (max-width: 900px) {
+    body.is-mobile-framed #mobileMapFrame {
+      padding: 8px !important;
+      overflow: visible !important;
+      border-radius: 26px !important;
+      border: 1px solid var(--neo-light-stroke) !important;
+      background:
+        radial-gradient(120% 90% at 15% 0%, rgba(255,255,255,0.48), rgba(255,255,255,0) 48%),
+        var(--neo-light-surface) !important;
+      box-shadow:
+        -10px -10px 24px var(--neo-light-highlight),
+        12px 12px 28px var(--neo-light-shadow),
+        inset 1px 1px 0 rgba(255,255,255,0.56),
+        inset -2px -2px 8px rgba(150,160,184,0.16) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-sizing: border-box !important;
+      isolation: isolate !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileMapFrame {
+      background:
+        radial-gradient(120% 90% at 15% 0%, rgba(255,255,255,0.045), rgba(255,255,255,0) 48%),
+        var(--neo-light-surface) !important;
+      box-shadow:
+        -8px -8px 18px var(--neo-light-highlight),
+        12px 12px 30px var(--neo-light-shadow-strong),
+        inset 1px 1px 0 rgba(255,255,255,0.035),
+        inset -2px -2px 8px rgba(0,0,0,0.32) !important;
+    }
+
+    body.is-mobile-framed #mobileMapHeader,
+    body.is-mobile-framed #mobileMapControls {
+      margin: 0 !important;
+      border-radius: 20px !important;
+      border: 1px solid var(--neo-light-stroke) !important;
+      background: var(--neo-light-surface-soft) !important;
+      box-shadow:
+        var(--neo-light-inset),
+        -5px -5px 12px var(--neo-light-highlight),
+        7px 7px 15px var(--neo-light-shadow) !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileMapHeader {
+      padding: 12px 14px !important;
+      border-bottom: 1px solid var(--neo-light-stroke) !important;
+    }
+
+    body.is-mobile-framed #mobileMapControls {
+      margin-top: 8px !important;
+      padding: 9px 10px !important;
+      border-bottom: 1px solid var(--neo-light-stroke) !important;
+    }
+
+    body.is-mobile-framed #mobileMapControls #actionDock,
+    body.is-mobile-framed #mobileMapControls #rightUtilityDock {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    body.is-mobile-framed #mobileMapControls .icon-btn {
+      border: 1px solid var(--neo-light-stroke) !important;
+      background: var(--neo-light-surface-soft) !important;
+      box-shadow:
+        var(--neo-light-inset),
+        -4px -4px 10px var(--neo-light-highlight),
+        5px 5px 12px var(--neo-light-shadow) !important;
+      color: var(--text) !important;
+      transform: translateY(0) !important;
+    }
+
+    body.is-mobile-framed #mobileMapControls .icon-btn:hover,
+    body.is-mobile-framed #mobileMapControls .icon-btn:focus-visible {
+      background: var(--neo-light-surface) !important;
+      box-shadow:
+        var(--neo-light-inset),
+        -5px -5px 12px var(--neo-light-highlight),
+        7px 7px 15px var(--neo-light-shadow-strong) !important;
+      outline: none !important;
+    }
+
+    body.is-mobile-framed #mobileMapControls .icon-btn:active {
+      transform: translateY(1px) !important;
+      box-shadow:
+        inset 2px 2px 6px rgba(142,152,176,0.30),
+        inset -2px -2px 6px rgba(255,255,255,0.72) !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileMapControls .icon-btn:active {
+      box-shadow:
+        inset 2px 2px 6px rgba(0,0,0,0.48),
+        inset -2px -2px 6px rgba(255,255,255,0.035) !important;
+    }
+
+    body.is-mobile-framed #mobileMapControls .icon-btn.is-active,
+    body.is-mobile-framed #mobileMapControls #themeToggleBtn.is-dark {
+      color: #ffffff !important;
+      border-color: rgba(255,255,255,0.18) !important;
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,0.24),
+        inset -3px -3px 9px rgba(116,18,64,0.14),
+        5px 5px 13px rgba(255,45,85,0.20) !important;
+    }
+
+    body.is-mobile-framed #mobileMapControls #hallModelBtn.is-active {
+      background: linear-gradient(145deg, rgba(82,84,98,0.98), rgba(55,58,70,0.96)) !important;
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,0.18),
+        inset -3px -3px 9px rgba(0,0,0,0.16),
+        5px 5px 13px rgba(31,31,39,0.22) !important;
+    }
+
+    body.is-mobile-framed #mobileMapViewport {
+      margin: 8px 0 0 !important;
+      display: block !important;
+      position: relative !important;
+      width: 100% !important;
+      height: clamp(320px, 56dvh, 520px) !important;
+      min-height: 320px !important;
+      border-radius: 22px !important;
+      border: 1px solid var(--neo-light-stroke) !important;
+      background: var(--neo-light-surface-soft) !important;
+      box-shadow:
+        inset 5px 5px 14px rgba(142,152,176,0.24),
+        inset -5px -5px 14px rgba(255,255,255,0.72),
+        -5px -5px 12px var(--neo-light-highlight),
+        7px 7px 15px var(--neo-light-shadow) !important;
+      overflow: hidden !important;
+      isolation: isolate !important;
+      touch-action: none !important;
+      -webkit-user-select: none !important;
+      user-select: none !important;
+      box-sizing: border-box !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileMapViewport {
+      background: var(--neo-light-surface-soft) !important;
+      box-shadow:
+        inset 5px 5px 14px rgba(0,0,0,0.48),
+        inset -4px -4px 12px rgba(255,255,255,0.035),
+        -5px -5px 12px var(--neo-light-highlight),
+        8px 8px 18px var(--neo-light-shadow-strong) !important;
+    }
+
+    body.is-mobile-framed #mobileMapViewport::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.58),
+        inset 0 0 0 1px rgba(255,255,255,0.16),
+        inset 18px 18px 30px rgba(136,145,166,0.10),
+        inset -18px -18px 30px rgba(255,255,255,0.14) !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileMapViewport::after {
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.055),
+        inset 0 0 0 1px rgba(255,255,255,0.035),
+        inset 18px 18px 30px rgba(0,0,0,0.20),
+        inset -18px -18px 30px rgba(255,255,255,0.025) !important;
+    }
+
+    body.is-mobile-framed #mobileMapViewport > canvas:not(#labelCanvas),
+    body.is-mobile-framed #mobileMapViewport canvas {
+      border-radius: inherit !important;
+      touch-action: none !important;
+      -webkit-user-select: none !important;
+      user-select: none !important;
+      will-change: auto !important;
+    }
+
+    body.is-mobile-framed #mobileMapLegendSlot {
+      margin: 8px 0 0 !important;
+      padding: 0 !important;
+      border-radius: 20px !important;
+      border: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileMapLegendSlot #categoryLegend.is-visible {
+      border: 1px solid var(--neo-light-stroke) !important;
+      border-radius: 20px !important;
+      background: var(--neo-light-surface-soft) !important;
+      box-shadow:
+        var(--neo-light-inset),
+        -5px -5px 12px var(--neo-light-highlight),
+        7px 7px 15px var(--neo-light-shadow) !important;
+    }
+  }
+
+  @media (max-width: 900px) and (max-height: 680px) {
+    body.is-mobile-framed #mobileMapViewport {
+      height: clamp(300px, 52dvh, 430px) !important;
+      min-height: 300px !important;
+    }
+  }
+</style>
 </head>
 <body>
   <div id="app">
@@ -9990,6 +10218,10 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         return window.innerWidth <= 900;
       }
 
+      function shouldShowBoothActionSprites() {
+        return !isMobileViewport();
+      }
+
 
       let mobileLayoutRaf = 0;
       let mobileLayoutTimer = 0;
@@ -10084,6 +10316,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         document.body.classList.toggle('is-mobile-framed', mobile);
         document.body.classList.toggle('is-mobile-viewport', mobile);
         document.body.classList.toggle('is-mobile-drawer-open', mobile && isDrawerOpen);
+        if (mobile && (actionMenuState || actionIconSprites.length)) closeActionMenu();
         if (hoverHint) hoverHint.textContent = '';
         if (!infoPanel) return;
         const hasResults = mobile && !!searchQuery;
@@ -11153,6 +11386,10 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
 
       function openActionMenu(mesh, clientX, clientY) {
         if (!mesh) return;
+        if (!shouldShowBoothActionSprites()) {
+          closeActionMenu();
+          return;
+        }
         clearActionIconSprites();
         actionMenuState = {
           mesh,
@@ -11180,7 +11417,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       }
 
       function raycastActionIconAtClient(clientX, clientY) {
-        if (!actionIconSprites.length) return null;
+        if (!shouldShowBoothActionSprites() || !actionIconSprites.length) return null;
         updatePointerFromClient(clientX, clientY);
         raycaster.setFromCamera(pointer, camera);
         const hits = raycaster.intersectObjects(actionIconSprites, false);
@@ -11435,7 +11672,11 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       function setPinnedMesh(mesh) {
         pinnedMesh = mesh || null;
         if (pinnedMesh) {
-          openActionMenu(pinnedMesh, window.innerWidth * 0.5, window.innerHeight * 0.5);
+          if (shouldShowBoothActionSprites()) {
+            openActionMenu(pinnedMesh, window.innerWidth * 0.5, window.innerHeight * 0.5);
+          } else {
+            closeActionMenu();
+          }
           if (isMobileViewport()) setDrawerOpen(false);
         } else {
           closeActionMenu();
@@ -11484,8 +11725,12 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
           setPinnedMesh(state.mesh);
           hoveredMesh = state.mesh;
           refreshMaterials();
-          openActionMenu(state.mesh, event.clientX, event.clientY);
-          showToast(`${boothId} の方向メニューを開きました`);
+          if (shouldShowBoothActionSprites()) {
+            openActionMenu(state.mesh, event.clientX, event.clientY);
+            showToast(`${boothId} の方向メニューを開きました`);
+          } else {
+            showToast(`${boothId} を表示しました`);
+          }
           saveState();
           return;
         }
