@@ -7026,22 +7026,23 @@
         secondaryMaterial.color.setHex(isDark ? 0x8b5cf6 : 0xb79bff);
         secondaryMaterial.emissive.setHex(isDark ? 0x3b22a6 : 0x8b5cf6);
         secondaryMaterial.emissiveIntensity = isDark ? 0.3 : 0.12;
-        selectedGlowMaterial.color.setHex(isDark ? 0xff6b9d : 0xff8aa8);
-        selectedGlowMaterial.emissive.setHex(0xff2d55);
-        selectedGlowMaterial.emissiveIntensity = isDark ? 0.66 : 0.18;
+        selectedGlowMaterial.color.setHex(isDark ? 0x9be7ff : 0x9be7ff);
+        selectedGlowMaterial.emissive.setHex(isDark ? 0x1fb6ff : 0x1fb6ff);
+        selectedGlowMaterial.emissiveIntensity = isDark ? 0.16 : 0.12;
         searchMatchMaterial.color.setHex(isDark ? 0x67d8ff : 0xeaf8ff);
         searchMatchMaterial.emissive.setHex(isDark ? 0x1fb6ff : 0x1785d8);
         searchMatchMaterial.emissiveIntensity = isDark ? 0.28 : 0.14;
         searchHoverMaterial.color.setHex(isDark ? 0x9be7ff : 0xf2fbff);
         searchHoverMaterial.emissive.setHex(isDark ? 0x3f8cff : 0x1fb6ff);
         searchHoverMaterial.emissiveIntensity = isDark ? 0.58 : 0.22;
-        selectedPrimaryMaterial.color.setHex(isDark ? 0xff2d55 : 0xff2d55);
-        selectedPrimaryMaterial.emissive.setHex(isDark ? 0xb0002b : 0x7a001d);
-        selectedPrimaryMaterial.emissiveIntensity = isDark ? 0.46 : 0.14;
-        selectedSecondaryMaterial.color.setHex(isDark ? 0x8b5cf6 : 0x8b5cf6);
-        selectedSecondaryMaterial.emissive.setHex(isDark ? 0x3b22a6 : 0x2e1595);
-        selectedSecondaryMaterial.emissiveIntensity = isDark ? 0.42 : 0.14;
+        selectedPrimaryMaterial.color.setHex(isDark ? 0xff9ab4 : 0xbe123c);
+        selectedPrimaryMaterial.emissive.setHex(isDark ? 0xff2d55 : 0x4a0718);
+        selectedPrimaryMaterial.emissiveIntensity = isDark ? 0.34 : 0.18;
+        selectedSecondaryMaterial.color.setHex(isDark ? 0xc4b5fd : 0x5b21b6);
+        selectedSecondaryMaterial.emissive.setHex(isDark ? 0x8b5cf6 : 0x1e0b55);
+        selectedSecondaryMaterial.emissiveIntensity = isDark ? 0.32 : 0.18;
         updateSelectionPillarMaterials();
+        refreshPageLabelTextures();
         emptyInfoMaterial.color.setHex(isDark ? 0x101018 : 0xffffff);
         hallGroups.forEach((group) => group.traverse((child) => {
           if (!child?.isMesh || !child.material) return;
@@ -7189,11 +7190,11 @@
       const hoverMaterial = new THREE.MeshStandardMaterial({ color: 0xfff3f7, emissive: 0xff5ca8, emissiveIntensity: 0.18, roughness: 0.52, metalness: 0.1 });
       const primaryMaterial = new THREE.MeshStandardMaterial({ color: 0xff8aa8, emissive: 0xff2d55, emissiveIntensity: 0.14, roughness: 0.46, metalness: 0.12 });
       const secondaryMaterial = new THREE.MeshStandardMaterial({ color: 0xb79bff, emissive: 0x8b5cf6, emissiveIntensity: 0.12, roughness: 0.48, metalness: 0.12 });
-      const selectedGlowMaterial = new THREE.MeshStandardMaterial({ color: 0xff8aa8, emissive: 0xff2d55, emissiveIntensity: 0.18, roughness: 0.4, metalness: 0.16 });
+      const selectedGlowMaterial = new THREE.MeshStandardMaterial({ color: 0x9be7ff, emissive: 0x1fb6ff, emissiveIntensity: 0.14, roughness: 0.42, metalness: 0.1 });
       const searchMatchMaterial = new THREE.MeshStandardMaterial({ color: 0xeaf8ff, emissive: 0x1fb6ff, emissiveIntensity: 0.16, roughness: 0.44, metalness: 0.12 });
       const searchHoverMaterial = new THREE.MeshStandardMaterial({ color: 0xf2fbff, emissive: 0x3f8cff, emissiveIntensity: 0.22, roughness: 0.38, metalness: 0.16 });
-      const selectedPrimaryMaterial = new THREE.MeshStandardMaterial({ color: 0xff2d55, emissive: 0x7a001d, emissiveIntensity: 0.14, roughness: 0.42, metalness: 0.14 });
-      const selectedSecondaryMaterial = new THREE.MeshStandardMaterial({ color: 0x8b5cf6, emissive: 0x2e1595, emissiveIntensity: 0.14, roughness: 0.42, metalness: 0.14 });
+      const selectedPrimaryMaterial = new THREE.MeshStandardMaterial({ color: 0xbe123c, emissive: 0x4a0718, emissiveIntensity: 0.18, roughness: 0.42, metalness: 0.14 });
+      const selectedSecondaryMaterial = new THREE.MeshStandardMaterial({ color: 0x5b21b6, emissive: 0x1e0b55, emissiveIntensity: 0.18, roughness: 0.42, metalness: 0.14 });
       const emptyInfoMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0.02 });
       const boothGeometry = new THREE.BoxGeometry(1, 1, 1);
       const tempVec = new THREE.Vector3();
@@ -7245,9 +7246,43 @@
         toneMapped: false,
         blending: THREE.AdditiveBlending
       });
+      const selectedPillarMaterial = new THREE.MeshBasicMaterial({
+        color: 0x1fb6ff,
+        map: selectionPillarTexture,
+        transparent: true,
+        opacity: 0.34,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+        toneMapped: false,
+        blending: THREE.AdditiveBlending
+      });
+      const selectedPrimaryPillarMaterial = new THREE.MeshBasicMaterial({
+        color: 0xbe123c,
+        map: selectionPillarTexture,
+        transparent: true,
+        opacity: 0.44,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+        toneMapped: false,
+        blending: THREE.NormalBlending
+      });
+      const selectedSecondaryPillarMaterial = new THREE.MeshBasicMaterial({
+        color: 0x5b21b6,
+        map: selectionPillarTexture,
+        transparent: true,
+        opacity: 0.42,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+        toneMapped: false,
+        blending: THREE.NormalBlending
+      });
 
       function pillarMaterialForTier(tier) {
-        return tier === 'secondary' ? secondaryPillarMaterial : primaryPillarMaterial;
+        if (tier === 'secondary') return secondaryPillarMaterial;
+        if (tier === 'selected-primary') return selectedPrimaryPillarMaterial;
+        if (tier === 'selected-secondary') return selectedSecondaryPillarMaterial;
+        if (tier === 'selected') return selectedPillarMaterial;
+        return primaryPillarMaterial;
       }
 
       function updateSelectionPillarMaterials() {
@@ -7258,6 +7293,15 @@
         secondaryPillarMaterial.color.setHex(isDark ? 0x8b5cf6 : 0x6d28d9);
         secondaryPillarMaterial.opacity = isDark ? 0.25 : 0.34;
         secondaryPillarMaterial.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+        selectedPillarMaterial.color.setHex(isDark ? 0x1fb6ff : 0x1fb6ff);
+        selectedPillarMaterial.opacity = isDark ? 0.42 : 0.44;
+        selectedPillarMaterial.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+        selectedPrimaryPillarMaterial.color.setHex(isDark ? 0xff9ab4 : 0xbe123c);
+        selectedPrimaryPillarMaterial.opacity = isDark ? 0.38 : 0.48;
+        selectedPrimaryPillarMaterial.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+        selectedSecondaryPillarMaterial.color.setHex(isDark ? 0xc4b5fd : 0x5b21b6);
+        selectedSecondaryPillarMaterial.opacity = isDark ? 0.36 : 0.46;
+        selectedSecondaryPillarMaterial.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
       }
 
       function disposeSelectionPillarGroup(group) {
@@ -7277,7 +7321,8 @@
         group.userData.tier = tier;
         const w = mesh.scale.x + SELECTION_PILLAR_EDGE_OFFSET;
         const d = mesh.scale.z + SELECTION_PILLAR_EDGE_OFFSET;
-        const h = Math.max(SELECTION_PILLAR_HEIGHT, BOOTH_H * 7.2);
+        const baseHeight = Math.max(SELECTION_PILLAR_HEIGHT, BOOTH_H * 7.2);
+        const h = String(tier).startsWith('selected') ? baseHeight * 2.5 : baseHeight;
         const material = pillarMaterialForTier(tier);
         const y = BOOTH_H * 0.5 + h * 0.5;
         const front = new THREE.Mesh(new THREE.PlaneGeometry(w, h), material);
@@ -7340,9 +7385,22 @@
       const pageLabelTextureCache = new Map();
       const pageLabelPlanes = [];
       const hallNameSprites = [];
+      let pinnedBoothLabelGroupKey = null;
+      let pinnedBoothLabelTone = null;
 
       function currentMapLabelTextColor() {
         return themeMode === 'dark' ? '#ffffff' : '#111111';
+      }
+
+      function currentBoothNumberTextColor() {
+        return currentMapLabelTextColor();
+      }
+
+      function currentPinnedBoothNumberTextColor() {
+        if (pinnedBoothLabelTone === 'selected-primary' || pinnedBoothLabelTone === 'selected-secondary') {
+          return themeMode === 'dark' ? '#111111' : '#ffffff';
+        }
+        return '#111111';
       }
 
       function currentMapLabelTintHex() {
@@ -7426,7 +7484,7 @@
         const tintHex = currentMapLabelTintHex();
         pageLabelPlanes.forEach((plane) => {
           if (!plane?.material?.color) return;
-          plane.material.color.setHex(tintHex);
+          plane.material.color.setHex(0xffffff);
           plane.material.needsUpdate = true;
         });
         areaLabelMeshes.forEach((mesh) => {
@@ -8570,7 +8628,9 @@
           fontSize = Math.max(CAETA_SAFE_MODE ? 4 : 7, fontSize);
 
           ctx.font = `600 ${fontSize}px "Inter", "游ゴシック", "SF Pro JP", "ヒラギノ角ゴシック", sans-serif`;
-          ctx.fillStyle = '#ffffff';
+          const boothKey = booth.info?.group_key || booth.id;
+          const isPinnedSelection = !!pinnedBoothLabelTone && boothKey === pinnedBoothLabelGroupKey;
+          ctx.fillStyle = isPinnedSelection ? currentPinnedBoothNumberTextColor() : currentBoothNumberTextColor();
           ctx.fillText(text, cx, cy + fontSize * 0.01);
         }
 
@@ -8656,7 +8716,7 @@
           new THREE.PlaneGeometry(frame.w, frame.h),
           new THREE.MeshBasicMaterial({
             map: makePageTopLabelTexture(pageInfo),
-            color: currentMapLabelTintHex(),
+            color: 0xffffff,
             transparent: true,
             alphaTest: 0.08,
             depthWrite: false,
@@ -10565,6 +10625,16 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         return null;
       }
 
+      function syncPinnedBoothLabelState() {
+        const nextKey = pinnedMesh ? (pinnedMesh.userData.info?.group_key || pinnedMesh.userData.id) : null;
+        const selectedTier = pinnedMesh ? getSelectionTierByMesh(pinnedMesh) : null;
+        const nextTone = pinnedMesh ? (selectedTier ? `selected-${selectedTier}` : 'selected') : null;
+        if (nextKey === pinnedBoothLabelGroupKey && nextTone === pinnedBoothLabelTone) return;
+        pinnedBoothLabelGroupKey = nextKey;
+        pinnedBoothLabelTone = nextTone;
+        refreshPageLabelTextures();
+      }
+
       function updateSelectionSummary() {
         const summary = `最優先 ${selectedPrimaryIds.length}件 / 気になる ${selectedSecondaryIds.length}件`;
         if (drawerSummaryText) drawerSummaryText.textContent = summary;
@@ -11460,6 +11530,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       }
 
       function refreshMaterials() {
+        syncPinnedBoothLabelState();
         const hoverKey = hoveredMesh ? (hoveredMesh.userData.info?.group_key || hoveredMesh.userData.id) : null;
         const pinnedKey = pinnedMesh ? (pinnedMesh.userData.info?.group_key || pinnedMesh.userData.id) : null;
         const hoveredSearchKey = hoveredSearchBoothId ? ((boothById.get(normalizeBoothId(hoveredSearchBoothId))?.userData?.info?.group_key) || normalizeBoothId(hoveredSearchBoothId)) : null;
@@ -11476,20 +11547,22 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
           let pillarTier = null;
           if (previewState === 'primary') {
             state = key === pinnedKey ? 'selected-primary' : 'primary';
-            pillarTier = 'primary';
+            pillarTier = key === pinnedKey ? 'selected-primary' : 'primary';
           } else if (previewState === 'secondary') {
             state = key === pinnedKey ? 'selected-secondary' : 'secondary';
-            pillarTier = 'secondary';
+            pillarTier = key === pinnedKey ? 'selected-secondary' : 'secondary';
           } else if (previewState === 'clear') {
             state = key === pinnedKey ? 'selected' : 'base';
+            pillarTier = key === pinnedKey ? 'selected' : null;
           } else if (key === pinnedKey && primaryKeys.has(key)) {
             state = 'selected-primary';
-            pillarTier = 'primary';
+            pillarTier = 'selected-primary';
           } else if (key === pinnedKey && secondaryKeys.has(key)) {
             state = 'selected-secondary';
-            pillarTier = 'secondary';
+            pillarTier = 'selected-secondary';
           } else if (key === pinnedKey) {
             state = 'selected';
+            pillarTier = 'selected';
           } else if (primaryKeys.has(key)) {
             state = 'primary';
             pillarTier = 'primary';
@@ -11671,6 +11744,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
 
       function setPinnedMesh(mesh) {
         pinnedMesh = mesh || null;
+        syncPinnedBoothLabelState();
         if (pinnedMesh) {
           if (shouldShowBoothActionSprites()) {
             openActionMenu(pinnedMesh, window.innerWidth * 0.5, window.innerHeight * 0.5);
@@ -11779,6 +11853,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         selectedSecondaryIds = [];
         pinnedMesh = null;
         hoveredMesh = null;
+        syncPinnedBoothLabelState();
         refreshMaterials();
         refreshInfoPanel();
         rebuildRoutes();
@@ -13810,9 +13885,18 @@ self.onmessage = function(event) {
           needsRaycast = false;
         }
         const pulsePhase = performance.now() * 0.0048;
+        // クリック固定中の柱だけ、通常ピラー比で約1.5倍の速度にする。
+        // 振れ幅は v86 のまま維持しつつ、高周波成分を抑えてチラつきを防ぐ。
+        const clickPulsePhase = performance.now() * 0.0072;
         const isDark = themeMode === 'dark';
         primaryPillarMaterial.opacity = (isDark ? 0.28 : 0.38) + (Math.sin(pulsePhase) * (isDark ? 0.05 : 0.03));
         secondaryPillarMaterial.opacity = (isDark ? 0.25 : 0.34) + (Math.sin(pulsePhase + 1.2) * (isDark ? 0.045 : 0.028));
+        const clickPulseMain = (Math.sin(clickPulsePhase) + 1) * 0.5;
+        const clickPulseKick = Math.pow((Math.sin(clickPulsePhase + 0.8) + 1) * 0.5, 2.2);
+        const clickPulse = Math.min(1, (clickPulseMain * 0.62) + (clickPulseKick * 0.48));
+        selectedPillarMaterial.opacity = (isDark ? 0.38 : 0.42) + clickPulse * (isDark ? 0.34 : 0.36);
+        selectedPrimaryPillarMaterial.opacity = (isDark ? 0.34 : 0.44) + clickPulse * (isDark ? 0.36 : 0.34);
+        selectedSecondaryPillarMaterial.opacity = (isDark ? 0.32 : 0.42) + clickPulse * (isDark ? 0.34 : 0.34);
         tickCamTween();
         controls.update();
         if (actionMenuState?.mesh) updateActionIconLayout(actionMenuState.mesh);
