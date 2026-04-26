@@ -6032,6 +6032,16 @@
       return window.innerWidth <= 900;
     }
 
+    function isIOSWebKitRuntime() {
+      const ua = navigator.userAgent || '';
+      const platform = navigator.platform || '';
+      return /iPad|iPhone|iPod/.test(ua) || (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    }
+
+    function shouldUseMobileSafeRendering() {
+      return isIOSWebKitRuntime() || isMobileFrameViewport();
+    }
+
     function syncMobileFrameClass() {
       document.body.classList.toggle('is-mobile-framed', isMobileFrameViewport());
     }
@@ -6184,12 +6194,17 @@
       setLoadingProgress(42, 'Building Scene');
       scene.background = new THREE.Color(0x11141c);
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobileFrameViewport() ? 1.15 : 1.5));
+      const mobileSafeRendering = shouldUseMobileSafeRendering();
+      const renderer = new THREE.WebGLRenderer({
+        antialias: !mobileSafeRendering,
+        alpha: false,
+        powerPreference: mobileSafeRendering ? 'default' : 'high-performance'
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobileSafeRendering ? 1 : 1.5));
       const initialRenderSize = currentRendererViewportSize();
       renderer.setSize(initialRenderSize.width, initialRenderSize.height);
-      renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.shadowMap.enabled = !mobileSafeRendering;
+      if (renderer.shadowMap.enabled) renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       (getActiveMapViewport() || app).appendChild(renderer.domElement);
       renderer.domElement.style.touchAction = 'none';
@@ -8097,7 +8112,7 @@
         if (pageTextureCache.has(pageInfo.page)) return pageTextureCache.get(pageInfo.page);
         const texture = new THREE.TextureLoader().load(pageInfo.image);
         if ('colorSpace' in texture && THREE.SRGBColorSpace) texture.colorSpace = THREE.SRGBColorSpace;
-        texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        texture.anisotropy = mobileSafeRendering ? 1 : renderer.capabilities.getMaxAnisotropy();
         pageTextureCache.set(pageInfo.page, texture);
         return texture;
       }
@@ -8107,7 +8122,11 @@
         if (pageLabelTextureCache.has(pageInfo.page)) return pageLabelTextureCache.get(pageInfo.page);
 
         const frame = getHallFrame(pageInfo.page);
-        const texW = 4096;
+        // iOS WebKit is prone to tab/GPU-process crashes when large canvas-backed
+        // textures are allocated during startup. 4096px wide label atlases become
+        // roughly 4096 x 5800 each for this venue map, so mobile/iOS uses a
+        // smaller atlas while desktop keeps the high-resolution version.
+        const texW = mobileSafeRendering ? 1536 : 4096;
         const texH = Math.max(256, Math.round(texW * frame.h / frame.w));
         const canvas = document.createElement('canvas');
         canvas.width = texW;
@@ -8140,7 +8159,7 @@
 
         const texture = new THREE.CanvasTexture(canvas);
         if ('colorSpace' in texture && THREE.SRGBColorSpace) texture.colorSpace = THREE.SRGBColorSpace;
-        texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        texture.anisotropy = mobileSafeRendering ? 1 : renderer.capabilities.getMaxAnisotropy();
         texture.minFilter = THREE.LinearFilter;
         texture.magFilter = THREE.LinearFilter;
         texture.generateMipmaps = false;
