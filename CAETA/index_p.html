@@ -12632,6 +12632,145 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
                 min-height: 46px;
               }
             }
+
+
+            /* v95: mobile shared-preview UI compact bar + expandable actions */
+            #sharedPreviewHeader {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 12px;
+            }
+            #sharedPreviewHeaderText { min-width: 0; }
+            #sharedPreviewCompactCount {
+              display: none;
+              margin-top: 3px;
+              color: var(--hint);
+              font-size: 11px;
+              line-height: 1.35;
+              font-weight: 650;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            #sharedPreviewToggleBtn {
+              display: none;
+              flex: 0 0 auto;
+              min-width: 86px;
+              min-height: 36px;
+              padding: 0 12px;
+              border-radius: 999px;
+              border: 1px solid var(--neo-light-stroke, rgba(17,17,24,0.08));
+              background: var(--neo-light-surface-soft, rgba(255,255,255,0.72));
+              color: var(--text);
+              box-shadow:
+                var(--neo-light-inset, inset 1px 1px 0 rgba(255,255,255,0.74)),
+                -4px -4px 9px var(--neo-light-highlight, rgba(255,255,255,0.86)),
+                5px 5px 11px var(--neo-light-shadow, rgba(146,156,184,0.28));
+              font-size: 12px;
+              font-weight: 800;
+              line-height: 1;
+            }
+            #sharedPreviewDetails { display: block; }
+            @media (max-width: 900px) {
+              #sharedPreviewDialog {
+                bottom: max(10px, env(safe-area-inset-bottom, 0px) + 10px) !important;
+                width: min(520px, calc(100vw - 20px)) !important;
+                border-radius: 19px !important;
+                padding: 9px 10px !important;
+                max-height: min(56dvh, 420px) !important;
+                overflow: hidden !important;
+                box-shadow:
+                  -6px -6px 14px var(--neo-light-highlight, rgba(255,255,255,0.76)),
+                  8px 8px 18px var(--neo-light-shadow, rgba(146,156,184,0.28)),
+                  0 12px 32px rgba(36,24,56,0.14) !important;
+              }
+              html[data-theme='dark'] #sharedPreviewDialog {
+                box-shadow:
+                  -5px -5px 12px var(--neo-light-highlight, rgba(255,255,255,0.035)),
+                  8px 8px 20px var(--neo-light-shadow-strong, rgba(0,0,0,0.46)),
+                  0 12px 32px rgba(0,0,0,0.24) !important;
+              }
+              #sharedPreviewHeader { gap: 9px; }
+              #sharedPreviewTitle {
+                font-size: 12.5px !important;
+                line-height: 1.25 !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+              #sharedPreviewCompactCount {
+                display: block;
+                font-size: 10.5px;
+              }
+              #sharedPreviewToggleBtn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+              }
+              #sharedPreviewBody,
+              #sharedPreviewDetails { display: none; }
+              #sharedPreviewDialog.is-expanded {
+                padding: 12px !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: contain;
+              }
+              #sharedPreviewDialog.is-expanded #sharedPreviewBody,
+              #sharedPreviewDialog.is-expanded #sharedPreviewDetails { display: block; }
+              #sharedPreviewDialog.is-expanded #sharedPreviewToggleBtn { min-width: 64px; }
+              #sharedPreviewBody {
+                margin-top: 9px !important;
+                font-size: 11.5px !important;
+                line-height: 1.55 !important;
+              }
+              #sharedPreviewCounts {
+                margin-top: 10px !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 7px !important;
+              }
+              .shared-preview-count {
+                border-radius: 13px !important;
+                padding: 7px 8px !important;
+                font-size: 11px !important;
+                line-height: 1.35 !important;
+              }
+              .shared-preview-count span { font-size: 9.5px !important; }
+              #sharedPreviewActions {
+                margin-top: 10px !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+              }
+              #sharedPreviewActions button {
+                min-height: 42px !important;
+                border-radius: 14px !important;
+                padding: 8px 9px !important;
+                align-items: center !important;
+                text-align: center !important;
+                font-size: 11.5px !important;
+              }
+              #sharedPreviewActions button small { display: none !important; }
+              #sharedPreviewCloseBtn { grid-column: 1 / -1; }
+            }
+            @media (max-width: 420px) {
+              #sharedPreviewDialog {
+                width: calc(100vw - 16px) !important;
+                bottom: max(8px, env(safe-area-inset-bottom, 0px) + 8px) !important;
+                padding: 8px !important;
+                border-radius: 18px !important;
+              }
+              #sharedPreviewToggleBtn {
+                min-width: 74px;
+                min-height: 34px;
+                padding: 0 10px;
+                font-size: 11.5px;
+              }
+              #sharedPreviewCounts { grid-template-columns: 1fr !important; }
+              #sharedPreviewActions button {
+                min-height: 40px !important;
+                font-size: 11px !important;
+              }
+            }
           `;
           document.head.appendChild(style);
         }
@@ -12644,20 +12783,29 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
           dialog.setAttribute('aria-live', 'polite');
           dialog.setAttribute('aria-labelledby', 'sharedPreviewTitle');
           dialog.innerHTML = `
-            <h2 id="sharedPreviewTitle">共有リンクをプレビュー中です</h2>
-            <p id="sharedPreviewBody">この共有リンクの「最優先」「気になる」を一時的に表示しています。まだあなたの保存済みリストは変更していません。</p>
-            <div id="sharedPreviewCounts">
-              <div class="shared-preview-count"><span>共有リンク</span><strong id="sharedPreviewIncomingCount">最優先 0件 / 気になる 0件</strong></div>
-              <div class="shared-preview-count"><span>保存済みリスト</span><strong id="sharedPreviewLocalCount">最優先 0件 / 気になる 0件</strong></div>
+            <div id="sharedPreviewHeader">
+              <div id="sharedPreviewHeaderText">
+                <h2 id="sharedPreviewTitle">共有リンクをプレビュー中</h2>
+                <div id="sharedPreviewCompactCount">共有：最優先 0件 / 気になる 0件</div>
+              </div>
+              <button id="sharedPreviewToggleBtn" type="button" aria-expanded="false" aria-controls="sharedPreviewDetails">保存方法</button>
             </div>
-            <div id="sharedPreviewActions">
-              <button id="sharedPreviewMergeBtn" type="button">既存リストに統合して保存<small>自分のリストを残したまま、共有されたブースを追加します。</small></button>
-              <button id="sharedPreviewReplaceBtn" type="button">既存リストをリセットして保存<small>自分のリストをいったん空にして、この共有リンクの内容だけを保存します。</small></button>
-              <button id="sharedPreviewCloseBtn" type="button">保存せずプレビューを閉じる<small>共有内容を保存せず、もとの保存済みリストに戻します。</small></button>
+            <p id="sharedPreviewBody">共有された「最優先」「気になる」を一時表示しています。まだ保存済みリストは変更していません。</p>
+            <div id="sharedPreviewDetails">
+              <div id="sharedPreviewCounts">
+                <div class="shared-preview-count"><span>共有リンク</span><strong id="sharedPreviewIncomingCount">最優先 0件 / 気になる 0件</strong></div>
+                <div class="shared-preview-count"><span>保存済みリスト</span><strong id="sharedPreviewLocalCount">最優先 0件 / 気になる 0件</strong></div>
+              </div>
+              <div id="sharedPreviewActions">
+                <button id="sharedPreviewMergeBtn" type="button" aria-label="既存リストに統合して保存。自分のリストを残したまま、共有されたブースを追加します。">統合して保存<small>自分のリストを残したまま、共有されたブースを追加します。</small></button>
+                <button id="sharedPreviewReplaceBtn" type="button" aria-label="既存リストをリセットして保存。自分のリストを空にして、この共有リンクの内容だけを保存します。">リセットして保存<small>自分のリストを空にして、この共有リンクの内容だけを保存します。</small></button>
+                <button id="sharedPreviewCloseBtn" type="button" aria-label="保存せずプレビューを閉じる。共有内容を保存せず、もとの保存済みリストに戻します。">保存せず閉じる<small>共有内容を保存せず、もとの保存済みリストに戻します。</small></button>
+              </div>
             </div>
           `;
           document.body.appendChild(dialog);
 
+          dialog.querySelector('#sharedPreviewToggleBtn')?.addEventListener('click', toggleSharedPreviewDialog);
           dialog.querySelector('#sharedPreviewMergeBtn')?.addEventListener('click', commitSharedPreviewMerge);
           dialog.querySelector('#sharedPreviewReplaceBtn')?.addEventListener('click', commitSharedPreviewReplace);
           dialog.querySelector('#sharedPreviewCloseBtn')?.addEventListener('click', closeSharedPreviewWithoutSaving);
@@ -12669,15 +12817,34 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         if (!isSharedPreviewMode) return;
         const incomingEl = document.getElementById('sharedPreviewIncomingCount');
         const localEl = document.getElementById('sharedPreviewLocalCount');
-        if (!incomingEl || !localEl) return;
+        const compactEl = document.getElementById('sharedPreviewCompactCount');
         const incoming = countSelectionState(buildStatePayload());
         const local = countSelectionState(localStateBeforeSharedPreview);
-        incomingEl.textContent = `最優先 ${incoming.primary}件 / 気になる ${incoming.secondary}件`;
-        localEl.textContent = `最優先 ${local.primary}件 / 気になる ${local.secondary}件`;
+        if (incomingEl) incomingEl.textContent = '最優先 ' + incoming.primary + '件 / 気になる ' + incoming.secondary + '件';
+        if (localEl) localEl.textContent = '最優先 ' + local.primary + '件 / 気になる ' + local.secondary + '件';
+        if (compactEl) compactEl.textContent = '共有：最優先 ' + incoming.primary + '件 / 気になる ' + incoming.secondary + '件';
+      }
+
+      function setSharedPreviewExpanded(expanded) {
+        const dialog = document.getElementById('sharedPreviewDialog');
+        if (!dialog) return;
+        dialog.classList.toggle('is-expanded', !!expanded);
+        const toggleBtn = dialog.querySelector('#sharedPreviewToggleBtn');
+        if (toggleBtn) {
+          toggleBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+          toggleBtn.textContent = expanded ? '閉じる' : '保存方法';
+        }
+      }
+
+      function toggleSharedPreviewDialog() {
+        const dialog = document.getElementById('sharedPreviewDialog');
+        if (!dialog) return;
+        setSharedPreviewExpanded(!dialog.classList.contains('is-expanded'));
       }
 
       function showSharedPreviewDialog() {
         const dialog = ensureSharedPreviewDialog();
+        setSharedPreviewExpanded(false);
         dialog.classList.add('is-visible');
         refreshSharedPreviewDialogCounts();
         showToast('共有リンクをプレビュー中です。保存済みリストはまだ変更していません');
@@ -12685,7 +12852,10 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
 
       function hideSharedPreviewDialog() {
         const dialog = document.getElementById('sharedPreviewDialog');
-        if (dialog) dialog.classList.remove('is-visible');
+        if (dialog) {
+          dialog.classList.remove('is-visible');
+          setSharedPreviewExpanded(false);
+        }
       }
 
       function commitSharedPreviewMerge() {
