@@ -6826,7 +6826,7 @@
     <div id="loadingOverlay" aria-live="polite" aria-label="Loading">
       <div id="loadingCard">
         <svg id="loadingLogo" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1061.12 218.51"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M0,109.85v-.6C0,46.7,48.79,0,111.35,0c46.1,0,77.23,22.45,94.89,54.48l-57.77,33.82c-7.78-14.97-18.86-25.44-38.02-25.44-23.65,0-39.21,20.65-39.21,45.8v.6c0,27.24,16.16,46.4,39.21,46.4,19.76,0,30.83-10.78,39.51-26.34l57.77,32.63c-17.66,31.13-46.99,56.57-99.08,56.57C50.59,218.51,0,174.81,0,109.85Z"/><path class="cls-1" d="M290.65,2.99h69.45l88.3,211.03h-76.03l-11.08-28.14h-73.34l-10.78,28.14h-74.83L290.65,2.99ZM343.93,136.2l-19.16-50.89-19.16,50.89h38.31Z"/><path class="cls-1" d="M457.07,4.49h178.7v57.47h-109.85v21.25h102.37v50.59h-102.37v22.75h111.35v57.47h-180.2V4.49Z"/><path class="cls-1" d="M709.7,63.76h-61.66V4.49h193.37v59.27h-61.66v150.26h-70.04V63.76Z"/><path class="cls-1" d="M903.37,2.99h69.45l88.3,211.03h-76.03l-11.08-28.14h-73.34l-10.78,28.14h-74.83L903.37,2.99ZM956.65,136.2l-19.16-50.89-19.16,50.89h38.31Z"/></g></svg>
-        <div id="loadingSubtitle">文学フリマ東京42 3Dブース地図</div>
+        <div id="loadingSubtitle">文学フリマ東京42（非公式）3Dブース地図</div>
         <h1 id="loadingTitle">Loading</h1>
         <div id="loadingProgress" aria-hidden="true">
           <div id="loadingProgressBar"></div>
@@ -11341,6 +11341,9 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       let drawerDragSuppressUntil = 0;
       let needsRaycast = false;
       let restoreState = null;
+      let sharedPreviewState = null;
+      let localStateBeforeSharedPreview = null;
+      let isSharedPreviewMode = false;
       let persistTimer = null;
       let gestureState = null;
       let menuGesture = null;
@@ -12298,6 +12301,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       function renderDrawerLists() {
         renderDrawerList(drawerPrimaryList, sortDrawerIdsByRoute(selectedPrimaryIds), 'まだ選択されていません。');
         renderDrawerList(drawerSecondaryList, sortDrawerIdsByRoute(selectedSecondaryIds), 'まだ選択されていません。');
+        refreshSharedPreviewDialogCounts();
         scheduleMobileLayoutMetrics();
       }
 
@@ -12362,6 +12366,8 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       function parseStateFromUrl() {
         const params = new URLSearchParams(window.location.search);
         if (!params.toString()) return null;
+        const hasSharePayload = ['v', 'p', 's', 'c', 'r', 't'].some((key) => params.has(key));
+        if (!hasSharePayload) return null;
         if (params.get('v') && params.get('v') !== URL_STATE_VERSION) return null;
         return {
           version: 1,
@@ -12377,13 +12383,16 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         };
       }
 
-      function saveState(immediate = false) {
+      function saveState(immediate = false, { force = false } = {}) {
         const run = () => {
+          if (isSharedPreviewMode && !force) {
+            return;
+          }
           try {
             const payload = buildStatePayload();
             localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
             setLoadingProgress(82, 'Finalizing');
-      updateAddressBarFromState();
+            updateAddressBarFromState();
           } catch (err) {
             console.warn('state save failed', err);
           }
@@ -12409,6 +12418,331 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
           console.warn('state restore failed', err);
           return null;
         }
+      }
+
+      function countSelectionState(state) {
+        return {
+          primary: uniqueValidBoothIds(state?.primaryBoothIds || []).length,
+          secondary: uniqueValidBoothIds(state?.secondaryBoothIds || []).length
+        };
+      }
+
+      function ensureSelectionPriority(primaryIds, secondaryIds) {
+        const primary = uniqueValidBoothIds(primaryIds || []);
+        const primarySet = new Set(primary);
+        const secondary = uniqueValidBoothIds(secondaryIds || []).filter((id) => !primarySet.has(id));
+        return { primary, secondary };
+      }
+
+      function applyRuntimeState(state, { applyCamera = false, focusPinned = false } = {}) {
+        const safeState = state || {};
+        closeActionMenu();
+        if (applyCamera) {
+          if (safeState.camera) applyCameraState(safeState.camera);
+          else animateCamera(DEFAULT_CAMERA_POS.clone(), DEFAULT_CAMERA_TARGET.clone());
+        }
+
+        themeMode = safeState.themeMode ? (safeState.themeMode === 'dark' ? 'dark' : 'light') : 'light';
+        routeModeEnabled = !!safeState.routeModeEnabled;
+        applyThemeMode(themeMode, { save: false });
+        updateRouteModeButton();
+
+        const normalized = ensureSelectionPriority(safeState.primaryBoothIds, safeState.secondaryBoothIds);
+        selectedPrimaryIds = normalized.primary;
+        selectedSecondaryIds = normalized.secondary;
+        categoryLayerVisible = !!safeState.categoryLayerVisible;
+
+        renderCategoryLegend();
+        renderSearchResults();
+        updateCategoryLayerButton();
+        updateCategoryLegendVisibility();
+        refreshMapLabelColors();
+        refreshMaterials();
+        rebuildRoutes();
+
+        const restoredMesh = safeState.pinnedBoothId ? boothById.get(normalizeBoothId(safeState.pinnedBoothId)) : null;
+        if (restoredMesh) {
+          setPinnedMesh(restoredMesh);
+          if (focusPinned && !safeState.camera) focusMesh(restoredMesh);
+        } else {
+          setPinnedMesh(null);
+        }
+
+        renderDrawerLists();
+        updateResponsiveUiState();
+        scheduleMobileLayoutMetrics();
+      }
+
+      function stripShareParamsFromAddressBar() {
+        try {
+          const url = new URL(window.location.href);
+          ['v', 'p', 's', 'c', 'r', 't'].forEach((key) => url.searchParams.delete(key));
+          const next = `${url.pathname}${url.search}${url.hash}`;
+          history.replaceState(null, '', next);
+        } catch (err) {
+          console.warn('shared preview URL cleanup failed', err);
+        }
+      }
+
+      function ensureSharedPreviewDialog() {
+        let style = document.getElementById('sharedPreviewStyle');
+        if (!style) {
+          style = document.createElement('style');
+          style.id = 'sharedPreviewStyle';
+          style.textContent = `
+            #sharedPreviewDialog {
+              position: fixed;
+              left: 50%;
+              bottom: max(18px, env(safe-area-inset-bottom, 0px) + 18px);
+              z-index: 180;
+              width: min(560px, calc(100vw - 28px));
+              transform: translateX(-50%);
+              border-radius: 24px;
+              border: 1px solid var(--neo-light-stroke, rgba(17,17,24,0.08));
+              background: var(--neo-light-surface, rgba(255,255,255,0.94));
+              color: var(--text);
+              box-shadow:
+                -10px -10px 24px var(--neo-light-highlight, rgba(255,255,255,0.86)),
+                14px 14px 32px var(--neo-light-shadow, rgba(146,156,184,0.28)),
+                0 18px 56px rgba(36,24,56,0.16);
+              padding: 18px;
+              display: none;
+              box-sizing: border-box;
+            }
+            html[data-theme='dark'] #sharedPreviewDialog {
+              background: var(--neo-light-surface, rgba(24,27,36,0.98));
+              box-shadow:
+                -8px -8px 18px var(--neo-light-highlight, rgba(255,255,255,0.035)),
+                14px 14px 34px var(--neo-light-shadow-strong, rgba(0,0,0,0.46)),
+                0 18px 56px rgba(0,0,0,0.28);
+            }
+            #sharedPreviewDialog.is-visible {
+              display: block;
+            }
+            #sharedPreviewTitle {
+              margin: 0;
+              font-size: 15px;
+              line-height: 1.45;
+              font-weight: 850;
+              letter-spacing: -0.02em;
+            }
+            #sharedPreviewBody {
+              margin: 8px 0 0;
+              font-size: 12.5px;
+              line-height: 1.75;
+              color: var(--muted);
+            }
+            #sharedPreviewCounts {
+              margin-top: 12px;
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 8px;
+            }
+            .shared-preview-count {
+              border: 1px solid var(--neo-light-stroke, rgba(17,17,24,0.08));
+              border-radius: 16px;
+              background: var(--neo-light-surface-soft, rgba(255,255,255,0.72));
+              box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.64),
+                inset -2px -2px 6px rgba(150,160,184,0.12);
+              padding: 10px 12px;
+              font-size: 12px;
+              line-height: 1.55;
+              color: var(--text);
+            }
+            .shared-preview-count span {
+              display: block;
+              color: var(--hint);
+              font-size: 10.5px;
+              font-weight: 750;
+              letter-spacing: 0.04em;
+              margin-bottom: 2px;
+            }
+            #sharedPreviewActions {
+              margin-top: 14px;
+              display: grid;
+              grid-template-columns: 1fr;
+              gap: 9px;
+            }
+            #sharedPreviewActions button {
+              width: 100%;
+              min-height: 44px;
+              border-radius: 16px;
+              border: 1px solid var(--neo-light-stroke, rgba(17,17,24,0.08));
+              background: var(--neo-light-surface-soft, rgba(255,255,255,0.72));
+              color: var(--text);
+              box-shadow:
+                var(--neo-light-inset, inset 1px 1px 0 rgba(255,255,255,0.74)),
+                -5px -5px 11px var(--neo-light-highlight, rgba(255,255,255,0.86)),
+                7px 7px 13px var(--neo-light-shadow, rgba(146,156,184,0.28));
+              padding: 10px 12px;
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              justify-content: center;
+              gap: 3px;
+              text-align: left;
+              font-size: 12px;
+              font-weight: 820;
+              line-height: 1.3;
+            }
+            #sharedPreviewActions button small {
+              display: block;
+              color: var(--hint);
+              font-size: 10.5px;
+              font-weight: 560;
+              line-height: 1.45;
+            }
+            #sharedPreviewMergeBtn {
+              background: var(--gradient-primary) !important;
+              color: #fff !important;
+              border-color: rgba(255,255,255,0.18) !important;
+              box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.24),
+                7px 7px 16px rgba(255,45,85,0.22) !important;
+            }
+            #sharedPreviewMergeBtn small {
+              color: rgba(255,255,255,0.82) !important;
+            }
+            #sharedPreviewReplaceBtn {
+              background: var(--gradient-secondary) !important;
+              color: #fff !important;
+              border-color: rgba(255,255,255,0.18) !important;
+              box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.22),
+                7px 7px 16px rgba(124,92,255,0.20) !important;
+            }
+            #sharedPreviewReplaceBtn small {
+              color: rgba(255,255,255,0.82) !important;
+            }
+            #sharedPreviewCloseBtn {
+              color: var(--muted) !important;
+            }
+            @media (max-width: 900px) {
+              #sharedPreviewDialog {
+                bottom: max(12px, env(safe-area-inset-bottom, 0px) + 12px);
+                width: min(520px, calc(100vw - 20px));
+                border-radius: 22px;
+                padding: 14px;
+              }
+              #sharedPreviewCounts {
+                grid-template-columns: 1fr;
+              }
+              #sharedPreviewActions button {
+                min-height: 46px;
+              }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+
+        let dialog = document.getElementById('sharedPreviewDialog');
+        if (!dialog) {
+          dialog = document.createElement('section');
+          dialog.id = 'sharedPreviewDialog';
+          dialog.setAttribute('role', 'dialog');
+          dialog.setAttribute('aria-live', 'polite');
+          dialog.setAttribute('aria-labelledby', 'sharedPreviewTitle');
+          dialog.innerHTML = `
+            <h2 id="sharedPreviewTitle">共有リンクをプレビュー中です</h2>
+            <p id="sharedPreviewBody">この共有リンクの「最優先」「気になる」を一時的に表示しています。まだあなたの保存済みリストは変更していません。</p>
+            <div id="sharedPreviewCounts">
+              <div class="shared-preview-count"><span>共有リンク</span><strong id="sharedPreviewIncomingCount">最優先 0件 / 気になる 0件</strong></div>
+              <div class="shared-preview-count"><span>保存済みリスト</span><strong id="sharedPreviewLocalCount">最優先 0件 / 気になる 0件</strong></div>
+            </div>
+            <div id="sharedPreviewActions">
+              <button id="sharedPreviewMergeBtn" type="button">既存リストに統合して保存<small>自分のリストを残したまま、共有されたブースを追加します。</small></button>
+              <button id="sharedPreviewReplaceBtn" type="button">既存リストをリセットして保存<small>自分のリストをいったん空にして、この共有リンクの内容だけを保存します。</small></button>
+              <button id="sharedPreviewCloseBtn" type="button">保存せずプレビューを閉じる<small>共有内容を保存せず、もとの保存済みリストに戻します。</small></button>
+            </div>
+          `;
+          document.body.appendChild(dialog);
+
+          dialog.querySelector('#sharedPreviewMergeBtn')?.addEventListener('click', commitSharedPreviewMerge);
+          dialog.querySelector('#sharedPreviewReplaceBtn')?.addEventListener('click', commitSharedPreviewReplace);
+          dialog.querySelector('#sharedPreviewCloseBtn')?.addEventListener('click', closeSharedPreviewWithoutSaving);
+        }
+        return dialog;
+      }
+
+      function refreshSharedPreviewDialogCounts() {
+        if (!isSharedPreviewMode) return;
+        const incomingEl = document.getElementById('sharedPreviewIncomingCount');
+        const localEl = document.getElementById('sharedPreviewLocalCount');
+        if (!incomingEl || !localEl) return;
+        const incoming = countSelectionState(buildStatePayload());
+        const local = countSelectionState(localStateBeforeSharedPreview);
+        incomingEl.textContent = `最優先 ${incoming.primary}件 / 気になる ${incoming.secondary}件`;
+        localEl.textContent = `最優先 ${local.primary}件 / 気になる ${local.secondary}件`;
+      }
+
+      function showSharedPreviewDialog() {
+        const dialog = ensureSharedPreviewDialog();
+        dialog.classList.add('is-visible');
+        refreshSharedPreviewDialogCounts();
+        showToast('共有リンクをプレビュー中です。保存済みリストはまだ変更していません');
+      }
+
+      function hideSharedPreviewDialog() {
+        const dialog = document.getElementById('sharedPreviewDialog');
+        if (dialog) dialog.classList.remove('is-visible');
+      }
+
+      function commitSharedPreviewMerge() {
+        if (!isSharedPreviewMode) return;
+        const preview = buildStatePayload();
+        const base = localStateBeforeSharedPreview || {};
+        const mergedPrimary = uniqueValidBoothIds([
+          ...(base.primaryBoothIds || []),
+          ...(preview.primaryBoothIds || [])
+        ]);
+        const mergedPrimarySet = new Set(mergedPrimary);
+        const mergedSecondary = uniqueValidBoothIds([
+          ...(base.secondaryBoothIds || []),
+          ...(preview.secondaryBoothIds || [])
+        ]).filter((id) => !mergedPrimarySet.has(id));
+
+        const mergedState = {
+          ...preview,
+          primaryBoothIds: mergedPrimary,
+          secondaryBoothIds: mergedSecondary,
+          source: 'merged'
+        };
+
+        isSharedPreviewMode = false;
+        sharedPreviewState = null;
+        restoreState = mergedState;
+        hideSharedPreviewDialog();
+        applyRuntimeState(mergedState, { applyCamera: false, focusPinned: false });
+        saveState(true, { force: true });
+        showToast('共有リストを既存リストに統合して保存しました');
+      }
+
+      function commitSharedPreviewReplace() {
+        if (!isSharedPreviewMode) return;
+        const preview = {
+          ...buildStatePayload(),
+          source: 'replaced'
+        };
+        isSharedPreviewMode = false;
+        sharedPreviewState = null;
+        restoreState = preview;
+        hideSharedPreviewDialog();
+        applyRuntimeState(preview, { applyCamera: false, focusPinned: false });
+        saveState(true, { force: true });
+        showToast('既存リストをリセットし、共有リストを保存しました');
+      }
+
+      function closeSharedPreviewWithoutSaving() {
+        if (!isSharedPreviewMode) return;
+        const fallbackState = localStateBeforeSharedPreview || null;
+        isSharedPreviewMode = false;
+        sharedPreviewState = null;
+        restoreState = fallbackState;
+        hideSharedPreviewDialog();
+        applyRuntimeState(fallbackState, { applyCamera: true, focusPinned: false });
+        stripShareParamsFromAddressBar();
+        showToast('共有プレビューを閉じました。保存済みリストは変更していません');
       }
 
       function applyCameraState(savedCamera) {
@@ -14918,52 +15252,26 @@ self.onmessage = function(event) {
 
 
 
-      restoreState = parseStateFromUrl() || loadState();
+      sharedPreviewState = parseStateFromUrl();
+      localStateBeforeSharedPreview = loadState();
+      isSharedPreviewMode = !!sharedPreviewState;
+      restoreState = sharedPreviewState || localStateBeforeSharedPreview;
 
-      if (restoreState?.source === 'url') {
-        showToast('共有リンクの状態を反映しました');
+      applyRuntimeState(restoreState, { applyCamera: true, focusPinned: !restoreState?.camera });
+
+      if (!isSharedPreviewMode) {
+        updateAddressBarFromState();
       }
-
-
-      if (restoreState?.camera) {
-        applyCameraState(restoreState.camera);
-      } else {
-        animateCamera(DEFAULT_CAMERA_POS.clone(), DEFAULT_CAMERA_TARGET.clone());
-      }
-
-      themeMode = restoreState?.themeMode ? (restoreState.themeMode === 'dark' ? 'dark' : 'light') : 'light';
-      routeModeEnabled = !!restoreState?.routeModeEnabled;
-      applyThemeMode(themeMode, { save: false });
-      updateRouteModeButton();
-      setDetail(null);
-
-      selectedPrimaryIds = uniqueValidBoothIds(restoreState?.primaryBoothIds || []);
-      selectedSecondaryIds = uniqueValidBoothIds(restoreState?.secondaryBoothIds || []);
-      categoryLayerVisible = !!restoreState?.categoryLayerVisible;
-      renderCategoryLegend();
-      renderSearchResults();
-      updateCategoryLayerButton();
-      updateCategoryLegendVisibility();
-      refreshMaterials();
-      rebuildRoutes();
-
-      if (restoreState?.pinnedBoothId) {
-        const restoredMesh = boothById.get(normalizeBoothId(restoreState.pinnedBoothId));
-        if (restoredMesh) {
-          setPinnedMesh(restoredMesh);
-          if (!restoreState?.camera) {
-            focusMesh(restoredMesh);
-          }
-        }
-      }
-
-      updateAddressBarFromState();
       installMobileLayoutObservers();
       setHallModelVisible(false);
       setDrawerOpen(true);
       renderDrawerLists();
       updateResponsiveUiState();
       scheduleMobileLayoutMetrics();
+
+      if (isSharedPreviewMode) {
+        showSharedPreviewDialog();
+      }
 
       function animate() {
         requestAnimationFrame(animate);
