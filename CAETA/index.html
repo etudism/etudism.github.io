@@ -6819,6 +6819,297 @@
   }
 </style>
 
+
+
+<style id="v95-drawer-remove-buttons-mobile-section-fix">
+  /* v95: add per-booth remove buttons in the drawer lists and flatten mobile drawer sections. */
+  .drawer-list-entry {
+    list-style: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .drawer-list-entry > .drawer-item {
+    min-width: 0 !important;
+  }
+
+  .drawer-item-remove {
+    align-self: center;
+    justify-self: end;
+    min-width: 54px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,45,85,0.18);
+    background: rgba(255,45,85,0.08);
+    color: var(--drawer-danger-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    box-shadow: none;
+    transform: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .drawer-item-remove:hover,
+  .drawer-item-remove:focus-visible {
+    background: rgba(255,45,85,0.12);
+    border-color: rgba(255,45,85,0.24);
+    transform: translateY(-1px);
+    outline: none;
+  }
+
+  .drawer-item-remove:active {
+    transform: translateY(1px);
+    background: rgba(255,45,85,0.16);
+  }
+
+  html[data-theme='dark'] .drawer-item-remove {
+    background: rgba(255,154,180,0.10);
+    border-color: rgba(255,154,180,0.16);
+  }
+
+  html[data-theme='dark'] .drawer-item-remove:hover,
+  html[data-theme='dark'] .drawer-item-remove:focus-visible {
+    background: rgba(255,154,180,0.15);
+    border-color: rgba(255,154,180,0.24);
+  }
+
+  @media (min-width: 901px) {
+    #desktopSplitLayout > #integratedInfoBottomPane .drawer-list-entry,
+    #bottomDrawer.is-integrated-right-menu .drawer-list-entry,
+    #infoPanel > #bottomDrawer .drawer-list-entry {
+      gap: 10px !important;
+    }
+
+    #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove,
+    #bottomDrawer.is-integrated-right-menu .drawer-item-remove,
+    #infoPanel > #bottomDrawer .drawer-item-remove {
+      min-width: 56px !important;
+      height: 32px !important;
+      margin-right: 2px !important;
+    }
+  }
+
+  @media (max-width: 900px) {
+    body.is-mobile-framed #integratedInfoBottomScroll .drawer-section,
+    body.is-mobile-framed #bottomDrawer .drawer-section,
+    body.is-mobile-framed #bottomDrawer .drawer-section.primary,
+    body.is-mobile-framed #bottomDrawer .drawer-section.secondary {
+      border: 0 !important;
+      outline: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomScroll .drawer-list-entry {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+    }
+
+    body.is-mobile-framed .drawer-item-remove {
+      min-width: 52px;
+      height: 30px;
+      padding: 0 10px;
+      font-size: 11px;
+    }
+  }
+</style>
+
+
+
+<style id="v96-drawer-remove-button-subtle">
+  /* v96: make per-booth drawer remove buttons smaller and visually quieter. */
+  .drawer-item-remove,
+  #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove,
+  #bottomDrawer.is-integrated-right-menu .drawer-item-remove,
+  #infoPanel > #bottomDrawer .drawer-item-remove,
+  body.is-mobile-framed .drawer-item-remove {
+    min-width: 42px !important;
+    height: 24px !important;
+    padding: 0 8px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(127, 136, 158, 0.16) !important;
+    background: rgba(127, 136, 158, 0.07) !important;
+    color: rgba(93, 94, 114, 0.76) !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+    font-weight: 650 !important;
+    letter-spacing: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .drawer-item-remove:hover,
+  .drawer-item-remove:focus-visible,
+  #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove:hover,
+  #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove:focus-visible,
+  #bottomDrawer.is-integrated-right-menu .drawer-item-remove:hover,
+  #bottomDrawer.is-integrated-right-menu .drawer-item-remove:focus-visible,
+  #infoPanel > #bottomDrawer .drawer-item-remove:hover,
+  #infoPanel > #bottomDrawer .drawer-item-remove:focus-visible,
+  body.is-mobile-framed .drawer-item-remove:hover,
+  body.is-mobile-framed .drawer-item-remove:focus-visible {
+    background: rgba(127, 136, 158, 0.11) !important;
+    border-color: rgba(127, 136, 158, 0.22) !important;
+    color: rgba(64, 66, 78, 0.86) !important;
+    transform: none !important;
+    outline: none !important;
+  }
+
+  .drawer-item-remove:active,
+  #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove:active,
+  #bottomDrawer.is-integrated-right-menu .drawer-item-remove:active,
+  #infoPanel > #bottomDrawer .drawer-item-remove:active,
+  body.is-mobile-framed .drawer-item-remove:active {
+    background: rgba(127, 136, 158, 0.14) !important;
+    color: rgba(64, 66, 78, 0.92) !important;
+    transform: translateY(1px) !important;
+  }
+
+  html[data-theme='dark'] .drawer-item-remove,
+  html[data-theme='dark'] #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove,
+  html[data-theme='dark'] #bottomDrawer.is-integrated-right-menu .drawer-item-remove,
+  html[data-theme='dark'] #infoPanel > #bottomDrawer .drawer-item-remove,
+  html[data-theme='dark'] body.is-mobile-framed .drawer-item-remove {
+    border-color: rgba(255, 255, 255, 0.10) !important;
+    background: rgba(255, 255, 255, 0.045) !important;
+    color: rgba(229, 231, 245, 0.54) !important;
+  }
+
+  html[data-theme='dark'] .drawer-item-remove:hover,
+  html[data-theme='dark'] .drawer-item-remove:focus-visible,
+  html[data-theme='dark'] #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove:hover,
+  html[data-theme='dark'] #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove:focus-visible,
+  html[data-theme='dark'] #bottomDrawer.is-integrated-right-menu .drawer-item-remove:hover,
+  html[data-theme='dark'] #bottomDrawer.is-integrated-right-menu .drawer-item-remove:focus-visible,
+  html[data-theme='dark'] #infoPanel > #bottomDrawer .drawer-item-remove:hover,
+  html[data-theme='dark'] #infoPanel > #bottomDrawer .drawer-item-remove:focus-visible,
+  html[data-theme='dark'] body.is-mobile-framed .drawer-item-remove:hover,
+  html[data-theme='dark'] body.is-mobile-framed .drawer-item-remove:focus-visible {
+    border-color: rgba(255, 255, 255, 0.14) !important;
+    background: rgba(255, 255, 255, 0.075) !important;
+    color: rgba(245, 247, 255, 0.70) !important;
+  }
+
+  html[data-theme='dark'] .drawer-item-remove:active,
+  html[data-theme='dark'] #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove:active,
+  html[data-theme='dark'] #bottomDrawer.is-integrated-right-menu .drawer-item-remove:active,
+  html[data-theme='dark'] #infoPanel > #bottomDrawer .drawer-item-remove:active,
+  html[data-theme='dark'] body.is-mobile-framed .drawer-item-remove:active {
+    background: rgba(255, 255, 255, 0.10) !important;
+    color: rgba(245, 247, 255, 0.78) !important;
+  }
+
+  @media (max-width: 900px) {
+    body.is-mobile-framed #integratedInfoBottomScroll .drawer-list-entry {
+      gap: 6px !important;
+    }
+  }
+</style>
+
+
+<style id="v97-mobile-continuous-map-info-panel">
+  /* v97: mobileMapFrame と mobileInfoFrame を一続きのパネルとして見せる。 */
+  @media (max-width: 900px) {
+    body.is-mobile-framed #mobileFrameLayout {
+      gap: 0 !important;
+      border-radius: 30px !important;
+      border: 1px solid rgba(17, 17, 24, 0.08) !important;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(246,247,252,0.92) 100%) !important;
+      box-shadow:
+        -10px -10px 24px rgba(255,255,255,0.72),
+        14px 14px 30px rgba(146,156,184,0.28),
+        0 18px 44px rgba(36,24,56,0.10) !important;
+      overflow: hidden !important;
+      isolation: isolate !important;
+      box-sizing: border-box !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileFrameLayout {
+      border-color: rgba(255,255,255,0.08) !important;
+      background:
+        linear-gradient(180deg, rgba(31,34,44,0.98) 0%, rgba(18,21,30,0.96) 100%) !important;
+      box-shadow:
+        -8px -8px 18px rgba(255,255,255,0.035),
+        14px 14px 32px rgba(0,0,0,0.46),
+        0 18px 44px rgba(0,0,0,0.28) !important;
+    }
+
+    body.is-mobile-framed #mobileMapFrame,
+    body.is-mobile-framed #mobileInfoFrame,
+    body.is-mobile-framed .mobile-frame#mobileMapFrame,
+    body.is-mobile-framed .mobile-frame#mobileInfoFrame {
+      margin: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      outline: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileMapFrame {
+      overflow: hidden !important;
+    }
+
+    body.is-mobile-framed #mobileInfoFrame {
+      overflow: visible !important;
+      border-top: 0 !important;
+    }
+
+    html[data-theme='dark'] body.is-mobile-framed #mobileMapFrame,
+    html[data-theme='dark'] body.is-mobile-framed #mobileInfoFrame {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    body.is-mobile-framed #mobileInfoFrameBody,
+    body.is-mobile-framed #mobileInfoFrame #infoPanel {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    body.is-mobile-framed #mobileMapHeader,
+    body.is-mobile-framed #mobileMapControls,
+    body.is-mobile-framed #mobileMapViewport,
+    body.is-mobile-framed #mobileMapLegendSlot {
+      border-radius: 0 !important;
+    }
+
+    body.is-mobile-framed #mobileMapViewport {
+      border-left: 0 !important;
+      border-right: 0 !important;
+      border-bottom: 0 !important;
+    }
+
+    body.is-mobile-framed #mobileInfoFrame #infoPanel {
+      padding-top: 14px !important;
+    }
+  }
+
+  @media (max-width: 420px) {
+    body.is-mobile-framed #mobileFrameLayout {
+      border-radius: 28px !important;
+    }
+  }
+</style>
+
 </head>
 <body>
   <div id="app">
@@ -6870,7 +7161,7 @@
           <div id="emptyInfoLogo" class="empty-info-logo"><svg class="empty-info-logo-svg" aria-hidden="true" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 769.99 827.63"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M118.15,455.33c42.49-24.6,68.63-70.01,68.57-119.11l-.07-56.97c-.06-51.54-41.9-93.28-93.44-93.21h0C41.67,186.1-.06,227.94,0,279.48l.33,272.28c8.43-23.14,24.55-42.42,46.12-54.91l71.7-41.51Z"/><path class="cls-1" d="M215.61,202.65c42.52,24.55,94.92,24.55,137.44,0l49.34-28.48c44.64-25.77,59.93-82.85,34.16-127.49h0c-25.77-44.64-82.85-59.93-127.49-34.16L73.26,148.66c24.26-4.24,49.01.11,70.6,12.57l71.75,41.42Z"/><path class="cls-1" d="M479.67,160.99c0,49.1,26.2,94.48,68.72,119.03l49.34,28.48c44.64,25.77,101.72,10.48,127.49-34.16h0c25.77-44.64,10.48-101.72-34.16-127.49L455.25,10.71c15.8,18.89,24.41,42.5,24.41,67.43v82.85Z"/><path class="cls-1" d="M651.84,372.3c-42.49,24.6-68.63,70.01-68.57,119.11l.07,56.97c.06,51.54,41.9,93.28,93.44,93.21h0c51.54-.06,93.28-41.9,93.21-93.44l-.33-272.28c-8.43,23.14-24.55,42.42-46.12,54.91l-71.7,41.51Z"/><path class="cls-1" d="M554.38,624.98c-42.52-24.55-94.92-24.55-137.44,0l-49.34,28.48c-44.64,25.77-59.93,82.85-34.16,127.49h0c25.77,44.64,82.85,59.93,127.49,34.16l235.8-136.14c-24.26,4.24-49.01-.11-70.6-12.57l-71.75-41.42Z"/><path class="cls-1" d="M290.32,666.65c0-49.1-26.2-94.48-68.72-119.03l-49.34-28.48c-44.64-25.77-101.72-10.48-127.49,34.16h0c-25.77,44.64-10.48,101.72,34.16,127.49l235.8,136.14c-15.8-18.89-24.41-42.5-24.41-67.43v-82.85Z"/></g></svg></div>
           <div id="emptyInfoForeground" aria-hidden="true">
             <div id="emptyInfoForegroundLogo"><svg id="emptyInfoForegroundLogoSvg" class="empty-info-foreground-logo-svg" aria-hidden="true" focusable="false" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 823.75 29"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M0,12.4v-.07C0,5.91,4.81.58,11.37.58c4.06,0,6.49,1.49,8.83,3.64l-1.2,1.23c-1.98-1.92-4.25-3.34-7.66-3.34C5.88,2.11,1.75,6.56,1.75,12.27v.06c0,5.75,4.19,10.23,9.61,10.23,3.28,0,5.52-1.27,7.83-3.54l1.14,1.1c-2.4,2.37-5,3.96-9.03,3.96C4.81,24.09,0,18.93,0,12.4Z"/><path class="cls-1" d="M28.02,7.14h1.59v4.71c1.3-2.96,4.06-5.1,7.34-4.97v1.75h-.16c-3.83,0-7.18,2.89-7.18,8.28v6.79h-1.59V7.14Z"/><path class="cls-1" d="M42.31,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM56.04,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M64.29,18.9v-.07c0-3.44,2.95-5.39,7.24-5.39,2.3,0,3.9.29,5.49.71v-.71c0-3.34-2.05-5.07-5.46-5.07-2.01,0-3.67.55-5.2,1.33l-.58-1.4c1.82-.84,3.6-1.43,5.88-1.43s4.03.62,5.23,1.82c1.1,1.1,1.69,2.63,1.69,4.68v10.33h-1.56v-2.76c-1.14,1.59-3.18,3.15-6.33,3.15s-6.4-1.75-6.4-5.2ZM77.05,17.5v-1.88c-1.4-.36-3.25-.75-5.62-.75-3.51,0-5.46,1.56-5.46,3.86v.06c0,2.4,2.27,3.8,4.81,3.8,3.38,0,6.27-2.08,6.27-5.1Z"/><path class="cls-1" d="M88.26,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.44-.58v1.49c-.84.39-1.66.58-2.7.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M101.99,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.47,3.96,8.47,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.47-3.96-8.47-8.6ZM117.28,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M127.16,7.14h1.59v4.71c1.3-2.96,4.06-5.1,7.34-4.97v1.75h-.16c-3.83,0-7.18,2.89-7.18,8.28v6.79h-1.59V7.14Z"/><path class="cls-1" d="M142.64,13.15h8.7v1.82h-8.7v-1.82Z"/><path class="cls-1" d="M167.58.81h1.62l10.59,22.89h-1.85l-2.89-6.36h-13.41l-2.89,6.36h-1.75L167.58.81ZM174.34,15.81l-5.97-13.15-6.01,13.15h11.98Z"/><path class="cls-1" d="M186.84,17.27V7.14h1.59v9.84c0,3.41,1.92,5.65,5.26,5.65s5.75-2.47,5.75-5.91V7.14h1.59v16.56h-1.59v-3.08c-1.1,1.95-2.96,3.47-5.97,3.47-4.19,0-6.62-2.86-6.62-6.82Z"/><path class="cls-1" d="M209.24,15.49v-.07c0-5.39,4.06-8.67,8.05-8.67,3.31,0,5.46,1.88,6.82,3.96V0h1.59v23.7h-1.59v-3.7c-1.43,2.17-3.54,4.09-6.82,4.09-3.99,0-8.05-3.21-8.05-8.6ZM224.21,15.46v-.06c0-4.25-3.31-7.11-6.75-7.11s-6.49,2.63-6.49,7.08v.06c0,4.35,3.02,7.14,6.49,7.14s6.75-2.89,6.75-7.11Z"/><path class="cls-1" d="M235.02.65h1.98v2.18h-1.98V.65ZM235.22,7.14h1.59v16.56h-1.59V7.14Z"/><path class="cls-1" d="M245.19,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.74c.29,4.12,3.25,6.53,6.49,6.53,2.57,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM258.92,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.11,6.43h12.05Z"/><path class="cls-1" d="M268.53,7.14h1.59v3.08c1.1-1.95,2.95-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M290.55,15.49v-.07c0-4.64,3.7-8.67,8.44-8.67,3.12,0,5.07,1.43,6.62,3.05l-1.14,1.17c-1.43-1.46-3.05-2.73-5.52-2.73-3.77,0-6.69,3.15-6.69,7.11v.06c0,3.99,3.02,7.18,6.82,7.18,2.34,0,4.16-1.2,5.55-2.76l1.1.97c-1.69,1.92-3.7,3.28-6.75,3.28-4.77,0-8.44-3.96-8.44-8.6Z"/><path class="cls-1" d="M311.85,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM325.58,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M348.54.97h16.17v1.56h-14.48v8.93h13.02v1.56h-13.02v9.12h14.64v1.56h-16.33V.97Z"/><path class="cls-1" d="M371.17,7.14h1.85l6.27,14.77,6.33-14.77h1.79l-7.44,16.69h-1.36l-7.44-16.69Z"/><path class="cls-1" d="M392.9,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM406.63,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M416.24,7.14h1.59v3.08c1.1-1.95,2.96-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M440.27,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.44-.58v1.49c-.84.39-1.66.58-2.7.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M475.11,2.53h-7.92V.97h17.53v1.56h-7.92v21.17h-1.69V2.53Z"/><path class="cls-1" d="M487.22,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.48,3.96,8.48,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.48-3.96-8.48-8.6ZM502.52,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M512.39,7.14h1.59v3.7c1.43-2.18,3.54-4.09,6.82-4.09,3.99,0,8.05,3.21,8.05,8.6v.06c0,5.39-4.06,8.67-8.05,8.67-3.31,0-5.46-1.88-6.82-3.96v8.77h-1.59V7.14ZM527.13,15.49v-.07c0-4.35-3.02-7.14-6.49-7.14s-6.75,2.89-6.75,7.11v.06c0,4.25,3.31,7.11,6.75,7.11s6.49-2.63,6.49-7.08Z"/><path class="cls-1" d="M535.93,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.47,3.96,8.47,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.47-3.96-8.47-8.6ZM551.22,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M561.32,0h1.59v23.7h-1.59V0Z"/><path class="cls-1" d="M571.29,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.48,3.96,8.48,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.48-3.96-8.48-8.6ZM586.58,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M596.13,26.43l.94-1.3c1.98,1.53,4.25,2.34,6.69,2.34,3.8,0,6.49-2.18,6.49-6.43v-2.4c-1.43,2.05-3.64,3.83-6.92,3.83-3.99,0-7.96-3.05-7.96-7.79v-.06c0-4.77,3.96-7.86,7.96-7.86,3.31,0,5.55,1.75,6.92,3.7v-3.31h1.59v14c0,2.4-.78,4.29-2.11,5.62-1.43,1.43-3.57,2.21-6.01,2.21-2.76,0-5.33-.84-7.6-2.53ZM610.35,14.64v-.06c0-3.83-3.41-6.3-6.85-6.3s-6.4,2.4-6.4,6.27v.06c0,3.73,2.99,6.33,6.4,6.33s6.85-2.53,6.85-6.3Z"/><path class="cls-1" d="M634.09,7.14h1.75l-7.18,17.14c-1.46,3.47-3.15,4.71-5.52,4.71-1.27,0-2.18-.23-3.28-.71l.55-1.4c.88.42,1.59.62,2.82.62,1.72,0,2.86-1.01,4.09-3.9l-7.96-16.46h1.85l6.88,14.81,5.97-14.81Z"/><path class="cls-1" d="M665.46.81h1.62l10.59,22.89h-1.85l-2.89-6.36h-13.41l-2.89,6.36h-1.75l10.59-22.89ZM672.21,15.81l-5.97-13.15-6.01,13.15h11.98Z"/><path class="cls-1" d="M683.93,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.7-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M702.99,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.69-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M723.84.65h1.98v2.18h-1.98V.65ZM724.03,7.14h1.59v16.56h-1.59V7.14Z"/><path class="cls-1" d="M733.71,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.69-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M755.07,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.43-.58v1.49c-.84.39-1.66.58-2.69.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M769.07,18.9v-.07c0-3.44,2.95-5.39,7.24-5.39,2.3,0,3.9.29,5.49.71v-.71c0-3.34-2.05-5.07-5.46-5.07-2.01,0-3.67.55-5.2,1.33l-.58-1.4c1.82-.84,3.6-1.43,5.88-1.43s4.03.62,5.23,1.82c1.1,1.1,1.69,2.63,1.69,4.68v10.33h-1.56v-2.76c-1.14,1.59-3.18,3.15-6.33,3.15s-6.4-1.75-6.4-5.2ZM781.83,17.5v-1.88c-1.4-.36-3.25-.75-5.62-.75-3.51,0-5.46,1.56-5.46,3.86v.06c0,2.4,2.27,3.8,4.81,3.8,3.38,0,6.27-2.08,6.27-5.1Z"/><path class="cls-1" d="M792.32,7.14h1.59v3.08c1.1-1.95,2.96-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M816.34,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.43-.58v1.49c-.84.39-1.66.58-2.69.58-2.57,0-4.64-1.4-4.64-4.55Z"/></g></svg></div>
-            <div id="emptyInfoVersion">Ver.1.2</div>
+            <div id="emptyInfoVersion">Ver.1.3</div>
           </div>
         </div>
       <div id="detail" style="display:none;">
@@ -12045,14 +12336,15 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       }
 
       function drawerDropContextFromPoint(clientX, clientY) {
-        const wrap = document.elementFromPoint(clientX, clientY)?.closest('.drawer-list-wrap');
+        const targetElement = document.elementFromPoint(clientX, clientY);
+        const wrap = targetElement?.closest('.drawer-list-wrap');
         if (!wrap) return null;
         const tier = wrap.dataset.tier || 'primary';
         const list = wrap.querySelector('.drawer-list');
         if (!list) return { wrap, list: null, tier, index: 0 };
-        const itemButton = document.elementFromPoint(clientX, clientY)?.closest('.drawer-item');
-        if (itemButton && list.contains(itemButton)) {
-          const li = itemButton.closest('li');
+        const itemElement = targetElement?.closest('.drawer-list-entry, .drawer-item');
+        if (itemElement && list.contains(itemElement)) {
+          const li = itemElement.matches('li') ? itemElement : itemElement.closest('li');
           const items = Array.from(list.children).filter((child) => child !== drawerDragState?.placeholder);
           const itemIndex = items.indexOf(li);
           const rect = li.getBoundingClientRect();
@@ -12263,6 +12555,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         list.className = 'drawer-list';
         items.forEach((item, index) => {
           const li = document.createElement('li');
+          li.className = 'drawer-list-entry';
           li.dataset.id = item.id;
           li.dataset.tier = tier;
           const button = document.createElement('button');
@@ -12292,7 +12585,25 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
             showToast(`${item.id} を表示しました`);
             saveState();
           });
+
+          const removeButton = document.createElement('button');
+          removeButton.type = 'button';
+          removeButton.className = `drawer-item-remove ${tier === 'secondary' ? 'secondary' : 'primary'}`;
+          removeButton.textContent = '解除';
+          removeButton.setAttribute('aria-label', `${item.id} の選択を解除`);
+          removeButton.addEventListener('pointerdown', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          });
+          removeButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            if (performance.now() < drawerDragSuppressUntil) return;
+            clearDrawerItemSelection(item, tier);
+          });
+
           li.appendChild(button);
+          li.appendChild(removeButton);
           list.appendChild(li);
         });
         container.appendChild(list);
@@ -13274,6 +13585,22 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         hoveredMesh = mesh;
         refreshMaterials();
         rebuildRoutes();
+        saveState();
+      }
+
+      function clearDrawerItemSelection(item, tier) {
+        const mesh = item?.mesh || boothById.get(normalizeBoothId(item?.id));
+        const boothId = normalizeBoothId(item?.id || mesh?.userData?.id);
+        if (!boothId) return;
+        closeActionMenu();
+        removeBoothIdFromSelections(boothId);
+        if (mesh) hoveredMesh = mesh;
+        syncPinnedBoothLabelState();
+        refreshMaterials();
+        refreshInfoPanel();
+        rebuildRoutes();
+        const tierLabel = tier === 'secondary' ? '気になる' : '最優先';
+        showToast(`${boothId} を${tierLabel}から解除しました`);
         saveState();
       }
 
