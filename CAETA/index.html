@@ -346,37 +346,9 @@
     .drawer-list-wrap {
       min-height: 56px;
     }
-    .drawer-list-wrap.is-drop-target {
-      background: rgba(255,45,85,0.08);
-    }
     .drawer-item {
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
-    }
-    .drawer-item.is-dragging-origin {
-      opacity: 0.32;
-    }
-    .drawer-drag-placeholder {
-      list-style: none;
-      height: 78px;
-      border-radius: 14px;
-      border: 1.5px dashed rgba(255,45,85,0.28);
-      background: rgba(255,45,85,0.1);
-      margin: 0;
-    }
-    .drawer-drag-ghost {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: min(340px, calc(100vw - 40px));
-      pointer-events: none;
-      z-index: 80;
-      transform: translate(-9999px, -9999px);
-      box-shadow: 0 16px 36px rgba(15,23,42,0.18);
-      background: var(--surface-hover);
-      border: 1px solid rgba(15,23,42,0.08);
-      border-radius: 14px;
-      padding: 12px;
     }
 
     #actionDock { position: absolute; left: 18px; bottom: 18px; z-index: 21; display: flex; gap: 8px; padding: 8px; }
@@ -472,8 +444,7 @@
     }
 
 
-    html[data-theme='dark'] #boothActionMenu,
-    html[data-theme='dark'] .drawer-drag-ghost {
+    html[data-theme='dark'] #boothActionMenu {
       background: rgba(15,23,42,0.94);
       border-color: var(--line);
     }
@@ -7110,6 +7081,884 @@
   }
 </style>
 
+<style id="v99-drawer-swipe-ghost-undo">
+  /* v99: ドラッグ＆ドロップ移動を削除し、左右スワイプ専用のゴースト／プレースホルダー表示を実装する。 */
+  .drawer-list-entry {
+    list-style: none !important;
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    --drawer-swipe-x: 0px;
+    --drawer-swipe-bg-opacity: 0;
+    border-radius: 14px;
+    touch-action: pan-y;
+    user-select: none;
+  }
+
+  .drawer-swipe-placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 18px;
+    border-radius: inherit;
+    background: rgba(127, 136, 158, 0.10);
+    color: rgba(93, 94, 114, 0.70);
+    opacity: var(--drawer-swipe-bg-opacity);
+    pointer-events: none;
+    transition: opacity 140ms ease, background 140ms ease, color 140ms ease;
+    box-sizing: border-box;
+  }
+
+  .drawer-swipe-placeholder::before {
+    content: '解除';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(127, 136, 158, 0.16);
+    background: rgba(255, 255, 255, 0.44);
+    color: currentColor;
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 750;
+    letter-spacing: 0.02em;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.48);
+  }
+
+  .drawer-list-entry.is-swipe-right .drawer-swipe-placeholder {
+    justify-content: flex-start;
+  }
+
+  .drawer-list-entry.is-swipe-ready .drawer-swipe-placeholder {
+    background: rgba(127, 136, 158, 0.16);
+    color: rgba(64, 66, 78, 0.84);
+  }
+
+  html[data-theme='dark'] .drawer-swipe-placeholder {
+    background: rgba(255, 255, 255, 0.065);
+    color: rgba(229, 231, 245, 0.60);
+  }
+
+  html[data-theme='dark'] .drawer-swipe-placeholder::before {
+    border-color: rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.055);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.035);
+  }
+
+  html[data-theme='dark'] .drawer-list-entry.is-swipe-ready .drawer-swipe-placeholder {
+    background: rgba(255, 255, 255, 0.10);
+    color: rgba(245, 247, 255, 0.78);
+  }
+
+  .drawer-swipe-ghost {
+    position: relative !important;
+    z-index: 1 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: stretch !important;
+    gap: 6px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    border-radius: inherit;
+    transform: translateX(var(--drawer-swipe-x)) !important;
+    transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), opacity 160ms ease, filter 160ms ease !important;
+    will-change: transform;
+    box-sizing: border-box;
+  }
+
+  .drawer-swipe-ghost > .drawer-item {
+    min-width: 0 !important;
+  }
+
+  .drawer-list-entry.is-swiping .drawer-swipe-ghost {
+    transition: none !important;
+    filter: drop-shadow(0 10px 18px rgba(15, 23, 42, 0.10));
+  }
+
+  .drawer-list-entry.is-swipe-commit .drawer-swipe-ghost {
+    opacity: 0 !important;
+  }
+
+  .drawer-list-entry.is-swipe-reset .drawer-swipe-ghost {
+    transition: transform 210ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+
+  @media (min-width: 901px) {
+    #desktopSplitLayout > #integratedInfoBottomPane .drawer-swipe-ghost,
+    #bottomDrawer.is-integrated-right-menu .drawer-swipe-ghost,
+    #infoPanel > #bottomDrawer .drawer-swipe-ghost {
+      gap: 6px !important;
+    }
+  }
+
+  @media (max-width: 900px) {
+    body.is-mobile-framed #integratedInfoBottomScroll .drawer-section,
+    body.is-mobile-framed #bottomDrawer .drawer-section,
+    body.is-mobile-framed #bottomDrawer .drawer-section.primary,
+    body.is-mobile-framed #bottomDrawer .drawer-section.secondary {
+      border: 0 !important;
+      outline: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    body.is-mobile-framed .drawer-swipe-ghost {
+      gap: 6px !important;
+    }
+
+    body.is-mobile-framed .drawer-swipe-placeholder {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+
+  #selectionUndoBubble {
+    position: fixed;
+    left: 50%;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 22px);
+    z-index: 190;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: max-content;
+    max-width: min(420px, calc(100vw - 28px));
+    padding: 8px 8px 8px 13px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: var(--toast-bg);
+    color: #ffffff;
+    box-shadow: 0 14px 42px rgba(15, 23, 42, 0.24);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 10px) scale(0.98);
+    transition: opacity 170ms ease, transform 170ms ease;
+    box-sizing: border-box;
+  }
+
+  #selectionUndoBubble.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, 0) scale(1);
+  }
+
+  #selectionUndoBubble .selection-undo-message {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    line-height: 1.35;
+    font-weight: 600;
+    color: rgba(255,255,255,0.94);
+  }
+
+  #selectionUndoBubble .selection-undo-btn {
+    min-width: auto;
+    min-height: 26px;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.15);
+    color: #ffffff;
+    box-shadow: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    transform: none;
+  }
+
+  #selectionUndoBubble .selection-undo-btn:hover,
+  #selectionUndoBubble .selection-undo-btn:focus-visible {
+    background: rgba(255,255,255,0.22);
+    border-color: rgba(255,255,255,0.24);
+    transform: none;
+    outline: none;
+  }
+
+  #selectionUndoBubble .selection-undo-btn:active {
+    transform: translateY(1px);
+    background: rgba(255,255,255,0.28);
+  }
+
+  @media (max-width: 900px) {
+    body.is-mobile-framed #selectionUndoBubble {
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+      max-width: min(360px, calc(100vw - 24px));
+      padding: 7px 7px 7px 12px;
+    }
+    body.is-mobile-framed #selectionUndoBubble .selection-undo-message { font-size: 11.5px; }
+    body.is-mobile-framed #selectionUndoBubble .selection-undo-btn {
+      height: 25px;
+      padding: 0 9px;
+      font-size: 10.5px;
+    }
+  }
+</style>
+
+
+
+<style id="v100-mobile-drawer-direct-body">
+  /* v100: mobileでは「最優先」「気になる」リストを integratedInfoBottomScroll から外し、
+     mobileInfoFrameBody の直接の子要素として表示する。 */
+  @media (max-width: 900px) {
+    body.is-mobile-framed #mobileInfoFrameBody {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      overflow: visible !important;
+    }
+
+    body.is-mobile-framed #mobileInfoFrameBody > #infoPanel {
+      flex: 0 0 auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer,
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer.is-integrated-right-menu {
+      flex: 0 0 auto !important;
+      display: block !important;
+      position: static !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      margin: 0 !important;
+      padding: 0 14px 14px !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      transform: none !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomPane {
+      height: auto !important;
+      max-height: none !important;
+      min-height: 0 !important;
+      overflow: visible !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomScroll {
+      height: auto !important;
+      max-height: none !important;
+      min-height: 0 !important;
+      overflow: visible !important;
+      -webkit-overflow-scrolling: auto !important;
+      overscroll-behavior: auto !important;
+      touch-action: auto !important;
+    }
+
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer #drawerPanel,
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer #drawerPanelInner,
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer #drawerColumns {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer .drawer-section,
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer .drawer-section.primary,
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer .drawer-section.secondary {
+      border: 0 !important;
+      outline: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer .drawer-list-wrap,
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer .drawer-list {
+      height: auto !important;
+      max-height: none !important;
+      min-height: 0 !important;
+      overflow: visible !important;
+      -webkit-overflow-scrolling: auto !important;
+      overscroll-behavior: auto !important;
+      touch-action: auto !important;
+    }
+  }
+
+  @media (max-width: 420px) {
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer,
+    body.is-mobile-framed #mobileInfoFrameBody > #bottomDrawer.is-integrated-right-menu {
+      padding: 0 12px 12px !important;
+    }
+  }
+</style>
+
+
+<style id="v101-two-stage-swipe-remove">
+  /* v101: 一定距離で解除面を露出し、さらに深くスワイプすると解除する二段階スワイプ。 */
+  .drawer-list-entry {
+    --drawer-swipe-commit-progress: 0;
+    overflow: hidden !important;
+  }
+
+  .drawer-list-entry:not(.is-swipe-revealed) .drawer-swipe-placeholder {
+    opacity: 0 !important;
+  }
+
+  .drawer-list-entry.is-swipe-revealed .drawer-swipe-placeholder,
+  .drawer-list-entry.is-swipe-open .drawer-swipe-placeholder,
+  .drawer-list-entry.is-swipe-ready .drawer-swipe-placeholder {
+    opacity: var(--drawer-swipe-bg-opacity) !important;
+  }
+
+  .drawer-list-entry.is-swipe-left .drawer-swipe-placeholder {
+    justify-content: flex-end !important;
+  }
+
+  .drawer-list-entry.is-swipe-right .drawer-swipe-placeholder {
+    justify-content: flex-start !important;
+  }
+
+  .drawer-list-entry.is-swipe-revealed .drawer-swipe-placeholder::before,
+  .drawer-list-entry.is-swipe-open .drawer-swipe-placeholder::before {
+    content: '解除' !important;
+    min-width: 52px !important;
+    height: 26px !important;
+    padding: 0 12px !important;
+    opacity: 0.88;
+    transform: scale(calc(0.98 + (var(--drawer-swipe-commit-progress) * 0.04)));
+    transition: transform 140ms ease, opacity 140ms ease, background 140ms ease, color 140ms ease;
+  }
+
+  .drawer-list-entry.is-swipe-ready .drawer-swipe-placeholder {
+    background: rgba(127, 136, 158, 0.20) !important;
+  }
+
+  .drawer-list-entry.is-swipe-ready .drawer-swipe-placeholder::before {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.58) !important;
+    color: rgba(47, 50, 60, 0.86) !important;
+  }
+
+  html[data-theme='dark'] .drawer-list-entry.is-swipe-ready .drawer-swipe-placeholder {
+    background: rgba(255, 255, 255, 0.12) !important;
+  }
+
+  html[data-theme='dark'] .drawer-list-entry.is-swipe-ready .drawer-swipe-placeholder::before {
+    background: rgba(255, 255, 255, 0.085) !important;
+    color: rgba(245, 247, 255, 0.82) !important;
+  }
+
+  .drawer-list-entry.is-swipe-open .drawer-swipe-ghost,
+  .drawer-list-entry.is-swipe-reset .drawer-swipe-ghost {
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 160ms ease, filter 160ms ease !important;
+  }
+
+  .drawer-list-entry.is-swipe-ready .drawer-swipe-ghost {
+    filter: drop-shadow(0 12px 20px rgba(15, 23, 42, 0.13));
+  }
+
+  .drawer-list-entry.is-swipe-commit .drawer-swipe-ghost {
+    transition: transform 170ms cubic-bezier(0.16, 1, 0.3, 1), opacity 150ms ease !important;
+  }
+
+  @media (max-width: 900px) {
+    body.is-mobile-framed .drawer-list-entry.is-swipe-ready .drawer-swipe-ghost {
+      filter: drop-shadow(0 10px 18px rgba(15, 23, 42, 0.12));
+    }
+  }
+</style>
+
+
+
+<style id="v103-mobile-full-bleed-no-outer-frame">
+  /* v103: mobileFrameLayout の外枠表現と外側マージンをなくし、モバイル内容を画面いっぱいに配置する。 */
+  @media (max-width: 900px) {
+    body.is-mobile-framed,
+    body.is-mobile-framed #app {
+      margin: 0 !important;
+      width: 100% !important;
+      max-width: none !important;
+      background: var(--app-bg) !important;
+    }
+
+    body.is-mobile-framed #app {
+      min-height: 100dvh !important;
+      padding: 0 !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileFrameLayout,
+    html[data-theme='dark'] body.is-mobile-framed #mobileFrameLayout {
+      width: 100% !important;
+      max-width: none !important;
+      min-width: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      gap: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      outline: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      overflow: visible !important;
+      isolation: auto !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileMapFrame,
+    body.is-mobile-framed #mobileInfoFrame {
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #mobileMapFrame {
+      border-top: 0 !important;
+      border-left: 0 !important;
+      border-right: 0 !important;
+    }
+
+    body.is-mobile-framed #mobileInfoFrame {
+      border-left: 0 !important;
+      border-right: 0 !important;
+      border-bottom: 0 !important;
+    }
+
+    body.is-mobile-framed #mobileMapHeader {
+      padding-top: max(16px, var(--safe-top)) !important;
+    }
+
+    body.is-mobile-framed #mobileInfoFrame #infoPanel {
+      padding-left: 14px !important;
+      padding-right: 14px !important;
+      padding-bottom: max(14px, calc(var(--safe-bottom) + 14px)) !important;
+    }
+  }
+
+  @media (max-width: 420px) {
+    body.is-mobile-framed #app {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    body.is-mobile-framed #mobileFrameLayout {
+      gap: 0 !important;
+      border-radius: 0 !important;
+    }
+  }
+</style>
+
+
+
+<style id="v104-fixed-info-panel-bottom-actions">
+  /* v104: infoPanel の高さを一定化し、linkRow / infoActions をブース情報パネル下部に固定する。 */
+  :root {
+    --caeta-mobile-info-panel-height: clamp(560px, 70dvh, 690px);
+    --caeta-mobile-search-panel-height: clamp(132px, 20dvh, 176px);
+  }
+
+  #detail {
+    min-height: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  #boothId,
+  #boothName,
+  #boothMeta {
+    flex: 0 0 auto !important;
+  }
+
+  #boothDesc {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: hidden !important;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: var(--caeta-booth-desc-lines, 5) !important;
+    white-space: normal !important;
+    text-overflow: ellipsis !important;
+  }
+
+  #linkRow {
+    flex: 0 0 auto !important;
+    margin-top: auto !important;
+  }
+
+  #infoActions {
+    flex: 0 0 auto !important;
+  }
+
+  @media (min-width: 901px) {
+    #desktopSplitLayout > #integratedInfoTopPane {
+      min-height: 0 !important;
+      overflow: hidden !important;
+    }
+
+    #desktopSplitLayout > #integratedInfoTopPane #integratedInfoTopScroll {
+      height: 100% !important;
+      min-height: 0 !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+      box-sizing: border-box !important;
+    }
+
+    #desktopSplitLayout > #integratedInfoTopPane #detail {
+      flex: 1 1 auto !important;
+      height: 100% !important;
+      min-height: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    #desktopSplitLayout > #integratedInfoTopPane #boothDesc {
+      --caeta-booth-desc-lines: 6;
+    }
+
+    #desktopSplitLayout > #integratedInfoTopPane #linkRow {
+      margin-top: auto !important;
+      flex: 0 0 auto !important;
+    }
+
+    #desktopSplitLayout > #integratedInfoTopPane #infoActions {
+      flex: 0 0 auto !important;
+    }
+  }
+
+  @media (max-width: 900px) {
+    body.is-mobile-framed #mobileInfoFrameBody > #infoPanel,
+    body.is-mobile-framed #mobileInfoFrame #infoPanel {
+      height: var(--caeta-mobile-info-panel-height) !important;
+      min-height: var(--caeta-mobile-info-panel-height) !important;
+      max-height: var(--caeta-mobile-info-panel-height) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+      padding: 14px !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    body.is-mobile-framed #integratedInfoTopPane,
+    body.is-mobile-framed #integratedInfoTopScroll {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      margin: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      outline: 0 !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #integratedInfoTopPane {
+      flex: 1 1 auto !important;
+      height: auto !important;
+      max-height: none !important;
+    }
+
+    body.is-mobile-framed #integratedInfoTopScroll {
+      flex: 1 1 auto !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      padding: 0 !important;
+    }
+
+    body.is-mobile-framed #placeholder.empty-info-state {
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      overflow: hidden !important;
+      padding: 18px 8px !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #detail {
+      flex: 1 1 auto !important;
+      height: 100% !important;
+      min-height: 0 !important;
+      max-height: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      padding: 0 2px !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #detail[style*="display: none"] {
+      display: none !important;
+    }
+
+    body.is-mobile-framed #detail[style*="display: flex"] {
+      display: flex !important;
+    }
+
+    body.is-mobile-framed #boothId,
+    body.is-mobile-framed #boothName,
+    body.is-mobile-framed #boothMeta {
+      flex: 0 0 auto !important;
+    }
+
+    body.is-mobile-framed #boothMeta {
+      display: -webkit-box !important;
+      -webkit-box-orient: vertical !important;
+      -webkit-line-clamp: 3 !important;
+      overflow: hidden !important;
+      white-space: normal !important;
+    }
+
+    body.is-mobile-framed #boothDesc {
+      --caeta-booth-desc-lines: 5;
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      overflow: hidden !important;
+      display: -webkit-box !important;
+      -webkit-box-orient: vertical !important;
+      -webkit-line-clamp: var(--caeta-booth-desc-lines) !important;
+      white-space: normal !important;
+      text-overflow: ellipsis !important;
+    }
+
+    body.is-mobile-framed #linkRow {
+      flex: 0 0 auto !important;
+      margin-top: auto !important;
+      padding-top: 12px !important;
+    }
+
+    body.is-mobile-framed #infoActions {
+      flex: 0 0 auto !important;
+      margin-top: 10px !important;
+      padding-bottom: 0 !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomPane {
+      flex: 0 0 var(--caeta-mobile-search-panel-height) !important;
+      height: var(--caeta-mobile-search-panel-height) !important;
+      min-height: var(--caeta-mobile-search-panel-height) !important;
+      max-height: var(--caeta-mobile-search-panel-height) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomScroll {
+      flex: 1 1 auto !important;
+      height: 100% !important;
+      min-height: 0 !important;
+      max-height: 100% !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior: contain !important;
+      touch-action: pan-y !important;
+      box-sizing: border-box !important;
+    }
+  }
+
+  @media (max-width: 420px) {
+    :root {
+      --caeta-mobile-info-panel-height: clamp(540px, 72dvh, 660px);
+      --caeta-mobile-search-panel-height: clamp(124px, 19dvh, 164px);
+    }
+
+    body.is-mobile-framed #boothDesc {
+      --caeta-booth-desc-lines: 4;
+    }
+  }
+</style>
+
+
+
+<style id="v105-search-swipe-reset-xremove-fixes">
+  /* v105: 検索パネルを内容サイズに戻し、スワイプ解除は指を離した時だけ確定。解除ボタンは×アイコン化。 */
+  .drawer-item-remove,
+  #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove,
+  #bottomDrawer.is-integrated-right-menu .drawer-item-remove,
+  #infoPanel > #bottomDrawer .drawer-item-remove,
+  body.is-mobile-framed .drawer-item-remove {
+    width: 26px !important;
+    min-width: 26px !important;
+    max-width: 26px !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    max-height: 24px !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(127, 136, 158, 0.16) !important;
+    background: rgba(127, 136, 158, 0.06) !important;
+    color: rgba(93, 94, 114, 0.58) !important;
+    font-size: 16px !important;
+    line-height: 20px !important;
+    font-weight: 650 !important;
+    letter-spacing: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .drawer-item-remove:hover,
+  .drawer-item-remove:focus-visible,
+  #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove:hover,
+  #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove:focus-visible,
+  #bottomDrawer.is-integrated-right-menu .drawer-item-remove:hover,
+  #bottomDrawer.is-integrated-right-menu .drawer-item-remove:focus-visible,
+  #infoPanel > #bottomDrawer .drawer-item-remove:hover,
+  #infoPanel > #bottomDrawer .drawer-item-remove:focus-visible,
+  body.is-mobile-framed .drawer-item-remove:hover,
+  body.is-mobile-framed .drawer-item-remove:focus-visible {
+    background: rgba(127, 136, 158, 0.10) !important;
+    border-color: rgba(127, 136, 158, 0.22) !important;
+    color: rgba(64, 66, 78, 0.76) !important;
+    transform: none !important;
+    outline: none !important;
+  }
+
+  .drawer-item-remove:active,
+  #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove:active,
+  #bottomDrawer.is-integrated-right-menu .drawer-item-remove:active,
+  #infoPanel > #bottomDrawer .drawer-item-remove:active,
+  body.is-mobile-framed .drawer-item-remove:active {
+    background: rgba(127, 136, 158, 0.14) !important;
+    color: rgba(64, 66, 78, 0.86) !important;
+    transform: translateY(1px) !important;
+  }
+
+  html[data-theme='dark'] .drawer-item-remove,
+  html[data-theme='dark'] #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove,
+  html[data-theme='dark'] #bottomDrawer.is-integrated-right-menu .drawer-item-remove,
+  html[data-theme='dark'] #infoPanel > #bottomDrawer .drawer-item-remove,
+  html[data-theme='dark'] body.is-mobile-framed .drawer-item-remove {
+    border-color: rgba(255, 255, 255, 0.10) !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    color: rgba(229, 231, 245, 0.48) !important;
+  }
+
+  html[data-theme='dark'] .drawer-item-remove:hover,
+  html[data-theme='dark'] .drawer-item-remove:focus-visible,
+  html[data-theme='dark'] #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove:hover,
+  html[data-theme='dark'] #desktopSplitLayout > #integratedInfoBottomPane .drawer-item-remove:focus-visible,
+  html[data-theme='dark'] #bottomDrawer.is-integrated-right-menu .drawer-item-remove:hover,
+  html[data-theme='dark'] #bottomDrawer.is-integrated-right-menu .drawer-item-remove:focus-visible,
+  html[data-theme='dark'] #infoPanel > #bottomDrawer .drawer-item-remove:hover,
+  html[data-theme='dark'] #infoPanel > #bottomDrawer .drawer-item-remove:focus-visible,
+  html[data-theme='dark'] body.is-mobile-framed .drawer-item-remove:hover,
+  html[data-theme='dark'] body.is-mobile-framed .drawer-item-remove:focus-visible {
+    background: rgba(255, 255, 255, 0.075) !important;
+    color: rgba(245, 247, 255, 0.66) !important;
+  }
+
+  .drawer-swipe-ghost,
+  body.is-mobile-framed .drawer-swipe-ghost {
+    grid-template-columns: minmax(0, 1fr) 26px !important;
+    gap: 6px !important;
+  }
+
+  @media (max-width: 900px) {
+    body.is-mobile-framed #integratedInfoBottomPane {
+      flex: 0 0 auto !important;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomScroll {
+      display: block !important;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      overflow: visible !important;
+      padding: 12px 14px !important;
+      -webkit-overflow-scrolling: auto !important;
+      overscroll-behavior: auto !important;
+      touch-action: auto !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #integratedInfoBottomScroll > #boothSearchBar,
+    body.is-mobile-framed #boothSearchBar {
+      margin: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-height: 42px !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #boothSearchResults {
+      flex: 0 0 auto !important;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      margin-top: 10px !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    body.is-mobile-framed #boothSearchResults:not(.is-visible) {
+      display: none !important;
+      margin: 0 !important;
+      height: 0 !important;
+      min-height: 0 !important;
+      max-height: 0 !important;
+      border: 0 !important;
+    }
+
+    body.is-mobile-framed #boothSearchResults.is-visible {
+      display: block !important;
+    }
+
+    body.is-mobile-framed #boothSearchResultsList {
+      height: auto !important;
+      max-height: min(30dvh, 260px) !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+  }
+</style>
+
 </head>
 <body>
   <div id="app">
@@ -7161,7 +8010,7 @@
           <div id="emptyInfoLogo" class="empty-info-logo"><svg class="empty-info-logo-svg" aria-hidden="true" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 769.99 827.63"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M118.15,455.33c42.49-24.6,68.63-70.01,68.57-119.11l-.07-56.97c-.06-51.54-41.9-93.28-93.44-93.21h0C41.67,186.1-.06,227.94,0,279.48l.33,272.28c8.43-23.14,24.55-42.42,46.12-54.91l71.7-41.51Z"/><path class="cls-1" d="M215.61,202.65c42.52,24.55,94.92,24.55,137.44,0l49.34-28.48c44.64-25.77,59.93-82.85,34.16-127.49h0c-25.77-44.64-82.85-59.93-127.49-34.16L73.26,148.66c24.26-4.24,49.01.11,70.6,12.57l71.75,41.42Z"/><path class="cls-1" d="M479.67,160.99c0,49.1,26.2,94.48,68.72,119.03l49.34,28.48c44.64,25.77,101.72,10.48,127.49-34.16h0c25.77-44.64,10.48-101.72-34.16-127.49L455.25,10.71c15.8,18.89,24.41,42.5,24.41,67.43v82.85Z"/><path class="cls-1" d="M651.84,372.3c-42.49,24.6-68.63,70.01-68.57,119.11l.07,56.97c.06,51.54,41.9,93.28,93.44,93.21h0c51.54-.06,93.28-41.9,93.21-93.44l-.33-272.28c-8.43,23.14-24.55,42.42-46.12,54.91l-71.7,41.51Z"/><path class="cls-1" d="M554.38,624.98c-42.52-24.55-94.92-24.55-137.44,0l-49.34,28.48c-44.64,25.77-59.93,82.85-34.16,127.49h0c25.77,44.64,82.85,59.93,127.49,34.16l235.8-136.14c-24.26,4.24-49.01-.11-70.6-12.57l-71.75-41.42Z"/><path class="cls-1" d="M290.32,666.65c0-49.1-26.2-94.48-68.72-119.03l-49.34-28.48c-44.64-25.77-101.72-10.48-127.49,34.16h0c-25.77,44.64-10.48,101.72,34.16,127.49l235.8,136.14c-15.8-18.89-24.41-42.5-24.41-67.43v-82.85Z"/></g></svg></div>
           <div id="emptyInfoForeground" aria-hidden="true">
             <div id="emptyInfoForegroundLogo"><svg id="emptyInfoForegroundLogoSvg" class="empty-info-foreground-logo-svg" aria-hidden="true" focusable="false" id="_レイヤー_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 823.75 29"><defs><style>.cls-1{fill:currentColor;}</style></defs><g id="_レイヤー_1-2"><path class="cls-1" d="M0,12.4v-.07C0,5.91,4.81.58,11.37.58c4.06,0,6.49,1.49,8.83,3.64l-1.2,1.23c-1.98-1.92-4.25-3.34-7.66-3.34C5.88,2.11,1.75,6.56,1.75,12.27v.06c0,5.75,4.19,10.23,9.61,10.23,3.28,0,5.52-1.27,7.83-3.54l1.14,1.1c-2.4,2.37-5,3.96-9.03,3.96C4.81,24.09,0,18.93,0,12.4Z"/><path class="cls-1" d="M28.02,7.14h1.59v4.71c1.3-2.96,4.06-5.1,7.34-4.97v1.75h-.16c-3.83,0-7.18,2.89-7.18,8.28v6.79h-1.59V7.14Z"/><path class="cls-1" d="M42.31,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM56.04,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M64.29,18.9v-.07c0-3.44,2.95-5.39,7.24-5.39,2.3,0,3.9.29,5.49.71v-.71c0-3.34-2.05-5.07-5.46-5.07-2.01,0-3.67.55-5.2,1.33l-.58-1.4c1.82-.84,3.6-1.43,5.88-1.43s4.03.62,5.23,1.82c1.1,1.1,1.69,2.63,1.69,4.68v10.33h-1.56v-2.76c-1.14,1.59-3.18,3.15-6.33,3.15s-6.4-1.75-6.4-5.2ZM77.05,17.5v-1.88c-1.4-.36-3.25-.75-5.62-.75-3.51,0-5.46,1.56-5.46,3.86v.06c0,2.4,2.27,3.8,4.81,3.8,3.38,0,6.27-2.08,6.27-5.1Z"/><path class="cls-1" d="M88.26,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.44-.58v1.49c-.84.39-1.66.58-2.7.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M101.99,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.47,3.96,8.47,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.47-3.96-8.47-8.6ZM117.28,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M127.16,7.14h1.59v4.71c1.3-2.96,4.06-5.1,7.34-4.97v1.75h-.16c-3.83,0-7.18,2.89-7.18,8.28v6.79h-1.59V7.14Z"/><path class="cls-1" d="M142.64,13.15h8.7v1.82h-8.7v-1.82Z"/><path class="cls-1" d="M167.58.81h1.62l10.59,22.89h-1.85l-2.89-6.36h-13.41l-2.89,6.36h-1.75L167.58.81ZM174.34,15.81l-5.97-13.15-6.01,13.15h11.98Z"/><path class="cls-1" d="M186.84,17.27V7.14h1.59v9.84c0,3.41,1.92,5.65,5.26,5.65s5.75-2.47,5.75-5.91V7.14h1.59v16.56h-1.59v-3.08c-1.1,1.95-2.96,3.47-5.97,3.47-4.19,0-6.62-2.86-6.62-6.82Z"/><path class="cls-1" d="M209.24,15.49v-.07c0-5.39,4.06-8.67,8.05-8.67,3.31,0,5.46,1.88,6.82,3.96V0h1.59v23.7h-1.59v-3.7c-1.43,2.17-3.54,4.09-6.82,4.09-3.99,0-8.05-3.21-8.05-8.6ZM224.21,15.46v-.06c0-4.25-3.31-7.11-6.75-7.11s-6.49,2.63-6.49,7.08v.06c0,4.35,3.02,7.14,6.49,7.14s6.75-2.89,6.75-7.11Z"/><path class="cls-1" d="M235.02.65h1.98v2.18h-1.98V.65ZM235.22,7.14h1.59v16.56h-1.59V7.14Z"/><path class="cls-1" d="M245.19,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.74c.29,4.12,3.25,6.53,6.49,6.53,2.57,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM258.92,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.11,6.43h12.05Z"/><path class="cls-1" d="M268.53,7.14h1.59v3.08c1.1-1.95,2.95-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M290.55,15.49v-.07c0-4.64,3.7-8.67,8.44-8.67,3.12,0,5.07,1.43,6.62,3.05l-1.14,1.17c-1.43-1.46-3.05-2.73-5.52-2.73-3.77,0-6.69,3.15-6.69,7.11v.06c0,3.99,3.02,7.18,6.82,7.18,2.34,0,4.16-1.2,5.55-2.76l1.1.97c-1.69,1.92-3.7,3.28-6.75,3.28-4.77,0-8.44-3.96-8.44-8.6Z"/><path class="cls-1" d="M311.85,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM325.58,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M348.54.97h16.17v1.56h-14.48v8.93h13.02v1.56h-13.02v9.12h14.64v1.56h-16.33V.97Z"/><path class="cls-1" d="M371.17,7.14h1.85l6.27,14.77,6.33-14.77h1.79l-7.44,16.69h-1.36l-7.44-16.69Z"/><path class="cls-1" d="M392.9,15.46v-.06c0-4.81,3.38-8.64,7.86-8.64s7.6,3.77,7.6,8.67c0,.29,0,.39-.03.65h-13.73c.29,4.12,3.25,6.53,6.49,6.53,2.56,0,4.32-1.14,5.68-2.6l1.1.97c-1.69,1.82-3.67,3.12-6.85,3.12-4.35,0-8.12-3.47-8.12-8.64ZM406.63,14.64c-.23-3.34-2.14-6.43-5.94-6.43-3.28,0-5.81,2.76-6.1,6.43h12.05Z"/><path class="cls-1" d="M416.24,7.14h1.59v3.08c1.1-1.95,2.96-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M440.27,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.44-.58v1.49c-.84.39-1.66.58-2.7.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M475.11,2.53h-7.92V.97h17.53v1.56h-7.92v21.17h-1.69V2.53Z"/><path class="cls-1" d="M487.22,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.48,3.96,8.48,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.48-3.96-8.48-8.6ZM502.52,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M512.39,7.14h1.59v3.7c1.43-2.18,3.54-4.09,6.82-4.09,3.99,0,8.05,3.21,8.05,8.6v.06c0,5.39-4.06,8.67-8.05,8.67-3.31,0-5.46-1.88-6.82-3.96v8.77h-1.59V7.14ZM527.13,15.49v-.07c0-4.35-3.02-7.14-6.49-7.14s-6.75,2.89-6.75,7.11v.06c0,4.25,3.31,7.11,6.75,7.11s6.49-2.63,6.49-7.08Z"/><path class="cls-1" d="M535.93,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.47,3.96,8.47,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.47-3.96-8.47-8.6ZM551.22,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M561.32,0h1.59v23.7h-1.59V0Z"/><path class="cls-1" d="M571.29,15.49v-.07c0-4.64,3.6-8.67,8.54-8.67s8.48,3.96,8.48,8.6v.06c0,4.64-3.6,8.67-8.54,8.67s-8.48-3.96-8.48-8.6ZM586.58,15.49v-.07c0-3.99-2.99-7.18-6.82-7.18s-6.75,3.21-6.75,7.11v.06c0,3.99,2.99,7.18,6.82,7.18s6.75-3.21,6.75-7.11Z"/><path class="cls-1" d="M596.13,26.43l.94-1.3c1.98,1.53,4.25,2.34,6.69,2.34,3.8,0,6.49-2.18,6.49-6.43v-2.4c-1.43,2.05-3.64,3.83-6.92,3.83-3.99,0-7.96-3.05-7.96-7.79v-.06c0-4.77,3.96-7.86,7.96-7.86,3.31,0,5.55,1.75,6.92,3.7v-3.31h1.59v14c0,2.4-.78,4.29-2.11,5.62-1.43,1.43-3.57,2.21-6.01,2.21-2.76,0-5.33-.84-7.6-2.53ZM610.35,14.64v-.06c0-3.83-3.41-6.3-6.85-6.3s-6.4,2.4-6.4,6.27v.06c0,3.73,2.99,6.33,6.4,6.33s6.85-2.53,6.85-6.3Z"/><path class="cls-1" d="M634.09,7.14h1.75l-7.18,17.14c-1.46,3.47-3.15,4.71-5.52,4.71-1.27,0-2.18-.23-3.28-.71l.55-1.4c.88.42,1.59.62,2.82.62,1.72,0,2.86-1.01,4.09-3.9l-7.96-16.46h1.85l6.88,14.81,5.97-14.81Z"/><path class="cls-1" d="M665.46.81h1.62l10.59,22.89h-1.85l-2.89-6.36h-13.41l-2.89,6.36h-1.75l10.59-22.89ZM672.21,15.81l-5.97-13.15-6.01,13.15h11.98Z"/><path class="cls-1" d="M683.93,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.7-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M702.99,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.69-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M723.84.65h1.98v2.18h-1.98V.65ZM724.03,7.14h1.59v16.56h-1.59V7.14Z"/><path class="cls-1" d="M733.71,21.62l.94-1.27c1.82,1.4,3.83,2.18,5.94,2.18,2.24,0,3.99-1.23,3.99-3.15v-.07c0-1.95-2.08-2.66-4.38-3.31-2.69-.78-5.68-1.59-5.68-4.55v-.07c0-2.66,2.24-4.58,5.46-4.58,1.98,0,4.22.71,5.88,1.82l-.84,1.33c-1.53-1.01-3.34-1.66-5.1-1.66-2.27,0-3.77,1.23-3.77,2.89v.06c0,1.85,2.24,2.53,4.61,3.21,2.66.75,5.46,1.72,5.46,4.64v.06c0,2.96-2.53,4.84-5.71,4.84-2.4,0-5.03-.97-6.79-2.4Z"/><path class="cls-1" d="M755.07,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.43-.58v1.49c-.84.39-1.66.58-2.69.58-2.57,0-4.64-1.4-4.64-4.55Z"/><path class="cls-1" d="M769.07,18.9v-.07c0-3.44,2.95-5.39,7.24-5.39,2.3,0,3.9.29,5.49.71v-.71c0-3.34-2.05-5.07-5.46-5.07-2.01,0-3.67.55-5.2,1.33l-.58-1.4c1.82-.84,3.6-1.43,5.88-1.43s4.03.62,5.23,1.82c1.1,1.1,1.69,2.63,1.69,4.68v10.33h-1.56v-2.76c-1.14,1.59-3.18,3.15-6.33,3.15s-6.4-1.75-6.4-5.2ZM781.83,17.5v-1.88c-1.4-.36-3.25-.75-5.62-.75-3.51,0-5.46,1.56-5.46,3.86v.06c0,2.4,2.27,3.8,4.81,3.8,3.38,0,6.27-2.08,6.27-5.1Z"/><path class="cls-1" d="M792.32,7.14h1.59v3.08c1.1-1.95,2.96-3.47,5.97-3.47,4.19,0,6.62,2.86,6.62,6.82v10.13h-1.59v-9.84c0-3.41-1.92-5.65-5.26-5.65s-5.75,2.47-5.75,5.91v9.58h-1.59V7.14Z"/><path class="cls-1" d="M816.34,19.45v-10.84h-2.4v-1.46h2.4V1.85h1.59v5.29h5.81v1.46h-5.81v10.68c0,2.37,1.4,3.21,3.31,3.21.81,0,1.49-.16,2.43-.58v1.49c-.84.39-1.66.58-2.69.58-2.57,0-4.64-1.4-4.64-4.55Z"/></g></svg></div>
-            <div id="emptyInfoVersion">Ver.1.3</div>
+            <div id="emptyInfoVersion">Ver.1.4</div>
           </div>
         </div>
       <div id="detail" style="display:none;">
@@ -7881,16 +8730,22 @@
       const bottomScroll = document.getElementById('integratedInfoBottomScroll');
       if (bottomScroll) {
         const searchNodes = [boothSearchBar, boothSearchMeta, boothSearchResults].filter(Boolean);
-        const insertBeforeNode = bottomDrawer && bottomDrawer.parentElement === bottomScroll ? bottomDrawer : bottomScroll.firstChild;
         for (const node of searchNodes) {
           if (node.parentElement !== bottomScroll) {
-            bottomScroll.insertBefore(node, insertBeforeNode);
+            bottomScroll.appendChild(node);
           }
         }
-        if (bottomDrawer && bottomDrawer.parentElement !== bottomScroll) bottomScroll.appendChild(bottomDrawer);
       }
 
       if (infoPanel && infoBody && infoPanel.parentElement !== infoBody) infoBody.appendChild(infoPanel);
+      if (bottomDrawer && infoBody) {
+        if (bottomDrawer.parentElement !== infoBody) {
+          infoBody.appendChild(bottomDrawer);
+        }
+        if (infoPanel && bottomDrawer.previousElementSibling !== infoPanel) {
+          infoBody.insertBefore(bottomDrawer, infoPanel.nextSibling);
+        }
+      }
       syncMobileFrameClass();
       return mobileMapViewport;
     }
@@ -7972,6 +8827,52 @@
       toast.classList.add('show');
       clearTimeout(showToast._t);
       showToast._t = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    let selectionUndoBubble = null;
+    let selectionUndoTimer = 0;
+
+    function ensureSelectionUndoBubble() {
+      if (selectionUndoBubble) return selectionUndoBubble;
+      const bubble = document.createElement('div');
+      bubble.id = 'selectionUndoBubble';
+      bubble.setAttribute('role', 'status');
+      bubble.setAttribute('aria-live', 'polite');
+      bubble.innerHTML = `
+        <span class="selection-undo-message"></span>
+        <button class="selection-undo-btn" type="button">元に戻す</button>
+      `;
+      (app || document.body).appendChild(bubble);
+      selectionUndoBubble = bubble;
+      return bubble;
+    }
+
+    function hideSelectionUndoBubble() {
+      if (!selectionUndoBubble) return;
+      clearTimeout(selectionUndoTimer);
+      selectionUndoTimer = 0;
+      selectionUndoBubble.classList.remove('is-visible');
+    }
+
+    function showSelectionUndoBubble(message, undoHandler) {
+      const bubble = ensureSelectionUndoBubble();
+      const messageEl = bubble.querySelector('.selection-undo-message');
+      const undoBtn = bubble.querySelector('.selection-undo-btn');
+      if (messageEl) messageEl.textContent = message;
+      if (undoBtn) {
+        undoBtn.onclick = (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          hideSelectionUndoBubble();
+          if (typeof undoHandler === 'function') undoHandler();
+        };
+      }
+      clearTimeout(selectionUndoTimer);
+      bubble.classList.remove('is-visible');
+      requestAnimationFrame(() => bubble.classList.add('is-visible'));
+      selectionUndoTimer = setTimeout(() => {
+        bubble.classList.remove('is-visible');
+      }, 5200);
     }
 
     function showError(err) {
@@ -11628,8 +12529,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       let categoryLayerVisible = false;
       themeMode = 'dark';
       let legendHoveredCategory = null;
-      let drawerDragState = null;
-      let drawerDragSuppressUntil = 0;
+      let drawerInteractionSuppressUntil = 0;
       let needsRaycast = false;
       let restoreState = null;
       let sharedPreviewState = null;
@@ -12301,165 +13201,181 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         };
       }
 
-      function getSelectionArrayByTier(tier) {
-        return tier === 'secondary' ? selectedSecondaryIds : selectedPrimaryIds;
-      }
+      function setupDrawerItemSwipe(li, ghost, item, tier) {
+        if (!li || !ghost) return;
 
-      function moveSelectionBetweenTiers(fromTier, fromIndex, toTier, toIndex) {
-        const fromList = getSelectionArrayByTier(fromTier);
-        const toList = getSelectionArrayByTier(toTier);
-        if (!fromList || !toList) return false;
-        if (fromIndex < 0 || fromIndex >= fromList.length) return false;
-        const [moved] = fromList.splice(fromIndex, 1);
-        if (!moved) return false;
-        const normalizedToIndex = Math.max(0, Math.min(toIndex, toList.length));
-        if (fromList === toList && fromIndex < normalizedToIndex) {
-          toList.splice(normalizedToIndex - 1, 0, moved);
-        } else {
-          toList.splice(normalizedToIndex, 0, moved);
-        }
-        selectedPrimaryIds = uniqueValidBoothIds(selectedPrimaryIds);
-        selectedSecondaryIds = uniqueValidBoothIds(selectedSecondaryIds);
-        return true;
-      }
+        // Two-stage swipe:
+        // 1) Reveal: move the row horizontally and show the underlying 「解除」 surface.
+        // 2) Commit: remove only on pointerup after the row has been swiped past the full threshold.
+        const SWIPE_START_PX = 8;
+        const SWIPE_REVEAL_PX = 46;
+        const SWIPE_OPEN_PX = 78;
+        const SWIPE_COMMIT_PX = 136;
+        const SWIPE_MAX_PX = 214;
+        let swipeState = null;
+        let openX = 0;
 
-      function clearDrawerDropTargets() {
-        document.querySelectorAll('.drawer-list-wrap.is-drop-target').forEach((el) => el.classList.remove('is-drop-target'));
-      }
+        const clampSwipeX = (x) => {
+          const raw = Number.isFinite(x) ? x : 0;
+          const sign = Math.sign(raw) || 1;
+          const abs = Math.abs(raw);
+          if (abs <= SWIPE_MAX_PX) return raw;
+          return sign * (SWIPE_MAX_PX + Math.min(36, Math.pow(abs - SWIPE_MAX_PX, 0.72)));
+        };
 
-      function cleanupDrawerDrag() {
-        if (drawerDragState?.ghost?.parentNode) drawerDragState.ghost.parentNode.removeChild(drawerDragState.ghost);
-        if (drawerDragState?.placeholder?.parentNode) drawerDragState.placeholder.parentNode.removeChild(drawerDragState.placeholder);
-        drawerDragState?.originButton?.classList.remove('is-dragging-origin');
-        clearDrawerDropTargets();
-        drawerDragState = null;
-      }
+        const setSwipeX = (x, options = {}) => {
+          const amount = options.allowExit ? (Number.isFinite(x) ? x : 0) : clampSwipeX(x);
+          const abs = Math.abs(amount);
+          const revealed = abs >= SWIPE_REVEAL_PX || Math.abs(openX) >= SWIPE_OPEN_PX - 1;
+          const commitReady = options.commitReady ?? abs >= SWIPE_COMMIT_PX;
+          const revealRange = Math.max(1, SWIPE_COMMIT_PX - SWIPE_REVEAL_PX);
+          const backgroundOpacity = !revealed
+            ? Math.min(0.42, (abs / SWIPE_REVEAL_PX) * 0.42)
+            : Math.min(1, 0.72 + ((abs - SWIPE_REVEAL_PX) / revealRange) * 0.28);
+          const commitProgress = Math.min(1, abs / SWIPE_COMMIT_PX);
 
-      function drawerDropContextFromPoint(clientX, clientY) {
-        const targetElement = document.elementFromPoint(clientX, clientY);
-        const wrap = targetElement?.closest('.drawer-list-wrap');
-        if (!wrap) return null;
-        const tier = wrap.dataset.tier || 'primary';
-        const list = wrap.querySelector('.drawer-list');
-        if (!list) return { wrap, list: null, tier, index: 0 };
-        const itemElement = targetElement?.closest('.drawer-list-entry, .drawer-item');
-        if (itemElement && list.contains(itemElement)) {
-          const li = itemElement.matches('li') ? itemElement : itemElement.closest('li');
-          const items = Array.from(list.children).filter((child) => child !== drawerDragState?.placeholder);
-          const itemIndex = items.indexOf(li);
-          const rect = li.getBoundingClientRect();
-          const insertAfter = clientY > rect.top + rect.height / 2;
-          return { wrap, list, tier, index: itemIndex + (insertAfter ? 1 : 0) };
-        }
-        return { wrap, list, tier, index: list.children.length };
-      }
+          li.style.setProperty('--drawer-swipe-x', `${amount}px`);
+          li.style.setProperty('--drawer-swipe-bg-opacity', String(backgroundOpacity));
+          li.style.setProperty('--drawer-swipe-commit-progress', String(commitProgress));
+          li.classList.toggle('is-swipe-left', amount < -2);
+          li.classList.toggle('is-swipe-right', amount > 2);
+          li.classList.toggle('is-swipe-revealed', revealed);
+          li.classList.toggle('is-swipe-open', Math.abs(openX) > 0);
+          li.classList.toggle('is-swipe-ready', commitReady);
+        };
 
-      function updateDrawerDrag(clientX, clientY) {
-        if (!drawerDragState?.dragging) return;
-        drawerDragState.lastClientX = clientX;
-        drawerDragState.lastClientY = clientY;
-        drawerDragState.ghost.style.transform = `translate(${clientX - drawerDragState.offsetX}px, ${clientY - drawerDragState.offsetY}px)`;
-        clearDrawerDropTargets();
-        const context = drawerDropContextFromPoint(clientX, clientY);
-        if (!context) return;
-        context.wrap.classList.add('is-drop-target');
-        const { list, index } = context;
-        const placeholder = drawerDragState.placeholder;
-        if (!list) {
-          context.wrap.appendChild(placeholder);
-          return;
-        }
-        const items = Array.from(list.children).filter((child) => child !== placeholder);
-        if (index >= items.length) list.appendChild(placeholder);
-        else list.insertBefore(placeholder, items[index]);
-      }
+        const resetSwipe = () => {
+          openX = 0;
+          li.classList.add('is-swipe-reset');
+          li.classList.remove('is-swiping', 'is-swipe-ready', 'is-swipe-revealed', 'is-swipe-open', 'is-swipe-commit');
+          setSwipeX(0, { commitReady: false });
+          window.setTimeout(() => {
+            li.classList.remove('is-swipe-reset', 'is-swipe-left', 'is-swipe-right');
+          }, 240);
+        };
 
-      function finishDrawerDrag(cancelled = false) {
-        if (!drawerDragState) return;
-        const state = drawerDragState;
-        const didDrag = !!state.dragging;
-        if (!cancelled && didDrag) {
-          const wrap = state.placeholder.parentElement?.closest('.drawer-list-wrap');
-          const tier = wrap?.dataset.tier || state.fromTier;
-          const list = wrap?.querySelector('.drawer-list');
-          const index = list ? Array.from(list.children).indexOf(state.placeholder) : 0;
-          const changed = moveSelectionBetweenTiers(state.fromTier, state.fromIndex, tier, index);
-          if (changed) {
-            refreshMaterials();
-            rebuildRoutes();
-            saveState(true);
+        const snapOpen = (direction) => {
+          const sign = direction < 0 ? -1 : 1;
+          openX = sign * SWIPE_OPEN_PX;
+          drawerInteractionSuppressUntil = performance.now() + 360;
+          li.classList.add('is-swipe-reset', 'is-swipe-open');
+          li.classList.remove('is-swiping', 'is-swipe-ready', 'is-swipe-commit');
+          setSwipeX(openX, { commitReady: false });
+          window.setTimeout(() => li.classList.remove('is-swipe-reset'), 240);
+        };
+
+        const cleanup = () => {
+          window.removeEventListener('pointermove', onMove, { capture: true });
+          window.removeEventListener('pointerup', onEnd, { capture: true });
+          window.removeEventListener('pointercancel', onCancel, { capture: true });
+          if (swipeState?.captured) {
+            try { li.releasePointerCapture?.(swipeState.pointerId); } catch (err) {}
           }
-          drawerDragSuppressUntil = performance.now() + 320;
-        }
-        cleanupDrawerDrag();
-      }
-
-      function startDrawerDrag(event, button, item, tier, index) {
-        const rect = button.getBoundingClientRect();
-        const ghost = button.cloneNode(true);
-        ghost.classList.add('drawer-drag-ghost');
-        ghost.style.width = `${rect.width}px`;
-        document.body.appendChild(ghost);
-
-        const placeholder = document.createElement('li');
-        placeholder.className = 'drawer-drag-placeholder';
-        placeholder.style.height = `${rect.height}px`;
-        const originLi = button.closest('li');
-        originLi?.parentNode?.insertBefore(placeholder, originLi.nextSibling);
-
-        button.classList.add('is-dragging-origin');
-        drawerDragState = {
-          pointerId: event.pointerId,
-          item,
-          fromTier: tier,
-          fromIndex: index,
-          originButton: button,
-          originLi,
-          ghost,
-          placeholder,
-          offsetX: Math.min(28, rect.width / 2),
-          offsetY: Math.min(20, rect.height / 2),
-          startClientX: event.clientX,
-          startClientY: event.clientY,
-          lastClientX: event.clientX,
-          lastClientY: event.clientY,
-          dragging: true
+          swipeState = null;
         };
-        updateDrawerDrag(event.clientX, event.clientY);
-      }
 
-      function onDrawerItemPointerDown(event, button, item, tier, index) {
-        if (event.pointerType === 'touch') return;
-        if (event.button !== undefined && event.button !== 0) return;
-        if (drawerDragState) return;
-        const startX = event.clientX;
-        const startY = event.clientY;
-        const onMove = (moveEvent) => {
-          if (drawerDragState?.pointerId && moveEvent.pointerId !== drawerDragState.pointerId) return;
-          const dx = moveEvent.clientX - startX;
-          const dy = moveEvent.clientY - startY;
-          if (!drawerDragState) {
-            if (Math.hypot(dx, dy) < 6) return;
-            startDrawerDrag(moveEvent, button, item, tier, index);
-          } else {
-            updateDrawerDrag(moveEvent.clientX, moveEvent.clientY);
+        const commitSwipeRemoval = (direction) => {
+          if (li.dataset.swipeCommitted === 'true') return;
+          li.dataset.swipeCommitted = 'true';
+          const sign = direction < 0 ? -1 : 1;
+          const exitX = sign * Math.max(li.getBoundingClientRect().width + 96, 280);
+          openX = 0;
+          drawerInteractionSuppressUntil = performance.now() + 640;
+          li.classList.add('is-swipe-commit', 'is-swipe-ready', 'is-swipe-revealed');
+          li.classList.remove('is-swiping', 'is-swipe-open');
+          setSwipeX(exitX, { commitReady: true, allowExit: true });
+          cleanup();
+          window.setTimeout(() => {
+            clearDrawerItemSelection(item, tier, { undoable: true, source: 'swipe' });
+          }, 130);
+        };
+
+        function onMove(event) {
+          if (!swipeState || event.pointerId !== swipeState.pointerId || li.dataset.swipeCommitted === 'true') return;
+          const dx = event.clientX - swipeState.startX;
+          const dy = event.clientY - swipeState.startY;
+          const absX = Math.abs(dx);
+          const absY = Math.abs(dy);
+
+          if (!swipeState.active) {
+            if (absX < SWIPE_START_PX && absY < SWIPE_START_PX) return;
+            if (absY > absX * 1.15) {
+              cleanup();
+              if (!openX) resetSwipe();
+              return;
+            }
+            if (absX < SWIPE_START_PX || absX < absY * 1.15) return;
+            swipeState.active = true;
+            drawerInteractionSuppressUntil = performance.now() + 520;
+            li.classList.add('is-swiping');
+            try {
+              li.setPointerCapture?.(event.pointerId);
+              swipeState.captured = true;
+            } catch (err) {}
           }
-        };
-        const onEnd = (endEvent) => {
-          window.removeEventListener('pointermove', onMove, true);
-          window.removeEventListener('pointerup', onEnd, true);
-          window.removeEventListener('pointercancel', onCancel, true);
-          if (drawerDragState) finishDrawerDrag(false);
-        };
-        const onCancel = () => {
-          window.removeEventListener('pointermove', onMove, true);
-          window.removeEventListener('pointerup', onEnd, true);
-          window.removeEventListener('pointercancel', onCancel, true);
-          if (drawerDragState) finishDrawerDrag(true);
-        };
-        window.addEventListener('pointermove', onMove, true);
-        window.addEventListener('pointerup', onEnd, true);
-        window.addEventListener('pointercancel', onCancel, true);
+
+          if (!swipeState.active) return;
+          event.preventDefault();
+          event.stopPropagation();
+
+          const visualX = clampSwipeX(swipeState.startOpenX + dx);
+          const direction = Math.sign(visualX || dx || swipeState.startOpenX || 1);
+          swipeState.lastX = visualX;
+          setSwipeX(visualX);
+
+          // 解除の確定は pointerup のみで行う。
+          // ここでは十分に深くスワイプしても、行の移動と背景表示だけを更新する。
+        }
+
+        function onEnd(event) {
+          if (!swipeState || event.pointerId !== swipeState.pointerId) return;
+          const lastSwipeX = swipeState.lastX || openX || 0;
+          const wasActive = swipeState.active;
+          const direction = Math.sign(lastSwipeX || swipeState.startOpenX || 1);
+
+          if (wasActive && Math.abs(lastSwipeX) >= SWIPE_COMMIT_PX) {
+            commitSwipeRemoval(direction);
+            return;
+          }
+
+          cleanup();
+
+          if (!wasActive && Math.abs(openX) > 0) {
+            drawerInteractionSuppressUntil = performance.now() + 360;
+            resetSwipe();
+            return;
+          }
+
+          // 解除しきい値未満で指を離した場合は、開いた状態で残さず必ず元の位置へ戻す。
+          // 解除は pointerup 時点で SWIPE_COMMIT_PX を超えていた場合だけ確定する。
+          resetSwipe();
+        }
+
+        function onCancel() {
+          cleanup();
+          resetSwipe();
+        }
+
+        li.addEventListener('pointerdown', (event) => {
+          if (event.pointerType !== 'touch' && event.pointerType !== 'pen' && event.pointerType !== 'mouse') return;
+          if (event.target?.closest?.('.drawer-item-remove')) return;
+          if (event.button !== undefined && event.button !== 0) return;
+          li.dataset.swipeCommitted = 'false';
+          swipeState = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            startOpenX: openX,
+            lastX: openX,
+            active: false,
+            captured: false
+          };
+          li.classList.remove('is-swipe-reset', 'is-swipe-commit');
+          setSwipeX(openX, { commitReady: false });
+          window.addEventListener('pointermove', onMove, { capture: true, passive: false });
+          window.addEventListener('pointerup', onEnd, { capture: true });
+          window.addEventListener('pointercancel', onCancel, { capture: true });
+        }, { passive: true });
       }
 
       function buildRouteDrawerOrderMap(result, plan = null) {
@@ -12574,9 +13490,8 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
             <div class="drawer-item-name">${escapeHtml(item.boothName)}</div>
             <div class="drawer-item-meta">${escapeHtml(item.category)}</div>
           `;
-          button.addEventListener('pointerdown', (event) => onDrawerItemPointerDown(event, button, item, tier, index));
           button.addEventListener('click', () => {
-            if (performance.now() < drawerDragSuppressUntil) return;
+            if (performance.now() < drawerInteractionSuppressUntil) return;
             setPinnedMesh(item.mesh);
             hoveredMesh = item.mesh;
             refreshMaterials();
@@ -12589,8 +13504,9 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
           const removeButton = document.createElement('button');
           removeButton.type = 'button';
           removeButton.className = `drawer-item-remove ${tier === 'secondary' ? 'secondary' : 'primary'}`;
-          removeButton.textContent = '解除';
+          removeButton.textContent = '×';
           removeButton.setAttribute('aria-label', `${item.id} の選択を解除`);
+          removeButton.setAttribute('title', '解除');
           removeButton.addEventListener('pointerdown', (event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -12598,12 +13514,23 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
           removeButton.addEventListener('click', (event) => {
             event.preventDefault();
             event.stopPropagation();
-            if (performance.now() < drawerDragSuppressUntil) return;
+            if (performance.now() < drawerInteractionSuppressUntil) return;
             clearDrawerItemSelection(item, tier);
           });
 
-          li.appendChild(button);
-          li.appendChild(removeButton);
+          const swipePlaceholder = document.createElement('div');
+          swipePlaceholder.className = 'drawer-swipe-placeholder';
+          swipePlaceholder.setAttribute('aria-hidden', 'true');
+
+          const swipeGhost = document.createElement('div');
+          swipeGhost.className = 'drawer-swipe-ghost';
+          swipeGhost.appendChild(button);
+          swipeGhost.appendChild(removeButton);
+
+          setupDrawerItemSwipe(li, swipeGhost, item, tier);
+
+          li.appendChild(swipePlaceholder);
+          li.appendChild(swipeGhost);
           list.appendChild(li);
         });
         container.appendChild(list);
@@ -13425,8 +14352,8 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         markSecondaryBtn.setAttribute('aria-pressed', secondaryOn ? 'true' : 'false');
         markPrimaryBtn.dataset.state = primaryOn ? 'on' : 'off';
         markSecondaryBtn.dataset.state = secondaryOn ? 'on' : 'off';
-        markPrimaryBtn.title = primaryOn ? '最優先 ON' : '最優先 OFF';
-        markSecondaryBtn.title = secondaryOn ? '気になる ON' : '気になる OFF';
+        markPrimaryBtn.title = primaryOn ? '最優先を解除' : '最優先に設定';
+        markSecondaryBtn.title = secondaryOn ? '気になるを解除' : '気になるに設定';
         markPrimaryBtn.disabled = !target;
         markSecondaryBtn.disabled = !target;
       }
@@ -13473,9 +14400,7 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         boothMetaEl.textContent = fmtMeta(mesh);
         const rawBoothDescription = info?.description || 'このブースに対応するJSON詳細は見つかりませんでした。';
         const normalizedBoothDescription = String(rawBoothDescription).replace(/\s+/g, ' ').trim();
-        boothDescEl.textContent = normalizedBoothDescription.length > 260
-          ? `${normalizedBoothDescription.slice(0, 260).trimEnd()}[...]`
-          : normalizedBoothDescription;
+        boothDescEl.textContent = normalizedBoothDescription;
         boothDescEl.title = normalizedBoothDescription;
         linkRow.innerHTML = '';
         if (info) {
@@ -13588,19 +14513,40 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
         saveState();
       }
 
-      function clearDrawerItemSelection(item, tier) {
+      function clearDrawerItemSelection(item, tier, options = {}) {
         const mesh = item?.mesh || boothById.get(normalizeBoothId(item?.id));
         const boothId = normalizeBoothId(item?.id || mesh?.userData?.id);
         if (!boothId) return;
+        const beforeSelection = {
+          primary: selectedPrimaryIds.slice(),
+          secondary: selectedSecondaryIds.slice()
+        };
         closeActionMenu();
         removeBoothIdFromSelections(boothId);
         if (mesh) hoveredMesh = mesh;
         syncPinnedBoothLabelState();
         refreshMaterials();
         refreshInfoPanel();
+        renderDrawerLists();
         rebuildRoutes();
         const tierLabel = tier === 'secondary' ? '気になる' : '最優先';
-        showToast(`${boothId} を${tierLabel}から解除しました`);
+        const message = `${boothId} を${tierLabel}から解除しました`;
+        if (options?.undoable) {
+          showSelectionUndoBubble(message, () => {
+            selectedPrimaryIds = uniqueValidBoothIds(beforeSelection.primary);
+            selectedSecondaryIds = uniqueValidBoothIds(beforeSelection.secondary);
+            if (mesh) hoveredMesh = mesh;
+            syncPinnedBoothLabelState();
+            refreshMaterials();
+            refreshInfoPanel();
+            renderDrawerLists();
+            rebuildRoutes();
+            saveState(true);
+            showToast(`${boothId} の選択を元に戻しました`);
+          });
+        } else {
+          showToast(message);
+        }
         saveState();
       }
 
@@ -13682,14 +14628,47 @@ const STORAGE_KEY = 'bunfree_tokyo42_viewer_state_v1';
       }
 
 
-      markPrimaryBtn?.addEventListener('click', () => {
+      function toggleInfoActionSelection(tier) {
         if (!pinnedMesh) return;
-        applyTierSelection(pinnedMesh, 'primary', { toastMessage: `${normalizeBoothId(pinnedMesh.userData.id)} を最優先に設定しました` });
+        const mesh = pinnedMesh;
+        const boothId = normalizeBoothId(mesh.userData.id);
+        const tierLabel = tier === 'secondary' ? '気になる' : '最優先';
+        const currentTier = getSelectionTierByMesh(mesh);
+        closeActionMenu();
+
+        if (currentTier === tier) {
+          removeBoothIdFromSelections(boothId);
+          hoveredMesh = mesh;
+          syncPinnedBoothLabelState();
+          refreshMaterials();
+          refreshInfoPanel();
+          rebuildRoutes();
+          showToast(`${boothId} を${tierLabel}から解除しました`);
+          saveState();
+          return;
+        }
+
+        removeBoothIdFromSelections(boothId);
+        if (tier === 'primary') selectedPrimaryIds.push(boothId);
+        else selectedSecondaryIds.push(boothId);
+
+        selectedPrimaryIds = uniqueValidBoothIds(selectedPrimaryIds);
+        selectedSecondaryIds = uniqueValidBoothIds(selectedSecondaryIds);
+        hoveredMesh = null;
+        syncPinnedBoothLabelState();
+        refreshMaterials();
+        refreshInfoPanel();
+        rebuildRoutes();
+        showToast(`${boothId} を${tierLabel}に設定しました`);
+        saveState();
+      }
+
+      markPrimaryBtn?.addEventListener('click', () => {
+        toggleInfoActionSelection('primary');
       });
 
       markSecondaryBtn?.addEventListener('click', () => {
-        if (!pinnedMesh) return;
-        applyTierSelection(pinnedMesh, 'secondary', { toastMessage: `${normalizeBoothId(pinnedMesh.userData.id)} を気になるに設定しました` });
+        toggleInfoActionSelection('secondary');
       });
 
       drawerPeek?.addEventListener('click', (e) => {
