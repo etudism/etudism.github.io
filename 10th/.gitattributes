@@ -1,0 +1,2 @@
+# Generated bundles include upstream template literals with intentional spaces.
+assets/*.js -whitespace
