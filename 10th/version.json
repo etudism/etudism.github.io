@@ -1,0 +1,7 @@
+{
+  "buildSha": "f70443975e67ff834dd0aa70def18c71850150aa",
+  "buildTime": "2026-07-10T17:15:00Z",
+  "appVersion": "0.2.0",
+  "defaultModel": "Qwen3-0.6B-q4f16_1-MLC",
+  "performancePipeline": "v2"
+}
